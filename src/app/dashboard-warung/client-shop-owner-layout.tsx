@@ -1,3 +1,4 @@
+import OwnerBottomBar from "./owner-bottombar";
 import OwnerTopbar from "./owner-topbar";
 
 export default function ClientShopOwnerLayout({
@@ -6,12 +7,14 @@ export default function ClientShopOwnerLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="w-full">
+    <div className="w-full min-h-svh relative pb-14">
       <div className="p-5 pl-4">
-        <OwnerTopbar />
+        {/* <OwnerTopbar /> */}
 
         {children}
       </div>
-    </main>
+
+      <OwnerBottomBar />
+    </div>
   );
 }

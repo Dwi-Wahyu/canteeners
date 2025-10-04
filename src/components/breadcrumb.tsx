@@ -38,8 +38,6 @@ export function BreadCrumbs() {
     return iconMapping.find((each) => each.label === label)?.icon;
   }
 
-  console.log(breadcrumbs);
-
   return (
     <Breadcrumb>
       <BreadcrumbList className="gap-2">

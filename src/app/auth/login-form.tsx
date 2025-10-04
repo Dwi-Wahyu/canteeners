@@ -64,7 +64,7 @@ export default function LoginForm() {
           router.push("/admin");
           break;
         case "SHOP_OWNER":
-          router.push("/dashboard-warung-anda");
+          router.push("/dashboard-warung");
           break;
         default:
           router.push("/");

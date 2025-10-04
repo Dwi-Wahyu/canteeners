@@ -43,8 +43,6 @@ export default async function DetailKantinPage({
     return <NotFoundResource />;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
   return (
     <div className="container">
       <Suspense

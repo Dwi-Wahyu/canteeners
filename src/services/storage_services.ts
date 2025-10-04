@@ -37,7 +37,14 @@ export class LocalStorageService implements StorageService {
     filename: string,
     subfolder: string
   ): Promise<string> {
-    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
+    const allowedExtensions = [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".gif",
+      ".svg",
+      ".webp",
+    ];
     const fileExtension = extname(file.name).toLowerCase();
 
     if (!allowedExtensions.includes(fileExtension)) {
