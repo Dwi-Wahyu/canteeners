@@ -31,8 +31,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader, Save } from "lucide-react";
 import { NavigationButton } from "@/app/_components/navigation-button";
-import { uploadAvatar } from "@/app/admin/users/actions";
-import { InputShop } from "../../actions";
+import { InputShop, uploadShopImage } from "../../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { toast } from "sonner";
 
@@ -64,7 +63,7 @@ export default function InputWarungForm({
 
   const onSubmit = async (payload: InputShopSchemaType) => {
     if (files.length > 0) {
-      payload.image_url = await uploadAvatar(files[0], payload.name);
+      payload.image_url = await uploadShopImage(files[0], payload.name);
     }
 
     if (payload.image_url === "") {
@@ -164,7 +163,7 @@ export default function InputWarungForm({
         <div className="flex justify-end gap-3">
           <NavigationButton url={"/admin/kantin/" + canteen.id} />
 
-          <Button type="submit">
+          <Button disabled={form.formState.isSubmitting} type="submit">
             {form.formState.isSubmitting ? (
               <>
                 <Loader className="animate-spin" /> Loading

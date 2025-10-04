@@ -42,7 +42,7 @@ export default async function LoginPage() {
   const now = new Date();
   const expires = new Date(session.expires);
 
-  if (now > expires || !session) {
+  if (now > expires) {
     return (
       <div className="flex flex-col md:flex-row">
         <div className="bg-card md:w-[35vw] w-full p-6 h-svh flex flex-col justify-between">
@@ -73,6 +73,10 @@ export default async function LoginPage() {
         </div>
       </div>
     );
+  }
+
+  if (session.user.role === "SHOP_OWNER") {
+    redirect("/dashboard-warung");
   }
 
   redirect("/admin");
