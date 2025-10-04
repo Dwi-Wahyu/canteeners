@@ -78,13 +78,13 @@ export default async function LandingPage() {
               langsung dari meja Anda, dan terhubung instan dengan pemilik
               warung.
             </p>
-            <div className="flex justify-center space-x-4">
-              <Button size={"lg"} variant={"default"}>
-                Temukan Kantin Anda
+            <div className="flex flex-col md:flex-row gap-3 justify-center items-center w-full">
+              <Button asChild size={"lg"} variant={"default"} className="w-fit">
+                <Link href={"/#kantin"}>Temukan Kantin Anda</Link>
               </Button>
 
-              <Button size={"lg"} variant={"outline"}>
-                Mendaftar Ke Canteeners
+              <Button asChild size={"lg"} variant={"outline"} className="w-fit">
+                <Link href={"/auth/signup"}>Mendaftar Ke Canteeners</Link>
               </Button>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default async function LandingPage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <Card>
-                <CardContent className="flex flex-col items-center text-center shadow-md">
+                <CardContent className="flex flex-col items-center text-center ">
                   <div className="text-3xl text-primary mb-3 font-bold rounded-full flex items-center justify-center">
                     1
                   </div>
@@ -119,7 +119,7 @@ export default async function LandingPage() {
               </Card>
 
               <Card>
-                <CardContent className="flex flex-col items-center text-center shadow-md">
+                <CardContent className="flex flex-col items-center text-center ">
                   <div className="text-3xl text-primary mb-3 font-bold rounded-full flex items-center justify-center">
                     2
                   </div>
@@ -134,7 +134,7 @@ export default async function LandingPage() {
               </Card>
 
               <Card>
-                <CardContent className="flex flex-col items-center text-center shadow-md">
+                <CardContent className="flex flex-col items-center text-center ">
                   <div className="text-3xl text-primary mb-3 font-bold rounded-full flex items-center justify-center">
                     3
                   </div>
@@ -149,7 +149,7 @@ export default async function LandingPage() {
               </Card>
 
               <Card>
-                <CardContent className="flex flex-col items-center text-center shadow-md">
+                <CardContent className="flex flex-col items-center text-center ">
                   <div className="text-3xl text-primary mb-3 font-bold rounded-full flex items-center justify-center">
                     4
                   </div>
@@ -191,9 +191,8 @@ export default async function LandingPage() {
                       className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
                     />
                   </div>
-                  <div className="w-full h-full rounded-xl absolute z-20 left-0 top-0 bg-black/50"></div>
-                  <div className="relative w-full z-30 p-4">
-                    <h1 className="font-semibold text-center">
+                  <div className="w-full h-full rounded-xl absolute z-20 left-0 flex justify-center items-center top-0 bg-black/50">
+                    <h1 className="font-semibold text-center text-white">
                       {canteen.name}
                     </h1>
                   </div>
@@ -240,7 +239,7 @@ export default async function LandingPage() {
             </div>
 
             <div>
-              <h5 className="font-semibold text-white mb-3">Tautan</h5>
+              <h5 className="font-semibold mb-3">Tautan</h5>
               <ul className="space-y-2 text-muted-foreground text-sm">
                 <li>
                   <a href="#hero" className="hover:font-semibold transition">
@@ -267,7 +266,7 @@ export default async function LandingPage() {
 
             {/* Kolom 3: Dukungan */}
             <div>
-              <h5 className="font-semibold text-white mb-3">Dukungan</h5>
+              <h5 className="font-semibold mb-3">Dukungan</h5>
               <ul className="space-y-2 text-muted-foreground text-sm">
                 <li>
                   <a href="#" className="hover:font-semibold transition">
@@ -289,7 +288,7 @@ export default async function LandingPage() {
 
             {/* Kolom 4: Kontak */}
             <div>
-              <h5 className="font-semibold text-white mb-3">Kontak</h5>
+              <h5 className="font-semibold mb-3">Kontak</h5>
               <p className="text-sm text-muted-foreground">
                 Jl. Kampus Impian No. 123
               </p>

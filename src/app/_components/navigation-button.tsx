@@ -26,6 +26,7 @@ export function NavigationButton({
   size = "default",
   children,
   variant = "outline",
+  className,
 }: {
   label?: string;
   url: string;
@@ -39,10 +40,11 @@ export function NavigationButton({
     | "outline"
     | "secondary"
     | "ghost";
+  className?: string;
 }) {
   return (
     <Link href={url} passHref>
-      <Button variant={variant} type="button" size={size}>
+      <Button variant={variant} type="button" className={className} size={size}>
         {children ?? label}
       </Button>
     </Link>

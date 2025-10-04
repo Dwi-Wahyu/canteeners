@@ -19,7 +19,6 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
 import { useRouter } from "nextjs-toploader/app";
-import { useState } from "react";
 import { PasswordInput } from "@/components/password-input";
 import Link from "next/link";
 import { getUserRoleByUsernameAction } from "../admin/users/actions";
@@ -27,7 +26,6 @@ import { getUserRoleByUsernameAction } from "../admin/users/actions";
 export default function LoginForm() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -37,8 +35,6 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginSchemaType) => {
-    setLoading(true);
-
     const res = await signIn("credentials", {
       username: data.username,
       password: data.password,
@@ -68,12 +64,9 @@ export default function LoginForm() {
           break;
         default:
           router.push("/");
-
           break;
       }
     }
-
-    setLoading(false);
   };
 
   return (
@@ -132,7 +125,7 @@ export default function LoginForm() {
 
           <div className="flex flex-col gap-2 items-center mb-3">
             <Button
-              disabled={loading}
+              disabled={form.formState.isSubmitting}
               type="submit"
               className="w-full bg-gradient-to-b from-primary to-primary/70"
               size={"lg"}
@@ -140,8 +133,8 @@ export default function LoginForm() {
               {form.formState.isSubmitting ? "Loading..." : "Login"}
             </Button>
 
-            <div className="flex text-sm gap-1 mt-2 items-center">
-              <h1>Belum Punya Akun ?</h1>
+            <div className="flex text-sm justify-center gap-1 mt-2 items-center">
+              <h1>Atau</h1>
               <Link
                 href={"/auth/signup"}
                 className=" underline underline-offset-2 text-blue-400"

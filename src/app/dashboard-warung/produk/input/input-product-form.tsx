@@ -1,7 +1,7 @@
 "use client";
 
-import { FileUploadImage } from "@/app/_components/file-upload-image";
-import { Canteen, User } from "@/app/generated/prisma";
+import { useState } from "react";
+
 import {
   Form,
   FormControl,
@@ -10,15 +10,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  InputShopSchema,
-  InputShopSchemaType,
-} from "@/validations/schemas/shop";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 
 import {
   Select,
@@ -27,42 +18,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  InputProductSchema,
+  InputProductSchemaType,
+} from "@/validations/schemas/product";
+import { toast } from "sonner";
+import { InputProduct, uploadProductImage } from "../actions";
+import { useRouter } from "nextjs-toploader/app";
 import { Button } from "@/components/ui/button";
 import { Loader, Save } from "lucide-react";
-import { NavigationButton } from "@/app/_components/navigation-button";
-import { InputShop, uploadShopImage } from "../../actions";
-import { useRouter } from "nextjs-toploader/app";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { FileUploadImage } from "@/app/_components/file-upload-image";
 
-export default function InputWarungForm({
-  canteen,
-  shopOwners,
-}: {
-  canteen: Canteen;
-  shopOwners: User[];
-}) {
+export default function InputProductForm({ shop_id }: { shop_id: string }) {
   const [files, setFiles] = useState<File[]>([]);
 
-  const form = useForm<InputShopSchemaType>({
-    resolver: zodResolver(InputShopSchema),
+  const form = useForm<InputProductSchemaType>({
+    resolver: zodResolver(InputProductSchema),
     defaultValues: {
       name: "",
       description: "",
       image_url: "",
-      canteen_id: canteen.id,
+      price: "",
+      shop_id,
     },
   });
 
-  const ownerOptions = shopOwners.map((owners) => ({
-    label: owners.name,
-    value: owners.id,
-  }));
-
   const router = useRouter();
 
-  const onSubmit = async (payload: InputShopSchemaType) => {
+  const onSubmit = async (payload: InputProductSchemaType) => {
     if (files.length > 0) {
-      payload.image_url = await uploadShopImage(files[0], payload.name);
+      payload.image_url = await uploadProductImage(files[0], payload.name);
     }
 
     if (payload.image_url === "") {
@@ -70,12 +60,19 @@ export default function InputWarungForm({
       return;
     }
 
-    const result = await InputShop(payload);
+    const parsedPrice = parseInt(payload.price);
+
+    if (isNaN(parsedPrice)) {
+      form.setError("price", { message: "Harga tidak valid" });
+      return;
+    }
+
+    const result = await InputProduct(payload);
 
     if (result.success) {
       toast.success(result.message);
 
-      router.push("/admin/kantin/" + payload.canteen_id);
+      router.push("/dashboard-warung/produk");
     } else {
       console.log(result.error);
 
@@ -94,7 +91,7 @@ export default function InputWarungForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nama Warung</FormLabel>
+              <FormLabel>Nama</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -119,23 +116,22 @@ export default function InputWarungForm({
 
         <FormField
           control={form.control}
-          name="owner_id"
+          name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pemilik Warung</FormLabel>
+              <FormLabel>Harga</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Pemilik Warung" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ownerOptions.map((owner, idx) => (
-                      <SelectItem key={idx} value={owner.value}>
-                        {owner.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative">
+                  <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
+                    Rp
+                  </div>
+                  <Input
+                    placeholder="5000"
+                    type="number"
+                    className="peer pl-9"
+                    {...field}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -159,9 +155,7 @@ export default function InputWarungForm({
           )}
         </div>
 
-        <div className="flex justify-end gap-3">
-          <NavigationButton url={"/admin/kantin/" + canteen.id} />
-
+        <div className="flex justify-center gap-3">
           <Button disabled={form.formState.isSubmitting} type="submit">
             {form.formState.isSubmitting ? (
               <>

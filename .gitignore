@@ -28,6 +28,9 @@ secret.md
 /public/uploads/shops/*
 !/public/uploads/shops/.gitkeep
 
+/public/uploads/products/*
+!/public/uploads/products/.gitkeep
+
 /public/uploads/laporan/*
 !/public/uploads/laporan/.gitkeep
 
