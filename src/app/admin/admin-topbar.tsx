@@ -1,0 +1,28 @@
+"use client";
+
+import { BreadCrumbs } from "@/components/breadcrumb";
+import { ToggleDarkMode } from "@/components/toggle-darkmode";
+import TopbarAvatar from "@/components/topbar-avatar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSession } from "next-auth/react";
+
+export default function AdminTopbar() {
+  const session = useSession();
+
+  if (!session.data) {
+    return <div></div>;
+  }
+
+  return (
+    <div className="justify-between flex mb-3 items-center">
+      <BreadCrumbs />
+      <div className="flex gap-3 items-center">
+        <TopbarAvatar />
+
+        <ToggleDarkMode />
+
+        <SidebarTrigger />
+      </div>
+    </div>
+  );
+}

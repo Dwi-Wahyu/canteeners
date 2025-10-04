@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  name       String
+  username   String    @unique
+  nim        String?
+  password   String
+  avatar     String?
+  last_login DateTime?
+  role       Role
+
+  shop_owned Shop?
+
+  // relasi ke Orders (sebagai Customer)
+  orders Order[] @relation("CustomerOrders")
+
+  // relasi ke Messages (bisa Customer atau ShopOwner)
+  messages Message[]
+
+  // relasi ke Conversations (sebagai Customer)
+  conversationsAsCustomer Conversation[] @relation("CustomerConversations")
+
+  // relasi ke Conversations (sebagai ShopOwner)
+  conversationsAsShopOwner Conversation[] @relation("ShopOwnerConversations")
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  SHOP_OWNER
+}
+
+model Canteen {
+  id        Int    @id @default(autoincrement())
+  name      String
+  image_url String
+  shops     Shop[]
+
+  @@map("canteens")
+}
+
+model Shop {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  image_url   String
+  canteen     Canteen @relation(fields: [canteen_id], references: [id])
+  canteen_id  Int
+
+  products Product[]
+  orders   Order[]
+  owner    User      @relation(fields: [owner_id], references: [id])
+  owner_id String    @unique
+
+  @@map("shops")
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  image_url   String
+  price       Float
+  shop        Shop        @relation(fields: [shop_id], references: [id])
+  shop_id     String
+  order_items OrderItem[]
+
+  @@map("products")
+}
+
+model Conversation {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  customer    User   @relation("CustomerConversations", fields: [customer_id], references: [id])
+  customer_id String
+
+  shop_owner    User   @relation("ShopOwnerConversations", fields: [shop_owner_id], references: [id])
+  shop_owner_id String
+
+  orders ConversationOrder[]
+
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model ConversationOrder {
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+  conversation_id Int
+  order           Order        @relation(fields: [order_id], references: [id])
+  order_id        Int
+
+  @@id([conversation_id, order_id])
+  @@map("conversation_orders")
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  sender     User     @relation(fields: [sender_id], references: [id])
+  sender_id  String
+
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+  conversation_id Int
+
+  content   String?
+  image_url String?
+  type      MessageType @default(TEXT)
+
+  @@map("messages")
+}
+
+enum MessageType {
+  PAYMENT_PROOF
+  SYSTEM
+  TEXT
+}
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  customer    User   @relation(name: "CustomerOrders", fields: [customer_id], references: [id])
+  customer_id String
+
+  shop              Shop    @relation(fields: [shop_id], references: [id])
+  shop_id           String
+  estimation        Int? // dalam menit
+  payment_proof_url String?
+
+  status OrderStatus
+
+  conversations ConversationOrder[]
+  order_items   OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  order      Order   @relation(fields: [order_id], references: [id])
+  order_id   Int
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id Int
+  quantity   Int
+  price      Float
+
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING_CONFIRMATION // customer buat order, tunggu shop konfirmasi
+  WAITING_PAYMENT // shop setuju, customer harus bayar
+  WAITING_SHOP_CONFIRMATION // customer sudah upload bukti
+  PROCESSING // shop terima pembayaran, pesanan diproses
+  COMPLETED // order selesai
+  REJECTED // ditolak karena stok tidak ada
+  PAYMENT_REJECTED // bukti pembayaran tidak valid
+}
