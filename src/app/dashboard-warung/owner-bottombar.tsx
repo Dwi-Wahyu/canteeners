@@ -12,7 +12,7 @@ export default function OwnerBottomBar() {
       <Link
         href={"/dashboard-warung"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung" && "border-b-4"
+          pathname === "/dashboard-warung" && "border-b-[3px]"
         }`}
       >
         <Home />
@@ -21,7 +21,7 @@ export default function OwnerBottomBar() {
       <Link
         href={"/dashboard-warung/produk"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/produk" && "border-b-4"
+          pathname === "/dashboard-warung/produk" && "border-b-[3px]"
         }`}
       >
         <Utensils />
@@ -30,7 +30,7 @@ export default function OwnerBottomBar() {
       <Link
         href={"/dashboard-warung/pesan"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/pesan" && "border-b-4"
+          pathname === "/dashboard-warung/pesan" && "border-b-[3px]"
         }`}
       >
         <MessageCircle />
@@ -39,7 +39,7 @@ export default function OwnerBottomBar() {
       <Link
         href={"/dashboard-warung/pengaturan"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/pengaturan" && "border-b-4"
+          pathname === "/dashboard-warung/pengaturan" && "border-b-[3px]"
         }`}
       >
         <Settings />

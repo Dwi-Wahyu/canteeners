@@ -14,7 +14,12 @@ export const LoginSchema = z.object({
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 
-export const RegisterSchema = z.object({
+export const SignUpSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Username wajib diisi." })
+    .max(50, { message: "Username tidak lebih dari 50 karakter." }),
+  nim: z.string().max(50, { message: "NIM tidak lebih dari 10 karakter." }),
   username: z
     .string()
     .min(1, { message: "Username wajib diisi." })
@@ -26,7 +31,7 @@ export const RegisterSchema = z.object({
     .max(100, { message: "Kata sandi tidak lebih dari 100 karakter." }),
 });
 
-export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
+export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 
 export const ChangePasswordSchema = z
   .object({

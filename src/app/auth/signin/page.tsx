@@ -79,5 +79,9 @@ export default async function LoginPage() {
     redirect("/dashboard-warung");
   }
 
+  if (session.user.role === "CUSTOMER") {
+    redirect("/dashboard-pelanggan");
+  }
+
   redirect("/admin");
 }

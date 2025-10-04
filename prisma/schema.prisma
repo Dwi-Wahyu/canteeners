@@ -72,6 +72,7 @@ model Shop {
 model Product {
   id          Int         @id @default(autoincrement())
   name        String
+  description String?
   image_url   String
   price       Float
   shop        Shop        @relation(fields: [shop_id], references: [id])
