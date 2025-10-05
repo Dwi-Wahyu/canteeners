@@ -39,7 +39,11 @@ export default async function ShopDetailsPage({
         </Link>
       </div>
 
-      <ShopProductList shop={shop} isLoggedIn={isLoggedIn} />
+      <ShopProductList
+        shop={shop}
+        isLoggedIn={isLoggedIn}
+        customerId={session?.user.id}
+      />
     </div>
   );
 }

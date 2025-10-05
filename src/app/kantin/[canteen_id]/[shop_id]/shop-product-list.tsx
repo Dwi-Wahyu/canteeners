@@ -27,9 +27,11 @@ import OrderDetailDialog from "./order-detail-dialog";
 export default function ShopProductList({
   shop,
   isLoggedIn,
+  customerId,
 }: {
   shop: Shop;
   isLoggedIn: boolean;
+  customerId?: string;
 }) {
   const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +142,9 @@ export default function ShopProductList({
         showOrderDetails={showOrderDetails}
         toggleShowOrderDetails={toggleShowOrderDetails}
         orderItems={orderItems}
-        shop={shop}
+        shopOwnerId={shop.owner_id}
+        shopId={shop.id}
+        customerId={customerId}
       />
 
       {ordering && orderItems.length === 0 && (

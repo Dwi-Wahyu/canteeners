@@ -23,12 +23,16 @@ export default function OrderDetailDialog({
   showOrderDetails,
   toggleShowOrderDetails,
   orderItems,
-  shop,
+  shopOwnerId,
+  shopId,
+  customerId,
 }: {
   showOrderDetails: boolean;
   toggleShowOrderDetails: (showOrderDetails: boolean) => void;
   orderItems: OrderItemType[];
-  shop: Shop;
+  shopOwnerId: string;
+  shopId: string;
+  customerId?: string;
 }) {
   function calculateTotalPrice(items: OrderItemType[]): number {
     return items.reduce((total, item) => {
@@ -36,6 +40,8 @@ export default function OrderDetailDialog({
       return total + subtotal;
     }, 0);
   }
+
+  async function handleConfirmOrder() {}
 
   return (
     <AlertDialog open={showOrderDetails} onOpenChange={toggleShowOrderDetails}>
@@ -90,7 +96,9 @@ export default function OrderDetailDialog({
               <AlertDialogCancel asChild>
                 <Button variant="outline">Batal</Button>
               </AlertDialogCancel>
-              <AlertDialogAction type="button">Lanjutkan</AlertDialogAction>
+              <AlertDialogAction onClick={handleConfirmOrder} type="button">
+                Lanjutkan
+              </AlertDialogAction>
             </AlertDialogFooter>
           </ScrollArea>
         </AlertDialogHeader>
