@@ -62,6 +62,9 @@ export default function LoginForm() {
         case "SHOP_OWNER":
           router.push("/dashboard-warung");
           break;
+        case "CUSTOMER":
+          router.push("/dashboard-pelanggan");
+          break;
         default:
           router.push("/");
           break;
