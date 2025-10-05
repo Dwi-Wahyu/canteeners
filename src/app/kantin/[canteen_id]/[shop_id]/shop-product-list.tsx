@@ -144,13 +144,13 @@ export default function ShopProductList({
         orderItems={orderItems}
         shopOwnerId={shop.owner_id}
         shopId={shop.id}
-        customerId={customerId}
+        customerId={customerId ?? ""} // fix ini cari cara pastikan customer id non nullable
       />
 
       {ordering && orderItems.length === 0 && (
         <Alert className="mb-4">
           <CircleAlertIcon />
-          <AlertTitle>Pilih Minimal 1 Produk untuk Checkout</AlertTitle>
+          <AlertTitle>Pilih Minimal 1 Produk</AlertTitle>
         </Alert>
       )}
 

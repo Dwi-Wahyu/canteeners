@@ -1,15 +1,11 @@
-import { ChevronLeftIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { OrderItemType } from "./type";
-import { Shop } from "@/app/generated/prisma";
+import { PaymentMethod, Shop } from "@/app/generated/prisma";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -18,6 +14,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { createConversationAndOrder } from "./actions";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "nextjs-toploader/app";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function OrderDetailDialog({
   showOrderDetails,
@@ -32,7 +35,7 @@ export default function OrderDetailDialog({
   orderItems: OrderItemType[];
   shopOwnerId: string;
   shopId: string;
-  customerId?: string;
+  customerId: string;
 }) {
   function calculateTotalPrice(items: OrderItemType[]): number {
     return items.reduce((total, item) => {
@@ -41,7 +44,45 @@ export default function OrderDetailDialog({
     }, 0);
   }
 
-  async function handleConfirmOrder() {}
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
+
+  const router = useRouter();
+
+  async function handleConfirmOrder() {
+    setIsLoading(true);
+
+    try {
+      const conversationAndOrder = await createConversationAndOrder(
+        customerId,
+        shopOwnerId,
+        shopId,
+        orderItems,
+        paymentMethod
+      );
+
+      if (conversationAndOrder.success) {
+        toast.success(conversationAndOrder.message);
+
+        setTimeout(() => {
+          router.push(
+            "/dashboard-pelanggan/chat/" +
+              conversationAndOrder.data?.conversationId
+          );
+        }, 2000);
+      } else {
+        toast.error(conversationAndOrder.error.message);
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Terjadi kesalahan");
+    } finally {
+      toggleShowOrderDetails(false);
+      setIsLoading(false);
+    }
+  }
 
   return (
     <AlertDialog open={showOrderDetails} onOpenChange={toggleShowOrderDetails}>
@@ -89,16 +130,36 @@ export default function OrderDetailDialog({
                     </p>
                     <p>Rp {calculateTotalPrice(orderItems)}</p>
                   </div>
+
+                  <div className="space-y-1">
+                    <p>
+                      <strong>Metode Pembayaran</strong>
+                    </p>
+                    <RadioGroup defaultValue="option-one">
+                      {Object.values(PaymentMethod).map((method, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <RadioGroupItem value={method} id={method} />
+                          <Label htmlFor={method}>{method}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
                 </div>
               </div>
             </AlertDialogDescription>
             <AlertDialogFooter className="px-6 pb-6 sm:justify-end">
               <AlertDialogCancel asChild>
-                <Button variant="outline">Batal</Button>
+                <Button disabled={isLoading} variant="outline">
+                  Batal
+                </Button>
               </AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmOrder} type="button">
-                Lanjutkan
-              </AlertDialogAction>
+              <Button
+                onClick={handleConfirmOrder}
+                disabled={isLoading}
+                type="button"
+              >
+                {isLoading ? "Loading . . ." : "Konfirmasi"}
+              </Button>
             </AlertDialogFooter>
           </ScrollArea>
         </AlertDialogHeader>

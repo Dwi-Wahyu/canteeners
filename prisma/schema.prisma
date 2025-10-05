@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -23,18 +23,14 @@ model User {
 
   shop_owned Shop?
 
-  // relasi ke Orders (sebagai Customer)
-  orders Order[] @relation("CustomerOrders")
+  orders Order[]
 
-  // relasi ke Messages (bisa Customer atau ShopOwner)
   messages Message[]
 
-  // relasi ke Conversations (sebagai Customer)
-  conversationsAsCustomer Conversation[] @relation("CustomerConversations")
+  conversations ConversationParticipant[]
 
-  // relasi ke Conversations (sebagai ShopOwner)
-  conversationsAsShopOwner Conversation[] @relation("ShopOwnerConversations")
-
+  @@index([role])
+  @@index([last_login])
   @@map("users")
 }
 
@@ -61,12 +57,46 @@ model Shop {
   canteen     Canteen @relation(fields: [canteen_id], references: [id])
   canteen_id  Int
 
+  status           ShopStatus @default(ACTIVE)
+  suspended_reason String?
+
   products Product[]
   orders   Order[]
   owner    User      @relation(fields: [owner_id], references: [id])
   owner_id String    @unique
 
+  payments Payment[]
+
+  @@index([canteen_id])
+  @@index([name])
   @@map("shops")
+}
+
+enum ShopStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  method           PaymentMethod
+  qr_url           String?
+  account_number   String?
+  note             String? // bisa berupa nama akun dan bank
+  additional_price Float?
+
+  shop    Shop   @relation(fields: [shop_id], references: [id])
+  shop_id String
+
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  QRIS
+  BANK_TRANSFER
+  CASH
 }
 
 model Product {
@@ -79,35 +109,32 @@ model Product {
   shop_id     String
   order_items OrderItem[]
 
+  @@index([name])
+  @@index([shop_id])
   @@map("products")
 }
 
 model Conversation {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  customer    User   @relation("CustomerConversations", fields: [customer_id], references: [id])
-  customer_id String
-
-  shop_owner    User   @relation("ShopOwnerConversations", fields: [shop_owner_id], references: [id])
-  shop_owner_id String
-
-  orders ConversationOrder[]
+  participants ConversationParticipant[]
 
   messages Message[]
 
   @@map("conversations")
 }
 
-model ConversationOrder {
+model ConversationParticipant {
   conversation    Conversation @relation(fields: [conversation_id], references: [id])
-  conversation_id Int
-  order           Order        @relation(fields: [order_id], references: [id])
-  order_id        Int
+  conversation_id String
+  user            User         @relation(fields: [user_id], references: [id])
+  user_id         String
 
-  @@id([conversation_id, order_id])
-  @@map("conversation_orders")
+  @@id([conversation_id, user_id])
+  @@index([user_id])
+  @@map("conversation_participants")
 }
 
 model Message {
@@ -117,18 +144,25 @@ model Message {
   sender_id  String
 
   conversation    Conversation @relation(fields: [conversation_id], references: [id])
-  conversation_id Int
+  conversation_id String
 
   content   String?
   image_url String?
   type      MessageType @default(TEXT)
+  is_read   Boolean     @default(false)
 
+  order    Order? @relation(fields: [order_id], references: [id])
+  order_id Int?
+
+  @@index([conversation_id])
+  @@index([sender_id])
   @@map("messages")
 }
 
 enum MessageType {
   PAYMENT_PROOF
   SYSTEM
+  ORDER
   TEXT
 }
 
@@ -137,7 +171,7 @@ model Order {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  customer    User   @relation(name: "CustomerOrders", fields: [customer_id], references: [id])
+  customer    User   @relation(fields: [customer_id], references: [id])
   customer_id String
 
   shop              Shop    @relation(fields: [shop_id], references: [id])
@@ -147,21 +181,28 @@ model Order {
 
   status OrderStatus
 
-  conversations ConversationOrder[]
-  order_items   OrderItem[]
+  message        Message[]
+  payment_method PaymentMethod
 
+  order_items OrderItem[]
+
+  @@index([customer_id])
+  @@index([shop_id])
+  @@index([status])
+  @@index([created_at])
   @@map("orders")
 }
 
 model OrderItem {
   id         Int     @id @default(autoincrement())
-  order      Order   @relation(fields: [order_id], references: [id])
+  order      Order   @relation(onDelete: Cascade, fields: [order_id], references: [id])
   order_id   Int
   product    Product @relation(fields: [product_id], references: [id])
   product_id Int
   quantity   Int
   price      Float
 
+  @@index([order_id])
   @@map("order_items")
 }
 

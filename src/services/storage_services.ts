@@ -34,7 +34,7 @@ export class LocalStorageService implements StorageService {
    */
   public async uploadImage(
     file: File,
-    filename: string,
+    filename: string | undefined | null,
     subfolder: string
   ): Promise<string> {
     const allowedExtensions = [
@@ -51,10 +51,11 @@ export class LocalStorageService implements StorageService {
       throw new Error(`Format gambar tidak didukung: ${fileExtension}`);
     }
 
-    const sanitizedIdentifier = sanitizeFileNamePart(filename);
+    // const sanitizedIdentifier = filename ? sanitizeFileNamePart(filename) : "";
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
+    // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    // const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
+    const uniqueFileName = `${uuidv4()}${fileExtension}`;
 
     const targetDir = join(process.cwd(), UPLOAD_BASE_DIR, subfolder);
     ensureDirExists(targetDir);
@@ -109,10 +110,11 @@ export class LocalStorageService implements StorageService {
       );
     }
 
-    const sanitizedIdentifier = sanitizeFileNamePart(filename);
+    // const sanitizedIdentifier = sanitizeFileNamePart(filename);
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
+    // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const uniqueFileName = `${uuidv4()}${fileExtension}`;
+    // const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
 
     const targetDir = join(process.cwd(), UPLOAD_BASE_DIR, subfolder);
     ensureDirExists(targetDir);
