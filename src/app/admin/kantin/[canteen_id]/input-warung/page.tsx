@@ -2,7 +2,7 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { Skeleton } from "@/components/ui/skeleton";
 import { prisma } from "@/lib/prisma";
 import { Suspense } from "react";
-import InputWarungForm from "./input-warung-form";
+import InputShopForm from "./input-shop-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default async function InputWarungPage({
@@ -47,7 +47,7 @@ export default async function InputWarungPage({
             </h1>
           </CardHeader>
           <CardContent>
-            <InputWarungForm canteen={canteen} shopOwners={shopOwners} />
+            <InputShopForm canteen={canteen} shopOwners={shopOwners} />
           </CardContent>
         </Card>
       </div>

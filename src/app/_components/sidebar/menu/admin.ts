@@ -41,7 +41,7 @@ export const adminMenu = {
       icon: IconUserShield,
     },
     {
-      title: "Pemilik Kios",
+      title: "Pemilik Warung",
       url: "/admin/users/shop-owner",
       icon: IconUserShield,
     },

@@ -25,10 +25,10 @@ export default async function DashboardPelanggan() {
         {canteens.map((canteen, idx) => (
           <Link
             href={"/kantin/" + canteen.id}
-            className="group relative block h-60"
+            className="group relative block"
             key={idx}
           >
-            <div className="w-full overflow-hidden absolute z-10 left-0 top-0 h-full rounded-xl">
+            <div className="w-full overflow-hidden relative z-10 left-0 top-0 h-full rounded-xl">
               <img
                 src={"/uploads/canteens/" + canteen.image_url}
                 alt=""

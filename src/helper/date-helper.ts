@@ -21,6 +21,8 @@ export const formatDateWithoutYear = (dateString: Date | null | undefined) => {
   return new Date(dateString).toLocaleDateString("id-ID", options);
 };
 
-export function formatDateToYYYYMMDD(date: Date) {
-  return format(new Date(date), "yyyy-MM-dd");
+export function formatDateToYYYYMMDD(dateString: Date | null | undefined) {
+  if (!dateString) return "";
+
+  return format(new Date(dateString), "yyyy-MM-dd");
 }
