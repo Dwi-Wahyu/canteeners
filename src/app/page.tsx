@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { auth } from "@/config/auth";
 import { prisma } from "@/lib/prisma";
 import { UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { redirect } from "next/navigation";
 
 const TestimonialCard = ({
   name,
@@ -35,13 +36,23 @@ export default async function LandingPage() {
     },
   });
 
+  const session = await auth();
+
+  if (session && session.user.role === "CUSTOMER") {
+    redirect("/dashboard-pelanggan");
+  }
+
+  if (session && session.user.role === "SHOP_OWNER") {
+    redirect("/dashboard-warung");
+  }
+
   return (
     <div>
       <header className="py-4 px-4 sm:px-8 bg-secondary shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-2 items-center">
             <UtensilsCrossed className="w-6 h-6" />
-            <h1 className="text-2xl font-bold text-primary">Canteeners</h1>
+            <h1 className="text-2xl font-bold">Canteeners</h1>
           </div>
           <div className="hidden md:flex space-x-6 text-foreground">
             <a href="#hero" className="hover:text-primary transition">
@@ -66,10 +77,6 @@ export default async function LandingPage() {
           className="py-20 min-h-screen md:py-32 text-center border-b"
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <span className="inline-block bg-red-500 text-background text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">
-              Universitas Hasanuddin
-            </span>
-
             <h2 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-4 leading-tight">
               <span className="text-primary">Kantin Naik Level</span>
             </h2>

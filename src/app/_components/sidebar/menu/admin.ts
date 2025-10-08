@@ -1,9 +1,8 @@
 import {
-  IconBuildingWarehouse,
-  IconChartDots3,
-  IconHeartHandshake,
+  IconBriefcase,
   IconMessageUser,
   IconReceiptDollar,
+  IconTruckLoading,
   IconUserCog,
   IconUserShield,
 } from "@tabler/icons-react";
@@ -36,14 +35,14 @@ export const adminMenu = {
   navProject: [],
   navUser: [
     {
-      title: "Admin",
-      url: "/admin/users/admin",
-      icon: IconUserShield,
+      title: "Kurir",
+      url: "/admin/users/kurir",
+      icon: IconTruckLoading,
     },
     {
       title: "Pemilik Warung",
-      url: "/admin/users/shop-owner",
-      icon: IconUserShield,
+      url: "/admin/users/pemilik-warung",
+      icon: IconBriefcase,
     },
     {
       title: "Pelanggan",

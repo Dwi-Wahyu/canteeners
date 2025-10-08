@@ -20,6 +20,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "nextjs-toploader/app";
 import { PasswordInput } from "@/components/password-input";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
 import { getUserRoleByUsernameAction } from "../admin/users/actions";
 
 export default function LoginForm() {
@@ -72,81 +73,85 @@ export default function LoginForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center text-center">
-            <h1 className="text-2xl font-bold">Selamat Datang</h1>
-            <p className="text-muted-foreground text-balance">
-              Masukkan Username Dan Password
-            </p>
-          </div>
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input
-                    className="px-4 py-2"
-                    placeholder="Username Anda"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex justify-between items-center">
-                  <FormLabel>Password</FormLabel>
+    <Card>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col items-center text-center">
+                <h1 className="text-2xl font-bold">Selamat Datang</h1>
+                <p className="text-muted-foreground text-balance">
+                  Masukkan Username Dan Password
+                </p>
+              </div>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="px-4 py-2"
+                        placeholder="Username Anda"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel>Password</FormLabel>
 
+                      <Link
+                        href={"/lupa-password"}
+                        className="text-sm underline underline-offset-2 text-blue-400"
+                      >
+                        Lupa Password
+                      </Link>
+                    </div>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="Password Anda"
+                        className="px-4 py-2"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex flex-col gap-2 items-center mb-3">
+                <Button
+                  disabled={form.formState.isSubmitting}
+                  type="submit"
+                  className="w-full bg-gradient-to-b from-primary to-primary/70"
+                  size={"lg"}
+                >
+                  {form.formState.isSubmitting ? "Loading..." : "Login"}
+                </Button>
+
+                <div className="flex text-sm justify-center gap-1 mt-2 items-center">
+                  <h1>Atau</h1>
                   <Link
-                    href={"/lupa-password"}
-                    className="text-sm underline underline-offset-2 text-blue-400"
+                    href={"/auth/signup"}
+                    className=" underline underline-offset-2 text-blue-400"
                   >
-                    Lupa Password
+                    Daftar Sebagai Pelanggan
                   </Link>
                 </div>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="Password Anda"
-                    className="px-4 py-2"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex flex-col gap-2 items-center mb-3">
-            <Button
-              disabled={form.formState.isSubmitting}
-              type="submit"
-              className="w-full bg-gradient-to-b from-primary to-primary/70"
-              size={"lg"}
-            >
-              {form.formState.isSubmitting ? "Loading..." : "Login"}
-            </Button>
-
-            <div className="flex text-sm justify-center gap-1 mt-2 items-center">
-              <h1>Atau</h1>
-              <Link
-                href={"/auth/signup"}
-                className=" underline underline-offset-2 text-blue-400"
-              >
-                Daftar Sebagai Pelanggan
-              </Link>
+              </div>
             </div>
-          </div>
-        </div>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

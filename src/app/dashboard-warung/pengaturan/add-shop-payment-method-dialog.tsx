@@ -47,7 +47,7 @@ export default function AddShopPaymentMethodDialog({
   const form = useForm<InputPaymentSchemaType>({
     resolver: zodResolver(InputPaymentSchema),
     defaultValues: {
-      shop_id,
+      method: "QRIS",
     },
   });
 

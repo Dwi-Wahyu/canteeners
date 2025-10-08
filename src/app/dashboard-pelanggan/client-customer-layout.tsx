@@ -10,7 +10,7 @@ export default function ClientCustomerLayout({
     <div className="w-full relative min-h-svh pt-12 pb-16">
       <CustomerTopbar />
 
-      <div className="p-5">{children}</div>
+      <div className="p-5 pt-6">{children}</div>
 
       <CustomerBottombar />
     </div>

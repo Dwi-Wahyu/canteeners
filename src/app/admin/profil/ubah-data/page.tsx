@@ -1,6 +1,5 @@
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { auth } from "@/config/auth";
-import { IconUserEdit } from "@tabler/icons-react";
 import { ProfileEditForm } from "./profile-edit-form";
 import NotFoundResource from "@/app/_components/not-found-resource";
 import { getUserById } from "../../users/queries";

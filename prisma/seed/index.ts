@@ -3,7 +3,7 @@ import { seedUsers } from "./seed-users";
 import { seedCanteens } from "./seed-canteens";
 
 async function main() {
-  await seedUsers();
+  // await seedUsers();
   await seedCanteens();
 }
 

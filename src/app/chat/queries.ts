@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function getConversationMessages(
   user_id: string,
-  conversation_id: number
+  conversation_id: string
 ) {
   return await prisma.conversation.findFirst({
     where: {

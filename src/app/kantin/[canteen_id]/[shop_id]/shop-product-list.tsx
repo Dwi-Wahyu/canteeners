@@ -70,21 +70,15 @@ export default function ShopProductList({
   };
 
   useEffect(() => {
-    if (session.data) {
-      setIsLoading(true);
-      getAllShopProducts(shop.id, productName).then((products) => {
-        setProducts(products);
-        setIsLoading(false);
-      });
-    }
+    setIsLoading(true);
+    getAllShopProducts(shop.id, productName).then((products) => {
+      setProducts(products);
+      setIsLoading(false);
+    });
   }, [session.data, productName]);
 
   if (session.status === "loading") {
     return <LoadingUserSessionPage />;
-  }
-
-  if (!session.data) {
-    return <UnauthorizedPage />;
   }
 
   function clickToggleOrdering() {

@@ -1,12 +1,5 @@
 import { auth } from "@/config/auth";
 import UnauthorizedPage from "../_components/unauthorized-page";
-import DashboardCard from "../_components/dashboard-card";
-
-import { getUserSum } from "./users/queries";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/prisma";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -14,8 +7,6 @@ export default async function DashboardPage() {
   if (!session) {
     return <UnauthorizedPage />;
   }
-
-  const userSum = await getUserSum();
 
   return (
     <div>

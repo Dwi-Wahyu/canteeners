@@ -20,9 +20,7 @@ export async function InputShop(
 ): Promise<ServerActionReturn<void>> {
   // Ambil data payments dan pisahkan dari data Shop
   const paymentsData = payload.payments.map((p) => {
-    // Hapus shop_id karena akan otomatis diisi oleh Prisma saat create.
-    // Juga hapus field string kosong yang tidak relevan agar sesuai dengan model Prisma (String?)
-    const { shop_id, ...rest } = p;
+    const { ...rest } = p;
 
     const paymentItem: Prisma.PaymentCreateWithoutShopInput = {
       method: rest.method,

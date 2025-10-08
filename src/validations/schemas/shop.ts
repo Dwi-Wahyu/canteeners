@@ -4,8 +4,6 @@ export const PaymentMethodEnum = z.enum(["QRIS", "BANK_TRANSFER", "CASH"]);
 
 export const InputPaymentSchema = z
   .object({
-    shop_id: z.string().min(1, { message: "ID Toko (shop_id) wajib diisi." }),
-
     method: PaymentMethodEnum,
 
     qr_url: z.string().optional().or(z.literal("")), // Menerima string atau string kosong

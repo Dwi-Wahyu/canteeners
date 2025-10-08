@@ -10,27 +10,27 @@ export default function CustomerBottombar() {
   return (
     <div className="w-full bg-secondary p-4 pb-2 fixed bottom-0 left-0 z-50 flex justify-evenly">
       <Link
-        href={"/dashboard-warung"}
+        href={"/dashboard-pelanggan"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung" && "border-b-[3px]"
+          pathname === "/dashboard-pelanggan" && "border-b-[3px]"
         }`}
       >
         <Home />
       </Link>
 
       <Link
-        href={"/dashboard-warung/pesan"}
+        href={"/dashboard-pelanggan/chat"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/pesan" && "border-b-[3px]"
+          pathname === "/dashboard-pelanggan/chat" && "border-b-[3px]"
         }`}
       >
         <MessageCircle />
       </Link>
 
       <Link
-        href={"/dashboard-warung/pengaturan"}
+        href={"/dashboard-pelanggan/pengaturan"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/pengaturan" && "border-b-[3px]"
+          pathname === "/dashboard-pelanggan/pengaturan" && "border-b-[3px]"
         }`}
       >
         <Settings />

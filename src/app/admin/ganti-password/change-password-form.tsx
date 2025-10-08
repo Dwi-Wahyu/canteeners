@@ -25,7 +25,7 @@ import { IconLoader, IconLockPassword } from "@tabler/icons-react";
 import {
   ChangePasswordSchema,
   ChangePasswordSchemaType,
-} from "@/validations/schemas/change-password";
+} from "@/validations/schemas/auth";
 import { toast } from "sonner";
 import { changePassword } from "./actions";
 import { NavigationButton } from "../../_components/navigation-button";

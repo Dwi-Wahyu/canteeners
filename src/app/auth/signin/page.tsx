@@ -8,32 +8,18 @@ export default async function LoginPage() {
 
   if (!session) {
     return (
-      <div className="flex flex-col md:flex-row">
-        <div className="bg-card md:w-[35vw] w-full p-6 h-svh flex flex-col justify-between">
-          <div className="flex gap-2 items-center">
-            <UtensilsCrossed className="w-11 h-11" />
-
-            <div>
-              <h1 className="text-xl font-bold">CANTEENERS</h1>
-              <h1 className="text-sm text-muted-foreground">
-                Kantin Naik Level
-              </h1>
+      <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <a
+            href="#"
+            className="flex items-center gap-2 self-center font-medium"
+          >
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <UtensilsCrossed className="size-4" />
             </div>
-          </div>
-
+            Canteneers.
+          </a>
           <LoginForm />
-
-          <h1 className="flex gap-1 items-center text-muted-foreground text-xs justify-center">
-            Copyright
-            <Copyright className="w-4 h-4" />
-            SISFO UH 2025
-          </h1>
-        </div>
-
-        <div className="grow hidden bg-gradient-to-b from-primary to-background md:flex justify-center items-center">
-          <div className="p-4 bg-background rounded-xl">
-            <img src="/login-logo.svg" className="w-[35vw]" alt="" />
-          </div>
         </div>
       </div>
     );
@@ -44,32 +30,18 @@ export default async function LoginPage() {
 
   if (now > expires) {
     return (
-      <div className="flex flex-col md:flex-row">
-        <div className="bg-card md:w-[35vw] w-full p-6 h-svh flex flex-col justify-between">
-          <div className="flex gap-2 items-center">
-            <UtensilsCrossed className="w-11 h-11" />
-
-            <div>
-              <h1 className="text-xl font-bold">CANTEENERS</h1>
-              <h1 className="text-sm text-muted-foreground">
-                Kantin Naik Level
-              </h1>
+      <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <a
+            href="#"
+            className="flex items-center gap-2 self-center font-medium"
+          >
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <UtensilsCrossed className="size-4" />
             </div>
-          </div>
-
+            Canteneers.
+          </a>
           <LoginForm />
-
-          <h1 className="flex gap-1 items-center text-muted-foreground text-xs justify-center">
-            Copyright
-            <Copyright className="w-4 h-4" />
-            SISFO UH 2025
-          </h1>
-        </div>
-
-        <div className="grow hidden bg-gradient-to-b from-primary to-background md:flex justify-center items-center">
-          <div className="p-4 bg-background rounded-xl">
-            <img src="/login-logo.svg" className="w-[35vw]" alt="" />
-          </div>
         </div>
       </div>
     );

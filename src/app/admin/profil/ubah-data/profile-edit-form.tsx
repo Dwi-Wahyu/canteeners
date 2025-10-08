@@ -30,7 +30,8 @@ import { FileUploadImage } from "@/app/_components/file-upload-image";
 import { NavigationButton } from "@/app/_components/navigation-button";
 import { useRouter } from "nextjs-toploader/app";
 import { getUserById } from "../../users/queries";
-import { updateUser } from "../../users/actions";
+// import { getUserById } from "../../users/queries";
+// import { updateUser } from "../../users/actions";
 
 interface UserEditFormProps {
   initialData: NonNullable<Awaited<ReturnType<typeof getUserById>>>;
@@ -48,23 +49,20 @@ export function ProfileEditForm({ initialData }: UserEditFormProps) {
       id: initialData.id,
       name: initialData.name,
       username: initialData.username,
-      email: initialData.email ?? "",
-      phone_number: initialData.phone_number ?? "",
       avatar: initialData.avatar ?? null,
     },
   });
 
   const onSubmit = async (values: UpdateUserSchemaType) => {
-    setIsSubmitting(true);
-    const result = await updateUser(values);
-    setIsSubmitting(false);
-
-    if (result.success) {
-      toast.success("Profil Berhasil Diperbarui");
-      router.push("/admin/profil");
-    } else {
-      toast.error(result.error.message);
-    }
+    // setIsSubmitting(true);
+    // const result = await updateUser(values);
+    // setIsSubmitting(false);
+    // if (result.success) {
+    //   toast.success("Profil Berhasil Diperbarui");
+    //   router.push("/admin/profil");
+    // } else {
+    //   toast.error(result.error.message);
+    // }
   };
 
   const ADMIN_URL = process.env.NEXT_PUBLIC_ADMIN_URL;
