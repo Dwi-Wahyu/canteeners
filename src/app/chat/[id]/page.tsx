@@ -29,14 +29,7 @@ export default async function ConversationPage({
 
   const { id } = await params;
 
-  if (isNaN(parseInt(id))) {
-    return <NotFoundResource />;
-  }
-
-  const conversation = await getConversationMessages(
-    session.user.id,
-    parseInt(id)
-  );
+  const conversation = await getConversationMessages(session.user.id, id);
 
   if (!conversation) {
     return <NotFoundResource />;

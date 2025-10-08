@@ -36,7 +36,7 @@ export async function createUser(
         name: payload.name,
         username: payload.username,
         password: hashSync(payload.password, 10),
-        role: "workers",
+        role: "SHOP_OWNER",
         avatar: payload.avatar,
       },
     });
@@ -155,11 +155,8 @@ export async function deleteUser(
       return errorResponse("Workers tidak ditemukan.", "NOT_FOUND");
     }
 
-    const update = await prisma.user.update({
-      where: { id: id },
-      data: {
-        deleted_at: new Date(),
-      },
+    const update = await prisma.user.delete({
+      where: { id },
     });
 
     if (
@@ -186,7 +183,7 @@ export async function deleteUser(
       }
     }
 
-    revalidatePath("/admin/employee");
+    revalidatePath("/admin/users");
 
     return successResponse(
       undefined,

@@ -35,7 +35,7 @@ import { NavigationButton } from "@/app/_components/navigation-button";
 import { InputShop, uploadShopImage } from "../../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Gunakan Card untuk tampilan yang lebih rapi
+import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Gunakan Card untuk tampilan yang lebih rapi
 
 // Ambil nilai enum dari Zod
 const paymentMethodOptions = PaymentMethodEnum.options.map((method) => ({
@@ -62,7 +62,6 @@ export default function InputShopForm({
       // Default setidaknya ada satu metode pembayaran CASH
       payments: [
         {
-          shop_id: "", // Akan diisi saat submit, atau bisa di-refine di Zod jika perlu
           method: "CASH",
           qr_url: "",
           account_number: "",
@@ -97,7 +96,6 @@ export default function InputShopForm({
       payments: payload.payments.map((p) => {
         const payment: Partial<InputPaymentSchemaType> = {
           ...p,
-          shop_id: "", // shop_id akan diisi di action
         };
 
         // Hapus qr_url jika methodnya bukan QRIS
@@ -138,7 +136,11 @@ export default function InputShopForm({
       return;
     }
 
+    console.log(payload);
+
     const result = await InputShop(finalPayload);
+
+    console.log(result);
 
     if (result.success) {
       toast.success(result.message);
@@ -155,8 +157,7 @@ export default function InputShopForm({
 
   const addPaymentMethod = () => {
     append({
-      shop_id: "", // placeholder
-      method: "CASH", // default method saat menambah
+      method: "CASH",
       qr_url: "",
       account_number: "",
       note: "",
@@ -412,11 +413,11 @@ export default function InputShopForm({
           <Button disabled={form.formState.isSubmitting} type="submit">
             {form.formState.isSubmitting ? (
               <>
-                <Loader className="animate-spin mr-2 h-4 w-4" /> Loading
+                <Loader className="animate-spin" /> Loading
               </>
             ) : (
               <>
-                <Save className="mr-2 h-4 w-4" />
+                <Save />
                 Simpan
               </>
             )}

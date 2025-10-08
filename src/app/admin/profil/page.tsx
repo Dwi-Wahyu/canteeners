@@ -61,7 +61,7 @@ export default async function ProfilePage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 text-sm">
-            <div className="p-4 border rounded-lg">
+            {/* <div className="p-4 border rounded-lg">
               <p className="font-semibold">Email</p>
               {user_details.email ? (
                 <p>{user_details.email}</p>
@@ -79,7 +79,7 @@ export default async function ProfilePage() {
                   Belum menetapkan nomor HP
                 </p>
               )}
-            </div>
+            </div> */}
 
             <div className="p-4 border rounded-lg">
               <p className="font-semibold">Akun Dibuat Pada</p>

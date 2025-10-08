@@ -9,10 +9,9 @@ import { ChevronLeft } from "lucide-react";
 export default async function LupaPasswordPage() {
   const allAdmin = await prisma.user.findMany({
     where: {
-      role: "admin",
+      role: "ADMIN",
     },
     select: {
-      phone_number: true,
       name: true,
       avatar: true,
     },
@@ -31,7 +30,7 @@ export default async function LupaPasswordPage() {
       <div className="flex gap-4 my-2">
         {allAdmin.length > 0 ? (
           <div className="flex gap-4">
-            {/* {allAdmin.map((admin, idx) => (
+            {allAdmin.map((admin, idx) => (
               <Card key={idx}>
                 <CardContent className="flex flex-col gap-1 items-center justify-center">
                   <Avatar className="size-14">
@@ -43,12 +42,9 @@ export default async function LupaPasswordPage() {
                   </Avatar>
 
                   <h1 className="font-semibold text-lg mt-1">{admin.name}</h1>
-                  <h1 className="text-muted-foreground">
-                    {admin.phone_number ?? "-"}
-                  </h1>
                 </CardContent>
               </Card>
-            ))} */}
+            ))}
           </div>
         ) : null}
       </div>

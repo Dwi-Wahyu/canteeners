@@ -1,1 +1,3 @@
-seed dlu semua data mitra dan project dari excel supaya gampang visualisasi
+- permantap lagi query datatable di /users
+
+- buat dlu fungsionalitas keranjang pake global state

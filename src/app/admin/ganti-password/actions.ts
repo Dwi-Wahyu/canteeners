@@ -3,10 +3,10 @@
 import { auth } from "@/config/auth";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
-import { ChangePasswordSchemaType } from "@/validations/schemas/change-password";
 import { ServerActionReturn } from "@/types/server-action";
 import { PrismaClientKnownRequestError } from "../../generated/prisma/runtime/library";
 import { compare, genSalt, hash } from "bcryptjs";
+import { ChangePasswordSchemaType } from "@/validations/schemas/auth";
 
 export async function changePassword(
   payload: ChangePasswordSchemaType

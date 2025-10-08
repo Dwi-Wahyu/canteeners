@@ -24,7 +24,7 @@ export default async function DashboardPelanggan() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
         {canteens.map((canteen, idx) => (
           <Link
-            href={"/kantin/" + canteen.id}
+            href={"/dashboard-pelanggan/kantin/" + canteen.id}
             className="group relative block"
             key={idx}
           >

@@ -30,7 +30,7 @@ export default function OwnerBottomBar() {
       <Link
         href={"/chat"}
         className={` border-b-foreground pb-1 ${
-          pathname === "/dashboard-warung/pesan" && "border-b-[3px]"
+          pathname === "/chat" && "border-b-[3px]"
         }`}
       >
         <MessageCircle />

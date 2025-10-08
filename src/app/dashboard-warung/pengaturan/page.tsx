@@ -2,7 +2,6 @@
 
 import LoadingUserSessionPage from "@/app/_components/loading-user-session-page";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
-import { getUserProfile } from "@/app/admin/users/queries-action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { IconDoorExit, IconEdit, IconPlus } from "@tabler/icons-react";
@@ -12,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
 import AddShopPaymentMethodDialog from "./add-shop-payment-method-dialog";
+import { getUserProfile } from "@/app/admin/users/queries";
 
 type UserProfile = Awaited<ReturnType<typeof getUserProfile>>;
 

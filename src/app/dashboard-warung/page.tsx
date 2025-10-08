@@ -49,10 +49,6 @@ export default async function DashboardWarungAnda() {
           value="23"
         />
       </div>
-
-      <div>
-        <h1>Manajemen Produk</h1>
-      </div>
     </div>
   );
 }

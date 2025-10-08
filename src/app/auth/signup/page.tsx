@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd, UtensilsCrossed } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
 import { SignupForm } from "../signup-form";
 
 export default function SignupPage() {
