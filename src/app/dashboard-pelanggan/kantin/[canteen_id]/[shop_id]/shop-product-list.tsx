@@ -22,13 +22,14 @@ import { CircleAlertIcon } from "lucide-react";
 import ProductCard from "./product-card";
 import { OrderItemType, ProductsType } from "./type";
 import OrderDetailDialog from "./order-detail-dialog";
+import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 
 export default function ShopProductList({
   shop,
   isLoggedIn,
   customerId,
 }: {
-  shop: Shop;
+  shop: NonNullable<Awaited<ReturnType<typeof getShopDataWithPayment>>>;
   isLoggedIn: boolean;
   customerId: string;
 }) {
@@ -182,10 +183,12 @@ export default function ShopProductList({
           {products.map((product) => (
             <ProductCard
               product={product}
-              ordering={ordering}
               shopId={shop.id}
               shopName={shop.name}
               key={product.id}
+              availablePaymentMethod={shop.payments.map(
+                (payment) => payment.method
+              )}
             />
           ))}
         </div>

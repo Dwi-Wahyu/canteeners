@@ -20,8 +20,7 @@ import {
 } from "@/validations/schemas/shop";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form"; // Import useFieldArray
-
+import { useForm, useFieldArray } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -30,14 +29,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Loader, Save, Plus, Trash2 } from "lucide-react"; // Import ikon
+import { Loader, Save, Plus, Trash2 } from "lucide-react";
 import { NavigationButton } from "@/app/_components/navigation-button";
 import { InputShop, uploadShopImage } from "../../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { toast } from "sonner";
-import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Gunakan Card untuk tampilan yang lebih rapi
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
-// Ambil nilai enum dari Zod
 const paymentMethodOptions = PaymentMethodEnum.options.map((method) => ({
   label: method.replace("_", " "),
   value: method,
@@ -125,10 +123,7 @@ export default function InputShopForm({
     };
 
     if (files.length > 0) {
-      finalPayload.image_url = await uploadShopImage(
-        files[0],
-        finalPayload.name
-      );
+      finalPayload.image_url = await uploadShopImage(files[0]);
     }
 
     if (finalPayload.image_url === "") {

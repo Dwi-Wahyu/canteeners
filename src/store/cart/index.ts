@@ -25,7 +25,8 @@ const calculateTotalsAndGrouping = (items: CartItem[]) => {
   // Mengelompokkan item per toko (Record<string, ShopGroup> adalah cara TypeScript untuk objek dengan key string)
   const groupedItems: Record<string, ShopGroup> = items.reduce(
     (groups, item) => {
-      const { shopId, shopName, price, quantity } = item;
+      const { shopId, shopName, price, quantity, availablePaymentMethod } =
+        item;
       const subTotal = price * quantity;
 
       if (!groups[shopId]) {
@@ -35,6 +36,7 @@ const calculateTotalsAndGrouping = (items: CartItem[]) => {
           items: [],
           shopTotalQuantity: 0,
           shopTotalPrice: 0.0,
+          availablePaymentMethod,
         };
       }
 
@@ -53,6 +55,27 @@ const calculateTotalsAndGrouping = (items: CartItem[]) => {
 // Buat Store
 export const useCartStore = create<CartStore>((set, get) => ({
   ...initialCartState,
+
+  updateItemDetails: (productId, shopId, details) =>
+    set((state) => {
+      const updatedItems = state.items.map((item) => {
+        if (item.productId === productId && item.shopId === shopId) {
+          // Gunakan spread operator untuk menggabungkan detail yang diupdate
+          return { ...item, ...details };
+        }
+        return item;
+      });
+
+      // Lakukan perhitungan ulang (penting jika Anda mengizinkan price diubah, namun tetap aman dilakukan)
+      const { totalQuantity, totalPrice } =
+        calculateTotalsAndGrouping(updatedItems);
+
+      return {
+        items: updatedItems,
+        totalQuantity,
+        totalPrice,
+      };
+    }),
 
   // Derived State / Selector
   getGroupedItems: () => {
