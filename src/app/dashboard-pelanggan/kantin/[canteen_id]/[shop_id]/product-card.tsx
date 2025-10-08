@@ -1,4 +1,4 @@
-import { Product } from "@/app/generated/prisma";
+import { PaymentMethod, Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,14 +14,14 @@ import { toast } from "sonner";
 
 export default function ProductCard({
   product,
-  ordering,
   shopId,
   shopName,
+  availablePaymentMethod,
 }: {
   product: Product;
-  ordering: boolean;
   shopId: string;
   shopName: string;
+  availablePaymentMethod: PaymentMethod[];
 }) {
   const [qty, setQty] = useState(0);
 
@@ -45,6 +45,7 @@ export default function ProductCard({
       quantity: qty,
       shopId,
       shopName,
+      availablePaymentMethod,
     });
 
     toast.success(`Menambahkan ${product.name} x${qty} ke keranjang`);

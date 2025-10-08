@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { IconChevronLeft } from "@tabler/icons-react";
 import { ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { getCanteenById } from "../queries";
 import { useQuery } from "@tanstack/react-query";
+import BackButton from "@/app/_components/back-button";
 
 export default function CanteenPageClient({ id }: { id: number }) {
   const { data, isLoading, isError, error } = useQuery({
@@ -19,13 +19,7 @@ export default function CanteenPageClient({ id }: { id: number }) {
   return (
     <div className="container mx-auto max-w-5xl w-full">
       <div className="mb-4 flex justify-between items-center">
-        <Link
-          href={"/dashboard-pelanggan"}
-          className="flex gap-2 items-center text-sm text-muted-foreground"
-        >
-          <IconChevronLeft className="w-4 h-4 mb-1" />
-          Kembali
-        </Link>
+        <BackButton />
 
         <Button size="icon">
           <Link href={"/dashboard-pelanggan/keranjang"}>

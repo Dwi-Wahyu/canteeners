@@ -14,6 +14,8 @@
 
 users-seeded-in-server.md
 
+/script.md
+
 # testing
 /coverage
 
@@ -27,6 +29,13 @@ secret.md
 
 /public/uploads/shops/*
 !/public/uploads/shops/.gitkeep
+
+/public/uploads/shop-qrcode/*
+!/public/uploads/shop-qrcode/.gitkeep
+
+/public/uploads/table-qrcode/*
+!/public/uploads/table-qrcode/.gitkeep
+
 
 /public/uploads/products/*
 !/public/uploads/products/.gitkeep

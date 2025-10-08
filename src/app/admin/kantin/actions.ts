@@ -5,12 +5,27 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage_services";
 import { ServerActionReturn } from "@/types/server-action";
-import { InputShopSchemaType } from "@/validations/schemas/shop";
+import {
+  InputShopSchemaType,
+  UpdateShopSchemaType,
+} from "@/validations/schemas/shop";
 
-export async function uploadShopImage(file: File, name: string) {
+export async function uploadShopImage(file: File) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(file, name, "shops");
+  const shopImageUrl = await storageService.uploadImage(file, "", "shops");
+
+  return shopImageUrl;
+}
+
+export async function uploadShopQRCode(file: File) {
+  const storageService = new LocalStorageService();
+
+  const shopImageUrl = await storageService.uploadImage(
+    file,
+    "",
+    "shop-qrcode"
+  );
 
   return shopImageUrl;
 }
@@ -64,7 +79,7 @@ export async function InputShop(
       `Berhasil input warung ${createdShop.name}`
     );
   } catch (error) {
-    console.error("Kesalahan saat InputShop:", error);
+    console.error("Kesalahan saat input warung:", error);
 
     // Penanganan kesalahan unik (seperti 'owner_id' yang @unique)
     if (

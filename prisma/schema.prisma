@@ -27,6 +27,8 @@ model User {
 
   messages Message[]
 
+  quick_chats QuickChat[]
+
   conversations ConversationParticipant[]
 
   @@index([role])
@@ -201,9 +203,17 @@ model OrderItem {
   product_id Int
   quantity   Int
   price      Float
+  note       String?
 
   @@index([order_id])
   @@map("order_items")
+}
+
+model QuickChat {
+  id      Int     @id @default(autoincrement())
+  message String
+  user    User?   @relation(fields: [user_id], references: [id])
+  user_id String?
 }
 
 enum OrderStatus {

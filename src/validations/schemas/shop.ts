@@ -59,3 +59,12 @@ export const InputShopSchema = z.object({
 });
 
 export type InputShopSchemaType = z.infer<typeof InputShopSchema>;
+
+export const UpdateShopSchema = z.object({
+  id: z.string().min(1, { message: "ID shop harus diisi." }),
+  name: z.string().min(1, { message: "Nama toko harus diisi." }),
+  description: z.string().optional(),
+  image_url: z.string(),
+});
+
+export type UpdateShopSchemaType = z.infer<typeof UpdateShopSchema>;

@@ -1,3 +1,7 @@
 - permantap lagi query datatable di /users
 
 - buat dlu fungsionalitas keranjang pake global state
+
+- selesaikan dlu keranjang baru fokus di chat pub sub (tinggal fix infinite loop untuk fitur add notes atau ubah qty)
+
+- fix nda perlu mi pake identifier (nama, username atau apapun) kalo upload image pake localStorage

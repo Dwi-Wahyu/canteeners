@@ -3,18 +3,13 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { ToggleDarkMode } from "@/components/toggle-darkmode";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { auth } from "@/config/auth";
-import {
-  formatDateToYYYYMMDD,
-  formatDateWithoutYear,
-} from "@/helper/date-helper";
+import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
-import { prisma } from "@/lib/prisma";
-import { IconSend } from "@tabler/icons-react";
 import { ChevronLeft, Image } from "lucide-react";
 import { getConversationMessages } from "../queries";
 import Link from "next/link";
+import ChatClient from "./chat-client";
 
 export default async function ConversationPage({
   params,
@@ -82,47 +77,7 @@ export default async function ConversationPage({
         </div>
       </div>
 
-      <div className="container h-full max-w-7xl mx-auto flex flex-col gap-4 relative">
-        {conversation.messages.map((message) => {
-          const isSender = message.sender_id === session.user.id;
-
-          return (
-            <div
-              key={message.id}
-              className={`flex flex-col gap-1 ${
-                isSender ? "items-end" : "items-start"
-              }`}
-            >
-              <div
-                className={`p-4 relative max-w-[80%] rounded-xl ${
-                  isSender
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                <p className="text-sm w-full break-words">{message.content}</p>
-              </div>
-
-              <h1 className="text-xs ml-1 text-muted-foreground">
-                {formatDateToYYYYMMDD(message.created_at)}{" "}
-                {formatToHour(message.created_at)}
-              </h1>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full ">
-        <div className="container max-w-7xl mx-auto flex gap-2 items-end py-4 px-5 md:px-0">
-          <Button size="lg">
-            <Image />
-          </Button>
-          <Textarea className="bg-secondary grow rounded-xl min-h-10 max-h-40" />
-          <Button size="lg">
-            <IconSend />
-          </Button>
-        </div>
-      </div>
+      <ChatClient conversation={conversation} sender_id={session.user.id} />
     </div>
   );
 }

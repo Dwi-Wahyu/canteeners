@@ -1,10 +1,9 @@
-import { prisma } from "@/lib/prisma";
 import ShopProductList from "./shop-product-list";
 import NotFoundResource from "@/app/_components/not-found-resource";
 import { auth } from "@/config/auth";
-import Link from "next/link";
-import { IconChevronLeft } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
+import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
+import BackButton from "@/app/_components/back-button";
 
 export default async function ShopDetailsPage({
   params,
@@ -15,11 +14,7 @@ export default async function ShopDetailsPage({
 
   const session = await auth();
 
-  const shop = await prisma.shop.findFirst({
-    where: {
-      id: shop_id,
-    },
-  });
+  const shop = await getShopDataWithPayment(shop_id);
 
   const isLoggedIn =
     (session && new Date(session.expires) > new Date()) || false;
@@ -35,13 +30,7 @@ export default async function ShopDetailsPage({
   return (
     <div className="">
       <div className="mb-2 flex justify-between items-center">
-        <Link
-          href={"/dashboard-pelanggan/kantin/" + shop.canteen_id}
-          className="flex gap-2 items-center text-sm text-muted-foreground"
-        >
-          <IconChevronLeft className="w-4 h-4 mb-1" />
-          Kembali
-        </Link>
+        <BackButton />
       </div>
 
       <ShopProductList

@@ -1,10 +1,10 @@
 import {
   IconBriefcase,
+  IconBuildingCommunity,
   IconMessageUser,
   IconReceiptDollar,
   IconTruckLoading,
   IconUserCog,
-  IconUserShield,
 } from "@tabler/icons-react";
 
 import { LayoutDashboard, Settings, Store } from "lucide-react";
@@ -19,6 +19,11 @@ export const adminMenu = {
     {
       title: "Kantin",
       url: "/admin/kantin",
+      icon: IconBuildingCommunity,
+    },
+    {
+      title: "Kedai",
+      url: "/admin/kedai",
       icon: Store,
     },
     {
