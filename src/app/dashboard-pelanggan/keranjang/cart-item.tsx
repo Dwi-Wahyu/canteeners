@@ -16,26 +16,11 @@ import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/store/cart";
 
 export default function CartItemComponent({ item }: { item: CartItem }) {
-  const { updateQuantity, updateItemDetails } = useCartStore((state) => ({
-    updateQuantity: state.updateQuantity,
-    updateItemDetails: state.updateItemDetails,
-  }));
-
   const [qty, setQty] = useState(item.quantity);
   const [notes, setNotes] = useState(item.note || "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSave = () => {
-    const newQtyInt = parseInt(String(qty));
-    if (!isNaN(newQtyInt) && newQtyInt >= 0 && newQtyInt !== item.quantity) {
-      updateQuantity(item.productId, item.shopId, newQtyInt);
-    }
-
-    const currentNotes = item.note || "";
-    if (notes.trim() !== currentNotes) {
-      updateItemDetails(item.productId, item.shopId, { note: notes.trim() });
-    }
-
     setIsDialogOpen(false);
   };
 

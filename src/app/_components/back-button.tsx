@@ -11,7 +11,7 @@ export default function BackButton({ url }: { url?: string }) {
     return (
       <button
         onClick={() => router.back()}
-        className="flex gap-1 items-center text-sm text-muted-foreground"
+        className="flex gap-1 cursor-pointer items-center text-sm text-muted-foreground"
       >
         <IconChevronLeft className="w-4 h-4" />
         Kembali
@@ -22,7 +22,7 @@ export default function BackButton({ url }: { url?: string }) {
   return (
     <Link
       href={url}
-      className="flex gap-1 items-center text-sm text-muted-foreground"
+      className="flex gap-1 cursor-pointer items-center text-sm text-muted-foreground"
     >
       <IconChevronLeft className="w-4 h-4" />
       Kembali
