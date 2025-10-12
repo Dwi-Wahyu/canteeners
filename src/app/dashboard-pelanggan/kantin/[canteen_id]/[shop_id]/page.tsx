@@ -16,9 +16,6 @@ export default async function ShopDetailsPage({
 
   const shop = await getShopDataWithPayment(shop_id);
 
-  const isLoggedIn =
-    (session && new Date(session.expires) > new Date()) || false;
-
   if (!shop) {
     return <NotFoundResource title="Warung Tidak Ditemukan" />;
   }
@@ -33,11 +30,7 @@ export default async function ShopDetailsPage({
         <BackButton />
       </div>
 
-      <ShopProductList
-        shop={shop}
-        isLoggedIn={isLoggedIn}
-        customerId={session.user.id}
-      />
+      <ShopProductList shop={shop} />
     </div>
   );
 }

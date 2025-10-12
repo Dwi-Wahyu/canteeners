@@ -39,11 +39,11 @@ export default function CanteenPageClient({ id }: { id: number }) {
           <div className="text-center w-full">
             <h1 className="font-semibold text-xl">{data.name}</h1>
             <h1 className="text-muted-foreground text-lg">
-              Pilih warung yang tersedia
+              Pilih kedai yang tersedia
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
             {data.shops.map((shop) => (
               <Link
                 className="group"

@@ -45,7 +45,7 @@ export default function ProductPage() {
 
         <NavigationButton
           size={"sm"}
-          url="/dashboard-warung/produk/input"
+          url="/dashboard-kedai/produk/input"
           label="Input Produk"
           variant="default"
         />

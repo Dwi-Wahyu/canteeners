@@ -1,28 +1,35 @@
 "use server";
 
+import { ServerActionReturn } from "@/types/server-action";
+import { Message, MessageType } from "../generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { ServerActionReturn } from "@/types/server-action";
 
-export async function sendMessage({
+export async function saveMessage({
   conversation_id,
-  content,
   sender_id,
+  type,
+  content,
+  image_url,
 }: {
   conversation_id: string;
-  content?: string;
   sender_id: string;
-}): Promise<ServerActionReturn<void>> {
+  content?: string;
+  image_url?: string;
+  type: MessageType;
+}): Promise<ServerActionReturn<Message>> {
   try {
-    await prisma.message.create({
+    const created = await prisma.message.create({
       data: {
         conversation_id,
-        content,
         sender_id,
+        content,
+        image_url,
+        type,
       },
     });
 
-    return successResponse(undefined, "Berhasil mengirim pesan");
+    return successResponse(created, "Berhasil mengirim pesan");
   } catch (error) {
     console.log(error);
 

@@ -19,7 +19,6 @@ export const SignUpSchema = z.object({
     .string()
     .min(1, { message: "Username wajib diisi." })
     .max(50, { message: "Username tidak lebih dari 50 karakter." }),
-  nim: z.string().max(50, { message: "NIM tidak lebih dari 10 karakter." }),
   username: z
     .string()
     .min(1, { message: "Username wajib diisi." })
@@ -29,6 +28,8 @@ export const SignUpSchema = z.object({
     .min(1, { message: "Kata sandi wajib diisi." })
     .min(6, { message: "Kata sandi minimal 6 karakter." })
     .max(100, { message: "Kata sandi tidak lebih dari 100 karakter." }),
+  email: z.email().optional().nullable(),
+  phone_number: z.string().optional().nullable(),
 });
 
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;

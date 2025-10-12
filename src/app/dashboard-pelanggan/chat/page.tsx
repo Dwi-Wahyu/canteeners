@@ -1,7 +1,6 @@
-import { auth } from "@/config/auth";
-import UnauthorizedPage from "../_components/unauthorized-page";
-import { prisma } from "@/lib/prisma";
-import { Suspense } from "react";
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,49 +9,64 @@ import { IconFilter } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { getUserAllConversations } from "@/app/chat/server-queries";
+import { useSession } from "next-auth/react";
+import { useRouter } from "nextjs-toploader/app";
 
-export default async function ChatPage() {
-  const session = await auth();
+type ReturnTypeConversations = Awaited<
+  ReturnType<typeof getUserAllConversations>
+>;
 
-  if (!session) {
-    return <UnauthorizedPage />;
+export default function ChatPage() {
+  const session = useSession();
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversations, setConversations] = useState<ReturnTypeConversations>(
+    []
+  );
+
+  useEffect(() => {
+    if (session.data) {
+      setIsLoading(true);
+      getUserAllConversations(session.data.user.id)
+        .then((res) => {
+          setConversations(res);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [session.data]);
+
+  if (session.status === "loading") {
+    return (
+      <div>
+        <div className="mx-auto container">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl font-semibold">Pesan Masuk</h1>
+
+            <Button>
+              <IconFilter />
+            </Button>
+          </div>
+
+          <Input className="w-full mb-4" placeholder="Cari Nama . . ." />
+        </div>
+      </div>
+    );
   }
 
-  const conversations = await prisma.conversation.findMany({
-    where: {
-      participants: {
-        some: {
-          user_id: session.user.id,
-        },
-      },
-    },
-    include: {
-      participants: {
-        where: {
-          user_id: {
-            not: session.user.id,
-          },
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              avatar: true,
-            },
-          },
-        },
-      },
-      messages: {
-        orderBy: {
-          created_at: "desc",
-        },
-        take: 1,
-      },
-    },
-  });
+  if (session.status === "unauthenticated") {
+    router.push("/auth/signin");
+    return;
+  }
+
+  if (session.status === "authenticated") {
+  }
 
   return (
-    <div className="p-5 w-full">
+    <div>
       <div className="mx-auto container">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-semibold">Pesan Masuk</h1>
@@ -65,13 +79,21 @@ export default async function ChatPage() {
         <Input className="w-full mb-4" placeholder="Cari Nama . . ." />
 
         <ScrollArea>
-          <Suspense fallback={<div>Memuat pesan . . .</div>}>
-            <div className="flex flex-col gap-4">
+          {isLoading && <div>Memuat . . .</div>}
+
+          {!isLoading && conversations.length === 0 && (
+            <div className="text-center text-muted-foreground">
+              Belum ada percakapan
+            </div>
+          )}
+
+          {!isLoading && conversations.length > 0 && (
+            <div className="flex flex-col">
               {conversations.map((conversation) => (
                 <Link
                   key={conversation.id}
                   className="flex mb-4 items-center justify-between px-4 py-3 rounded-xl shadow-xs border border-secondary hover:bg-secondary"
-                  href={"/chat/" + conversation.id}
+                  href={"/dashboard-pelanggan/chat/" + conversation.id}
                 >
                   <div className="flex gap-2 items-center">
                     <Avatar>
@@ -102,7 +124,7 @@ export default async function ChatPage() {
                 </Link>
               ))}
             </div>
-          </Suspense>
+          )}
         </ScrollArea>
       </div>
     </div>

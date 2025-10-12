@@ -36,7 +36,6 @@ secret.md
 /public/uploads/table-qrcode/*
 !/public/uploads/table-qrcode/.gitkeep
 
-
 /public/uploads/products/*
 !/public/uploads/products/.gitkeep
 

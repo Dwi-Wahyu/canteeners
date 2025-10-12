@@ -57,27 +57,27 @@ export default async function DetailKantinPage({
             <h1 className="text-xl font-bold mb-3">{canteen.name}</h1>
 
             <img
-              src={"/uploads/canteens/" + canteen.image_url}
+              src={"/uploads/canteen/" + canteen.image_url}
               alt=""
               className="w-full rounded-lg"
             />
 
             <div className="mt-7 mb-3 flex justify-between items-center">
-              <h1 className="text-lg font-semibold">Daftar Warung</h1>
+              <h1 className="text-lg font-semibold">Daftar Kedai</h1>
 
               <NavigationButton
-                url={`/admin/kantin/${canteen.id}/input-warung/`}
+                url={`/admin/kantin/${canteen.id}/input-kedai/`}
                 size="sm"
               >
                 <Store />
-                Input Warung
+                Input Kedai
               </NavigationButton>
             </div>
 
             {canteen.shops.length > 0 ? (
               <div className="grid grid-cols-3 gap-4">
                 {canteen.shops.map((shop, idx) => (
-                  <Link href={"/admin/kantin/edit-warung/" + shop.id} key={idx}>
+                  <Link href={"/admin/kantin/kedai/" + shop.id} key={idx}>
                     <img src={shop.image_url} className="rounded-lg" alt="" />
                     <h1 className="text-center font-semibold mt-1">
                       {shop.name}

@@ -8,6 +8,8 @@ import React from "react";
 import { DataTableAdvancedToolbar } from "@/components/data-table/data-table-advanced-toolbar";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { DataTableSortList } from "@/components/data-table/data-table-sort-list";
+import { NavigationButton } from "@/app/_components/navigation-button";
+import { UserPlus } from "lucide-react";
 
 export default function UsersTable({
   promises,
@@ -36,6 +38,11 @@ export default function UsersTable({
     <DataTable table={table}>
       <DataTableToolbar table={table}>
         <DataTableSortList table={table} />
+
+        <NavigationButton url="/admin/users/input">
+          <UserPlus />
+          Input User
+        </NavigationButton>
       </DataTableToolbar>
     </DataTable>
   );

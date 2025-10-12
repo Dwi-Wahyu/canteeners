@@ -9,7 +9,7 @@ export const InputUserSchema = z.object({
   email: z.string().optional(),
   phone_number: z.string().optional(),
   avatar: z.string().nullable().optional(),
-  role: z.enum(["admin", "workers"]),
+  role: z.enum(["ADMIN", "CUSTOMER", "SHOP_OWNER"]),
 });
 
 export type InputUserSchemaType = z.infer<typeof InputUserSchema>;

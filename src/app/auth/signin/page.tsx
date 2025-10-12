@@ -48,7 +48,7 @@ export default async function LoginPage() {
   }
 
   if (session.user.role === "SHOP_OWNER") {
-    redirect("/dashboard-warung");
+    redirect("/dashboard-kedai");
   }
 
   if (session.user.role === "CUSTOMER") {

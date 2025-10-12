@@ -2,7 +2,7 @@ import { PaymentMethod, Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useCartStore } from "@/store/cart";
+import { useKeranjang, useKeranjangActions } from "@/store/use-keranjang-store";
 import {
   IconCheck,
   IconMinus,
@@ -15,17 +15,20 @@ import { toast } from "sonner";
 export default function ProductCard({
   product,
   shopId,
+  ownerId,
   shopName,
   availablePaymentMethod,
 }: {
   product: Product;
   shopId: string;
+  ownerId: string;
   shopName: string;
   availablePaymentMethod: PaymentMethod[];
 }) {
   const [qty, setQty] = useState(0);
 
-  const cartStore = useCartStore();
+  const keranjang = useKeranjang();
+  const { addKedai, addItem } = useKeranjangActions();
 
   useEffect(() => {
     if (qty < 0) {
@@ -38,14 +41,17 @@ export default function ProductCard({
   const handleAddToCart = () => {
     setAdded(true);
 
-    cartStore.addItem({
+    if (qty === 0) return;
+
+    if (!keranjang[shopId]) {
+      addKedai(shopId, shopName, availablePaymentMethod, ownerId);
+    }
+
+    addItem(shopId, {
       productId: product.id,
       name: product.name,
       price: product.price,
       quantity: qty,
-      shopId,
-      shopName,
-      availablePaymentMethod,
     });
 
     toast.success(`Menambahkan ${product.name} x${qty} ke keranjang`);

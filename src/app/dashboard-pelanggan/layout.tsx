@@ -13,5 +13,9 @@ export default async function Layout({
     redirect("/auth/signin");
   }
 
-  return <ClientCustomerLayout>{children}</ClientCustomerLayout>;
+  return (
+    <ClientCustomerLayout userId={session.user.id} role={session.user.role}>
+      {children}
+    </ClientCustomerLayout>
+  );
 }

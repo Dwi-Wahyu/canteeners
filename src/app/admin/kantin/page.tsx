@@ -26,7 +26,7 @@ export default async function KantinPage() {
               <Card>
                 <CardContent>
                   <img
-                    src={appUrl + "/uploads/canteens/" + canteen.image_url}
+                    src={appUrl + "/uploads/canteen/" + canteen.image_url}
                     alt=""
                     className="rounded-lg"
                   />

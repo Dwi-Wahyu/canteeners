@@ -15,9 +15,7 @@ export default function KedaiPage() {
 
   return (
     <div className="container max-w-7xl mx-auto">
-      <h1 className="font-semibold text-lg mb-4 text-primary-foreground">
-        Daftar Kedai
-      </h1>
+      <h1 className="font-semibold text-lg mb-4">Daftar Kedai</h1>
 
       {isLoading && <div>Loading . . .</div>}
 

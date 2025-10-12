@@ -30,7 +30,7 @@ export default async function DashboardPelanggan() {
           >
             <div className="w-full overflow-hidden relative z-10 left-0 top-0 h-full rounded-xl">
               <img
-                src={"/uploads/canteens/" + canteen.image_url}
+                src={"/uploads/canteen/" + canteen.image_url}
                 alt=""
                 className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
               />
