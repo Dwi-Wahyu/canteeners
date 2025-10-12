@@ -43,7 +43,7 @@ export default async function LandingPage() {
   }
 
   if (session && session.user.role === "SHOP_OWNER") {
-    redirect("/dashboard-warung");
+    redirect("/dashboard-kedai");
   }
 
   return (
@@ -97,7 +97,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="about" className="py-16 md:py-24 bg-secondary">
+        <section id="about" className="py-16 md:py-24 bg-secondary shadow">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-4xl font-bold text-primary">
@@ -173,7 +173,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="kantin" className="py-16 md:py-24">
+        <section id="kantin" className="py-16 md:py-24 shadow">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-4xl font-bold text-primary">
@@ -193,7 +193,7 @@ export default async function LandingPage() {
                 >
                   <div className="w-full overflow-hidden absolute z-10 left-0 top-0 h-full rounded-xl">
                     <img
-                      src={"/uploads/canteens/" + canteen.image_url}
+                      src={"/uploads/canteen/" + canteen.image_url}
                       alt=""
                       className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
                     />

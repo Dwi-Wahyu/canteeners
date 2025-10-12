@@ -1,7 +1,27 @@
 - permantap lagi query datatable di /users
 
-- buat dlu fungsionalitas keranjang pake global state
+- buat dlu fungsionalitas keranjang pake global state [done]
 
-- selesaikan dlu keranjang baru fokus di chat pub sub (tinggal fix infinite loop untuk fitur add notes atau ubah qty)
+- buat ulang store cart pake itu keranjang store [done]
 
-- fix nda perlu mi pake identifier (nama, username atau apapun) kalo upload image pake localStorage
+- selesaikan dlu keranjang baru fokus di chat pub sub (tinggal fix infinite loop untuk fitur add notes atau ubah qty) [done]
+
+- fix nda perlu mi pake identifier (nama, username atau apapun) kalo upload image pake localStorage [done]
+
+- ubah semua penamaan folder upload jadi singular
+
+- buat fungsionalitas web socket, pertimbangkan createMessage di handler websocket (handler.ts) cari cara pakai type dari handler 'on', dan pertimbangkan dimana membuat row message pakai prisma apakah di websocket handler atau di sendMessage()
+
+= skema pengiriman pesan =
+
+"chat-client.tsx" pake fungsi sendMessage() dari "use-server-queries.ts" -> sendMessage() emit event "send_message" ke websocket -> pake fungsi callback untuk memberi kepastian pesan dikirim di server -> emit ke seluruh yang join room conversation di websocket -> participants penerima emit "event" message_received ke room conversation id
+
+- fix ketika keluar dari detail conversation panggil fungsi leaveConversation
+
+- fix nda mau muncul notifikasi padahal sudah subscribe ketika build muncul ki ini error
+
+- fix ketika shop owner masuk ke chat detail baru subscribe notifikasi
+
+- fix simpan url gambar pake nama file langsung nda usah relative import
+
+- fix id message jadi string uuid

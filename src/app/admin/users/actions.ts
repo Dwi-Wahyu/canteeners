@@ -19,10 +19,10 @@ import {
 } from "@/validations/schemas/user";
 import { Role } from "@/app/generated/prisma";
 
-export async function uploadAvatar(file: File, username: string) {
+export async function uploadAvatar(file: File) {
   const storageService = new LocalStorageService();
 
-  const avatarUrl = await storageService.uploadImage(file, username, "avatar");
+  const avatarUrl = await storageService.uploadImage(file, "", "avatar");
 
   return avatarUrl;
 }
@@ -43,9 +43,9 @@ export async function createUser(
 
     console.log(create);
 
-    return successResponse(undefined, "Karyawan Berhasil Ditambahkan");
+    return successResponse(undefined, "User Berhasil Ditambahkan");
   } catch (e: any) {
-    console.error("Error creating employee:", e);
+    console.error("Error creating user:", e);
 
     if (e instanceof PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -65,7 +65,7 @@ export async function createUser(
     }
 
     return errorResponse(
-      "Terjadi kesalahan saat menambahkan employee: " + e.message,
+      "Terjadi kesalahan saat menambahkan user: " + e.message,
       "SERVER_ERROR"
     );
   }
@@ -97,7 +97,7 @@ export async function updateUser(
       });
     }
 
-    return successResponse(undefined, "Data Karyawan berhasil diperbarui");
+    return successResponse(undefined, "Data user berhasil diperbarui");
   } catch (e: any) {
     console.error("Error updating employee:", e);
 
@@ -129,21 +129,8 @@ export async function updateUser(
 export async function deleteUser(
   id: string
 ): Promise<ServerActionReturn<void>> {
-  const session = await auth();
-
-  if (!session) {
-    return errorResponse(
-      "Sesi Login Tidak Terbaca, Silahkan Login Ulang",
-      "SERVER_ERROR"
-    );
-  }
-
-  const headersList = await headers();
-  const forwardedFor = headersList.get("x-forwarded-for");
-  const userIp = forwardedFor ? forwardedFor.split(",")[0].trim() : "127.0.0.1";
-
   try {
-    const employee = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: id },
       select: {
         id: true,
@@ -151,19 +138,16 @@ export async function deleteUser(
       },
     });
 
-    if (!employee) {
-      return errorResponse("Workers tidak ditemukan.", "NOT_FOUND");
+    if (!user) {
+      return errorResponse("User tidak ditemukan.", "NOT_FOUND");
     }
 
     const update = await prisma.user.delete({
       where: { id },
     });
 
-    if (
-      employee.avatar &&
-      employee.avatar !== "/uploads/avatar/default-avatar.jpg"
-    ) {
-      const avatarAbsolutePath = join(process.cwd(), "public", employee.avatar);
+    if (user.avatar && user.avatar !== "/uploads/avatar/default-avatar.jpg") {
+      const avatarAbsolutePath = join(process.cwd(), "public", user.avatar);
 
       if (existsSync(avatarAbsolutePath)) {
         unlink(avatarAbsolutePath, (err) => {
@@ -190,7 +174,7 @@ export async function deleteUser(
       "Workers berhasil dihapus (soft delete)."
     );
   } catch (e: any) {
-    console.error("Error soft deleting employee:", e);
+    console.error("Error soft deleting user:", e);
 
     if (e instanceof PrismaClientKnownRequestError) {
       if (e.code === "P2025") {
@@ -198,7 +182,7 @@ export async function deleteUser(
       }
     }
     return errorResponse(
-      "Terjadi kesalahan saat menghapus employee: " + e.message,
+      "Terjadi kesalahan saat menghapus user: " + e.message,
       "SERVER_ERROR"
     );
   }

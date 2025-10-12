@@ -1,6 +1,6 @@
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
-import ClientShopOwnerLayout from "./client-shop-owner-layout";
+import ClientOwnerLayout from "./client-owner-layout";
 
 export default async function Layout({
   children,
@@ -13,5 +13,9 @@ export default async function Layout({
     redirect("/auth/signin");
   }
 
-  return <ClientShopOwnerLayout>{children}</ClientShopOwnerLayout>;
+  return (
+    <ClientOwnerLayout userId={session.user.id} role={session.user.role}>
+      {children}
+    </ClientOwnerLayout>
+  );
 }

@@ -24,7 +24,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
           >
             <BreadcrumbProvider>
               {children}
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools
+                initialIsOpen={false}
+                buttonPosition="top-right"
+              /> */}
             </BreadcrumbProvider>
           </ThemeProvider>
         </NuqsAdapter>

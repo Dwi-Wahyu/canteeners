@@ -50,7 +50,7 @@ export default async function DetailKantinPage({
       <div className="mx-auto max-w-5xl">
         {/* <div className="relative">
           <img
-            src={"/uploads/canteens/" + canteen.image_url}
+            src={"/uploads/canteen/" + canteen.image_url}
             alt=""
             className="w-full rounded-xl z-10 object-cover"
           />

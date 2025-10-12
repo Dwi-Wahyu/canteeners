@@ -39,9 +39,10 @@ export function SignupForm({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
       name: "",
-      nim: "",
       username: "",
       password: "",
+      email: null,
+      phone_number: null,
     },
   });
 
@@ -78,7 +79,9 @@ export function SignupForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nama Lengkap</FormLabel>
+                      <FormLabel>
+                        Nama Lengkap <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="px-4 py-2"
@@ -95,7 +98,9 @@ export function SignupForm({
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>
+                        Username <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           className="px-4 py-2"
@@ -107,16 +112,20 @@ export function SignupForm({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="nim"
+                  name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>NIM</FormLabel>
+                      <FormLabel>
+                        Password <span className="text-red-500">*</span>
+                      </FormLabel>
+
                       <FormControl>
-                        <Input
+                        <PasswordInput
+                          placeholder="Password Anda"
                           className="px-4 py-2"
-                          placeholder="NIM Anda"
                           {...field}
                         />
                       </FormControl>
@@ -124,18 +133,38 @@ export function SignupForm({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="password"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
-
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <PasswordInput
-                          placeholder="Password Anda"
+                        <Input
                           className="px-4 py-2"
+                          placeholder="user@gmail.com"
                           {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nomor Telepon</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="px-4 py-2"
+                          placeholder="0896xxxx"
+                          {...field}
+                          value={field.value || ""}
                         />
                       </FormControl>
                       <FormMessage />

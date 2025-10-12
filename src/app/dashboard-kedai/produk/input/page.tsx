@@ -1,9 +1,9 @@
-import TitleWithPrevButton from "../../title-with-prev-button";
 import InputProductForm from "./input-product-form";
 import { auth } from "@/config/auth";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { prisma } from "@/lib/prisma";
 import NotFoundResource from "@/app/_components/not-found-resource";
+import BackButton from "@/app/_components/back-button";
 
 export default async function InputProductPage() {
   const session = await auth();
@@ -24,7 +24,9 @@ export default async function InputProductPage() {
 
   return (
     <div>
-      <TitleWithPrevButton title="Input Produk" />
+      <BackButton url="/dashboard-kedai/produk" />
+
+      <h1 className="text-lg font-semibold mt-2">Input Produk</h1>
 
       <div className="mt-4">
         <InputProductForm shop_id={shop_owned.id} />

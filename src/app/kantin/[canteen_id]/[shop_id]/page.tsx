@@ -4,6 +4,7 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { auth } from "@/config/auth";
 import Link from "next/link";
 import { IconChevronLeft } from "@tabler/icons-react";
+import { redirect } from "next/navigation";
 
 export default async function ShopDetailsPage({
   params,
@@ -27,6 +28,10 @@ export default async function ShopDetailsPage({
     return <NotFoundResource title="Warung Tidak Ditemukan" />;
   }
 
+  if (isLoggedIn) {
+    redirect(`/dashboard-pelanggan/kantin/${shop.canteen_id}/${shop.id}`);
+  }
+
   return (
     <div className="p-5">
       <div className="md:hidden mb-2">
@@ -39,11 +44,7 @@ export default async function ShopDetailsPage({
         </Link>
       </div>
 
-      <ShopProductList
-        shop={shop}
-        isLoggedIn={isLoggedIn}
-        customerId={session?.user.id}
-      />
+      <ShopProductList shop={shop} />
     </div>
   );
 }

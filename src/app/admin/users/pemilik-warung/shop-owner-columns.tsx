@@ -35,7 +35,7 @@ export const ShopOwnerColumns: ColumnDef<UsersTableDataType>[] = [
     header: "Username",
   },
   {
-    header: "Nama Warung",
+    header: "Nama Kedai",
     cell: function Cell({ row }) {
       return row.original.shop_owned?.name;
     },

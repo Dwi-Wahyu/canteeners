@@ -2,7 +2,6 @@ import { auth } from "@/config/auth";
 import UnauthorizedPage from "../_components/unauthorized-page";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { ReactNode } from "react";
-import { IconUsers } from "@tabler/icons-react";
 import {
   BanknoteArrowDown,
   BanknoteArrowUp,

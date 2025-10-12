@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { auth } from "@/config/auth";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
-import { ChevronLeft, Image } from "lucide-react";
-import { getConversationMessages } from "../queries";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import ChatClient from "./chat-client";
+import ChatClient from "../../../chat/chat-client";
+import {
+  getConversationMessages,
+  readAllMessageInConversation,
+} from "@/app/chat/queries";
 
 export default async function ConversationPage({
   params,
@@ -30,17 +33,21 @@ export default async function ConversationPage({
     return <NotFoundResource />;
   }
 
+  if (conversation.participants[0].user.id === session.user.id) {
+    await readAllMessageInConversation(conversation.id);
+  }
+
   return (
-    <div className="relative min-h-screen pt-24 px-5">
-      <div className="w-full fixed left-0 top-0 bg-secondary shadow text-secondary-foreground">
+    <div className="relative min-h-screen">
+      <div className="w-full fixed z-30 left-0 top-0 bg-secondary shadow text-secondary-foreground">
         <div className="py-4 px-5 md:px-0 container max-w-7xl mx-auto flex justify-between items-center">
           <Button
             asChild
             className="rounded-full"
             size={"icon"}
-            variant={"outline"}
+            variant={"secondary"}
           >
-            <Link href={"/chat"}>
+            <Link href={"/dashboard-kedai/chat"}>
               <ChevronLeft />
             </Link>
           </Button>
@@ -77,7 +84,11 @@ export default async function ConversationPage({
         </div>
       </div>
 
-      <ChatClient conversation={conversation} sender_id={session.user.id} />
+      <ChatClient
+        conversation={conversation}
+        sender_id={session.user.id}
+        receiver_id={conversation.participants[0].user.id}
+      />
     </div>
   );
 }

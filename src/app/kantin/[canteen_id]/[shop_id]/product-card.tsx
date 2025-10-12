@@ -9,17 +9,9 @@ import {
   IconShoppingCartPlus,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useRouter } from "nextjs-toploader/app";
 
-export default function ProductCard({
-  product,
-  ordering,
-  onAddItem,
-}: {
-  product: Product;
-  ordering: boolean;
-  onAddItem: (product: Product, quantity: number) => void;
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   const [qty, setQty] = useState(0);
 
   useEffect(() => {
@@ -28,12 +20,10 @@ export default function ProductCard({
     }
   }, [qty]);
 
-  const [added, setAdded] = useState(false);
+  const router = useRouter();
 
   const handleAddToCart = () => {
-    setAdded(true);
-    onAddItem(product, qty);
-    toast.success(`${product.name} ${qty}`);
+    router.push("/dashboard-pelanggan");
   };
 
   return (
@@ -53,32 +43,30 @@ export default function ProductCard({
 
         <h1 className="text-end font-semibold">Rp {product.price}</h1>
 
-        {ordering && (
-          <div className="flex items-center gap-2 mt-3">
-            <div className="grow flex items-center gap-2">
-              <Button
-                variant={"outline"}
-                onClick={() => setQty((prev) => prev - 1)}
-              >
-                <IconMinus />
-              </Button>
-              <Input value={qty} className="text-center" disabled />
-              <Button
-                variant={"outline"}
-                onClick={() => setQty((prev) => prev + 1)}
-              >
-                <IconPlus />
-              </Button>
-            </div>
+        <div className="flex items-center gap-2 mt-3">
+          <div className="grow flex items-center gap-2">
             <Button
-              disabled={qty === 0}
-              onClick={handleAddToCart}
-              variant={added ? "default" : "outline"}
+              variant={"outline"}
+              onClick={() => setQty((prev) => prev - 1)}
             >
-              {added ? <IconCheck /> : <IconShoppingCartPlus />}
+              <IconMinus />
+            </Button>
+            <Input value={qty} className="text-center" disabled />
+            <Button
+              variant={"outline"}
+              onClick={() => setQty((prev) => prev + 1)}
+            >
+              <IconPlus />
             </Button>
           </div>
-        )}
+          <Button
+            disabled={qty === 0}
+            onClick={handleAddToCart}
+            variant={"outline"}
+          >
+            <IconShoppingCartPlus />
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

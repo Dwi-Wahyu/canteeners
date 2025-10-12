@@ -1,0 +1,253 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0" version="28.2.5" pages="3">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1551" dy="927" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-0" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Canteeners Grand Design&lt;/h1&gt;&lt;p&gt;Super App untuk mengatasi keramaian kantin dengan menyediakan platform untuk pemilik kedai dengan pelanggan agar dapat terhubung langsung melalui aplikasi dengan fitur&amp;nbsp; diantaranya ecommerce dengan realtime chat.&amp;nbsp;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="40" width="760" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Initial Team&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;strokeColor=none;strokeWidth=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="280" width="760" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-2" value="Wahyu" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="150" y="370" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-3" value="Aril palu" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="330" y="370" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-4" value="Ucup" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="480" y="370" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-5" value="Ditdot" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="620" y="370" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-10" value="Fullstack" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="135" y="330" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-11" value="Marketing" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="315" y="330" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-12" value="QA" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="465" y="330" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iTz5bAOJAK56_k_M5mlu-13" value="UI / UX" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="605" y="330" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DwEWvU7iEY32JSs1KIJQ-0" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="40" y="520" width="760" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="DwEWvU7iEY32JSs1KIJQ-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Global Todo&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="60" y="530" width="720" height="450" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="aG-snJE8POjRzCeQxVN1" name="Keranjang UML">
+    <mxGraphModel dx="558" dy="334" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8AifXO44vB68D_NTp4h0-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.643;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="8AifXO44vB68D_NTp4h0-3" target="8AifXO44vB68D_NTp4h0-15" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="30" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8AifXO44vB68D_NTp4h0-3" target="8AifXO44vB68D_NTp4h0-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-3" value="PaymentMethod" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="419" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-4" value="+CASH&lt;div&gt;+QRIS&lt;/div&gt;&lt;div&gt;+BANK_TRANSFER&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="8AifXO44vB68D_NTp4h0-3" vertex="1">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-6" value="KeranjangState" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="355" y="364" width="300" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-7" value="kedai: Record&amp;lt;string, Kedai&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="8AifXO44vB68D_NTp4h0-6" vertex="1">
+          <mxGeometry y="26" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-8" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="8AifXO44vB68D_NTp4h0-6" vertex="1">
+          <mxGeometry y="52" width="300" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-9" value="&lt;div style=&quot;line-height: 150%;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;addKedai(id: string, name: string,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;availablePaymentMethod: PaymentMethod[ ]) =&amp;gt; void&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;removeKedai(id: string) =&amp;gt; void;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;clearKeranjang( ) =&amp;gt; void;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;addItem(kedaiId: string, item: KeranjangItem) =&amp;gt; void;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="8AifXO44vB68D_NTp4h0-6" vertex="1">
+          <mxGeometry y="60" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-14" value="Kedai" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="150" y="70" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-15" value="&lt;div style=&quot;line-height: 150%;&quot;&gt;name: string&lt;div&gt;items: KeranjangItem[ ]&lt;br&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;totalQuantity: number;&lt;/div&gt;&lt;div&gt;totalPrice: number;&lt;/div&gt;&lt;div&gt;paymentMethod: PaymentMethod&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="8AifXO44vB68D_NTp4h0-14" vertex="1">
+          <mxGeometry y="50" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-21" value="KeranjangItem" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="450" y="75" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-22" value="&lt;div style=&quot;line-height: 150%;&quot;&gt;productId: number;&lt;div&gt;name: string;&lt;/div&gt;&lt;div&gt;price: number;&lt;/div&gt;&lt;div&gt;quantity: number;&lt;/div&gt;&lt;div&gt;note?: string;&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="8AifXO44vB68D_NTp4h0-21" vertex="1">
+          <mxGeometry y="50" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.007;entryY=0.226;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" source="8AifXO44vB68D_NTp4h0-22" target="8AifXO44vB68D_NTp4h0-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8AifXO44vB68D_NTp4h0-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="8AifXO44vB68D_NTp4h0-6" target="8AifXO44vB68D_NTp4h0-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="0wOyyqE1Z5zwhQ9aL_pP" name="Realtime Chat Flow">
+    <mxGraphModel dx="776" dy="463" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-7" target="zXFgrh9IuvyAk8eFvidq-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-7" value="Mulai" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="140" y="80" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-10" target="btUvF9yQ2k_w96ZSOgof-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-10" value="Konek socket&lt;div&gt;client ke server&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="200" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-12" target="_uDnRhtSBWV3jqzJLKGs-20">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="699.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-12" value="Socket client join / subscribe ke&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;room conversationI&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;d&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="520" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-14" target="zXFgrh9IuvyAk8eFvidq-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-14" value="Emit event &quot;send_message&quot; ke server dengan payload" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="900" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-17" target="zXFgrh9IuvyAk8eFvidq-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-17" value="Server ack dan kirim konfirmasi ke sender bahwa pesan diterima server" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="580" y="980" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-26" target="zXFgrh9IuvyAk8eFvidq-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-37" value="Text" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_uDnRhtSBWV3jqzJLKGs-7">
+          <mxGeometry x="-0.2072" y="1" relative="1" as="geometry">
+            <mxPoint x="-2" y="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-26" target="_uDnRhtSBWV3jqzJLKGs-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-36" value="Gambar / Bukti Pembayaran" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_uDnRhtSBWV3jqzJLKGs-35">
+          <mxGeometry x="-0.38" y="-1" relative="1" as="geometry">
+            <mxPoint y="16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-26" value="Jenis&lt;div&gt;Pesan&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="140" y="1095" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-28" target="_uDnRhtSBWV3jqzJLKGs-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-28" value="conversationId&lt;div&gt;message&lt;/div&gt;&lt;div&gt;receiverId&lt;/div&gt;" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+          <mxGeometry x="350" y="1165" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-30" target="_uDnRhtSBWV3jqzJLKGs-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-30" value="conversationId&lt;div&gt;imageUrl&lt;/div&gt;&lt;div&gt;receiverId&lt;/div&gt;" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+          <mxGeometry x="345" y="1305" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="zXFgrh9IuvyAk8eFvidq-36" target="btUvF9yQ2k_w96ZSOgof-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="660" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zXFgrh9IuvyAk8eFvidq-36" value="Server emit &quot;send_message&quot; ke seluruh subscriber room selain sender" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="580" y="790" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-2" target="zXFgrh9IuvyAk8eFvidq-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-2" value="Emit event &quot;send_message&quot; ke server dengan payload" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="580" y="1160" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-6" target="zXFgrh9IuvyAk8eFvidq-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-6" value="Simpan gambar&amp;nbsp;&lt;div&gt;di uploads&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="1300" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-20" target="zXFgrh9IuvyAk8eFvidq-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-22" value="Pengirim" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_uDnRhtSBWV3jqzJLKGs-21">
+          <mxGeometry x="-0.1434" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-20" target="_uDnRhtSBWV3jqzJLKGs-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-27" value="Penerima" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_uDnRhtSBWV3jqzJLKGs-24">
+          <mxGeometry x="-0.2664" y="1" relative="1" as="geometry">
+            <mxPoint x="18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-20" value="Role" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="130" y="680" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-23" target="btUvF9yQ2k_w96ZSOgof-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-23" value="Membuat event handler &quot;send_message&quot;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="350" y="520" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_uDnRhtSBWV3jqzJLKGs-31" target="_uDnRhtSBWV3jqzJLKGs-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-31" value="Server menerima&amp;nbsp; event &quot;receive_message&quot; dan emit kembali ke seluruh subscriber room" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="770" y="360" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_uDnRhtSBWV3jqzJLKGs-33" value="Sender menerima event &quot;receive_message&quot; dan mengubah ui" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="770" y="520" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="3jz5LJjnJTsZmGZ9Tl1h-8" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1720" width="540" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="3jz5LJjnJTsZmGZ9Tl1h-7" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Todo&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;- pikir bagaimana alur notifikasi jika pesan masuk dari conversation yang belum di subscribe / belum join room&amp;nbsp;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;- buat room notifikasi untuk setiap yang terhubung ke socket server&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;-&amp;nbsp; setelah pesan diterima server langsung saja emit ke room user id kemudian setelah acknowledge emit receive_message ke pengirim&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;masalah saat ini adalah : mending acknowledge pesan diterima pengguna setelah dikirimkan ke room user id dengan callback dan timeout dan subscriber room itu emit kembali ke room event &quot;receive_message&quot;&amp;nbsp;&amp;nbsp;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="140" y="1730" width="500" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="btUvF9yQ2k_w96ZSOgof-4" target="zXFgrh9IuvyAk8eFvidq-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-4" value="Server membuat room untuk userId yang terhubung untuk notifikasi" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="360" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="btUvF9yQ2k_w96ZSOgof-7" target="_uDnRhtSBWV3jqzJLKGs-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-7" value="Server emit &quot;new_message&quot; ke room userId penerima untuk notifikasi" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="770" y="200" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="btUvF9yQ2k_w96ZSOgof-13" target="btUvF9yQ2k_w96ZSOgof-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-13" value="Socket menerima event &quot;send_message&quot;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="350" y="360" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="btUvF9yQ2k_w96ZSOgof-15" target="btUvF9yQ2k_w96ZSOgof-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="btUvF9yQ2k_w96ZSOgof-15" value="Emit &quot;receive_message&quot; ke server" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="350" y="200" width="160" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

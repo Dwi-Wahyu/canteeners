@@ -25,9 +25,9 @@ export async function getConversationMessages(
         select: {
           user: {
             select: {
+              id: true,
               name: true,
               avatar: true,
-
               username: true,
               last_login: true,
             },
@@ -39,6 +39,17 @@ export async function getConversationMessages(
           },
         },
       },
+    },
+  });
+}
+
+export async function readAllMessageInConversation(conversation_id: string) {
+  await prisma.message.updateMany({
+    where: {
+      conversation_id,
+    },
+    data: {
+      is_read: true,
     },
   });
 }

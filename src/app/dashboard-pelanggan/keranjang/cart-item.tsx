@@ -1,11 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CartItem } from "@/store/cart/types";
 import { Ellipsis } from "lucide-react";
 
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,27 +15,34 @@ import {
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
-import { useCartStore } from "@/store/cart";
+import {
+  KeranjangItem,
+  useKeranjangActions,
+} from "@/store/use-keranjang-store";
 
-export default function CartItemComponent({ item }: { item: CartItem }) {
-  const { updateQuantity, updateItemDetails } = useCartStore((state) => ({
-    updateQuantity: state.updateQuantity,
-    updateItemDetails: state.updateItemDetails,
-  }));
+export default function CartItemComponent({
+  item,
+  shopId,
+}: {
+  item: KeranjangItem;
+  shopId: string;
+}) {
+  const { updateItem } = useKeranjangActions();
 
   const [qty, setQty] = useState(item.quantity);
   const [notes, setNotes] = useState(item.note || "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSave = () => {
-    const newQtyInt = parseInt(String(qty));
-    if (!isNaN(newQtyInt) && newQtyInt >= 0 && newQtyInt !== item.quantity) {
-      updateQuantity(item.productId, item.shopId, newQtyInt);
-    }
-
     const currentNotes = item.note || "";
-    if (notes.trim() !== currentNotes) {
-      updateItemDetails(item.productId, item.shopId, { note: notes.trim() });
+
+    if (qty < 1) return;
+
+    if (notes.trim() !== currentNotes || qty !== item.quantity) {
+      updateItem(shopId, item.productId, {
+        quantity: qty,
+        note: notes.trim() === "" ? undefined : notes.trim(),
+      });
     }
 
     setIsDialogOpen(false);
@@ -69,6 +78,12 @@ export default function CartItemComponent({ item }: { item: CartItem }) {
           <h1 className="text-muted-foreground">
             Rp {item.quantity * item.price}
           </h1>
+
+          {item.note && (
+            <div className="text-xs bg-secondary text-muted-foreground py-1 px-2 rounded">
+              {item.note}
+            </div>
+          )}
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
@@ -79,7 +94,10 @@ export default function CartItemComponent({ item }: { item: CartItem }) {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="hidden"></DialogTitle>
+              <DialogTitle className="hidden">Product Details</DialogTitle>
+              <DialogDescription className="hidden">
+                Product Details Description
+              </DialogDescription>
 
               <div className="text-start flex flex-col gap-2">
                 <div>
@@ -90,7 +108,14 @@ export default function CartItemComponent({ item }: { item: CartItem }) {
                   <h1 className="text-sm text-muted-foreground mb-1">Jumlah</h1>
                   <Input
                     value={qty}
-                    onChange={(e) => setQty(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value) && value > 0) {
+                        setQty(value);
+                      } else if (e.target.value === "") {
+                        setQty(0);
+                      }
+                    }}
                     type="number"
                   />
                 </div>
