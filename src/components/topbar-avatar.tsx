@@ -35,7 +35,7 @@ export default function TopbarAvatar() {
         </h1>
         <Avatar className="size-8">
           <AvatarImage
-            src={session.data.user.avatar}
+            src={`/uploads/avatar/${session.data.user.avatar}`}
             alt={session.data.user.name}
           />
           <AvatarFallback className="text-xs">HR</AvatarFallback>

@@ -46,7 +46,7 @@ export const authConfig: NextAuthConfig = {
           username: user.username,
           name: user.name,
           role: user.role,
-          avatar: user.avatar ?? "/uploads/avatar/default-avatar.jpg",
+          avatar: user.avatar ?? "default-avatar.jpg",
         };
       },
     }),

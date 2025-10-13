@@ -11,8 +11,6 @@ export default function KedaiPage() {
     queryFn: getShops,
   });
 
-  console.log(error);
-
   return (
     <div className="container max-w-7xl mx-auto">
       <h1 className="font-semibold text-lg mb-4">Daftar Kedai</h1>

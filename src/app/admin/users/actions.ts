@@ -2,7 +2,7 @@
 
 import { successResponse, errorResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { LocalStorageService } from "@/services/storage_services";
+import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
 
 import { hashSync } from "bcryptjs";
@@ -22,7 +22,7 @@ import { Role } from "@/app/generated/prisma";
 export async function uploadAvatar(file: File) {
   const storageService = new LocalStorageService();
 
-  const avatarUrl = await storageService.uploadImage(file, "", "avatar");
+  const avatarUrl = await storageService.uploadImage(file, "avatar");
 
   return avatarUrl;
 }
@@ -107,7 +107,7 @@ export async function updateUser(
           (e.meta?.target as string[])?.join(", ") || "Unknown field";
         if (targetField.includes("username")) {
           return errorResponse(
-            "NRP sudah digunakan. Silakan pilih NRP lain.",
+            "Username sudah digunakan. Silakan pilih Username lain.",
             "DUPLICATE_USERNAME"
           );
         }
@@ -146,7 +146,7 @@ export async function deleteUser(
       where: { id },
     });
 
-    if (user.avatar && user.avatar !== "/uploads/avatar/default-avatar.jpg") {
+    if (user.avatar && user.avatar !== "default-avatar.jpg") {
       const avatarAbsolutePath = join(process.cwd(), "public", user.avatar);
 
       if (existsSync(avatarAbsolutePath)) {

@@ -40,7 +40,7 @@ export default function InputUserPage() {
     defaultValues: {
       name: "",
       username: "",
-      avatar: "/uploads/avatar/default-avatar.jpg",
+      avatar: "default-avatar.jpg",
       email: "",
       phone_number: "",
       password: "",

@@ -98,10 +98,7 @@ export default function ChatPage() {
                   <div className="flex gap-2 items-center">
                     <Avatar>
                       <AvatarImage
-                        src={
-                          conversation.participants[0].user.avatar ??
-                          "/uploads/avatar/default-avatar.jpg"
-                        }
+                        src={`/uploads/avatar/${conversation.participants[0].user.avatar}`}
                       />
                       <AvatarFallback>
                         {conversation.participants[0].user.name.charAt(0)}
@@ -120,7 +117,8 @@ export default function ChatPage() {
                     </div>
                   </div>
 
-                  <Badge>4</Badge>
+                  {/* Ini menampilkan jumlah pesan yang belum dibaca */}
+                  <Badge>{conversation._count.messages}</Badge>
                 </Link>
               ))}
             </div>

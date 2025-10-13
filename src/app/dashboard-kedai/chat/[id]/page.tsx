@@ -38,7 +38,7 @@ export default async function ConversationPage({
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative">
       <div className="w-full fixed z-30 left-0 top-0 bg-secondary shadow text-secondary-foreground">
         <div className="py-4 px-5 md:px-0 container max-w-7xl mx-auto flex justify-between items-center">
           <Button
@@ -57,7 +57,7 @@ export default async function ConversationPage({
               <AvatarImage
                 src={
                   conversation.participants[0].user.avatar ??
-                  "/uploads/avatar/default-avatar.jpg"
+                  "default-avatar.jpg"
                 }
               />
               <AvatarFallback>

@@ -46,7 +46,10 @@ export default async function ShopDetails({
               </div>
 
               {payment.method === "QRIS" && (
-                <img className="max-w-52" src={payment.qr_url ?? ""} />
+                <img
+                  className="max-w-52"
+                  src={`/uploads/shop-qrcode/${payment.qr_url}`}
+                />
               )}
 
               {payment.method === "BANK_TRANSFER" && (

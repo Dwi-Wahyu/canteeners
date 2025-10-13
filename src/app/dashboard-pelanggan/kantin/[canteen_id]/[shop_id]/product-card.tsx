@@ -63,7 +63,7 @@ export default function ProductCard({
         <h1 className="font-semibold">{product.name}</h1>
 
         <img
-          src={product.image_url}
+          src={"/uploads/product/" + product.image_url}
           alt=""
           className="my-3 rounded-lg w-full"
         />

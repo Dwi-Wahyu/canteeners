@@ -94,7 +94,7 @@ export default async function DetailKantinPage({
 
                   <div className="w-full rounded-lg overflow-hidden">
                     <img
-                      src={shop.image_url}
+                      src={"/uploads/shop/" + shop.image_url}
                       alt=""
                       className="w-full rounded-lg group-hover:scale-105 ease-in-out transition-all duration-300"
                     />

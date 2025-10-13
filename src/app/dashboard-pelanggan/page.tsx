@@ -12,8 +12,6 @@ export default async function DashboardPelanggan() {
 
   const canteens = await prisma.canteen.findMany();
 
-  console.log(canteens);
-
   return (
     <div>
       <h1 className="text-xl font-semibold">
@@ -31,7 +29,7 @@ export default async function DashboardPelanggan() {
           >
             <div className="w-full overflow-hidden relative z-10 left-0 top-0 h-full rounded-xl">
               <img
-                src={"/uploads/canteens/" + canteens[0].image_url}
+                src={"/uploads/canteen/" + canteens[0].image_url}
                 alt=""
                 className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
               />
@@ -47,7 +45,7 @@ export default async function DashboardPelanggan() {
             <div className="group relative block" key={idx}>
               <div className="w-full overflow-hidden relative z-10 left-0 top-0 h-full rounded-xl">
                 <img
-                  src={"/uploads/canteens/" + canteen.image_url}
+                  src={"/uploads/canteen/" + canteen.image_url}
                   alt=""
                   className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
                 />

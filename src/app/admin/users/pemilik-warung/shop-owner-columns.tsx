@@ -18,7 +18,7 @@ export const ShopOwnerColumns: ColumnDef<UsersTableDataType>[] = [
       return (
         <img
           className="rounded-lg"
-          src={avatar ?? "/uploads/avatar/default-avatar.jpg"}
+          src={avatar ?? "default-avatar.jpg"}
           alt={name}
           width={100}
           height={100}

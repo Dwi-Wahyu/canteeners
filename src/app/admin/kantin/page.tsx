@@ -7,8 +7,6 @@ import { Suspense } from "react";
 export default async function KantinPage() {
   const canteens = await prisma.canteen.findMany();
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
   return (
     <div>
       <Suspense
@@ -26,7 +24,7 @@ export default async function KantinPage() {
               <Card>
                 <CardContent>
                   <img
-                    src={appUrl + "/uploads/canteen/" + canteen.image_url}
+                    src={"/uploads/canteen/" + canteen.image_url}
                     alt=""
                     className="rounded-lg"
                   />
