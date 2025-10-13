@@ -2,14 +2,23 @@
 
 import TopbarAvatar from "@/components/topbar-avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useIsSocketConnected } from "@/store/use-socket-store";
+import {
+  IconBellExclamation,
+  IconBellRinging,
+  IconWifi,
+  IconWifiOff,
+} from "@tabler/icons-react";
 import { UtensilsCrossed } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-export default function OwnerTopbar() {
+export default function OwnerTopbar({
+  connected = false,
+  subscribed = false,
+}: {
+  connected: boolean;
+  subscribed: boolean;
+}) {
   const session = useSession();
-
-  const isSocketConnected = useIsSocketConnected();
 
   if (!session.data) {
     return (
@@ -20,19 +29,17 @@ export default function OwnerTopbar() {
         </div>
 
         <div className="flex gap-3 items-center">
-          <h1 className="font-semibold hidden md:block text-sm">Username</h1>
-          <div className="relative w-fit">
-            <Avatar className="size-8">
-              <AvatarImage
-                src={"/uploads/avatar/default-avatar.jpg"}
-                alt={"avatar"}
-              />
-              <AvatarFallback className="text-xs">AV</AvatarFallback>
-            </Avatar>
-            <span className="border-background bg-destructive absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2">
-              <span className="sr-only">Busy</span>
-            </span>
-          </div>
+          {connected ? <IconWifi /> : <IconWifiOff />}
+
+          {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
+
+          <Avatar className="size-8">
+            <AvatarImage
+              src={`/uploads/avatar/default-avatar.jpg`}
+              alt={"avatar"}
+            />
+            <AvatarFallback className="text-xs">AV</AvatarFallback>
+          </Avatar>
         </div>
       </div>
     );
@@ -46,17 +53,19 @@ export default function OwnerTopbar() {
       </div>
 
       <div className="flex gap-3 items-center">
-        <h1 className="font-semibold hidden md:block text-sm">
-          {session.data.user.name}
-        </h1>
+        {connected ? <IconWifi /> : <IconWifiOff />}
+
+        {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
 
         <Avatar className="size-8">
           <AvatarImage
-            src={session.data.user.avatar}
-            alt={session.data.user.name}
+            src={`/uploads/avatar/default-avatar.jpg`}
+            alt={"avatar"}
           />
-          <AvatarFallback className="text-xs">HR</AvatarFallback>
+          <AvatarFallback className="text-xs">AV</AvatarFallback>
         </Avatar>
+
+        {/* <ToggleDarkMode /> */}
       </div>
     </div>
   );

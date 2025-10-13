@@ -3,17 +3,14 @@
 import { Prisma } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { LocalStorageService } from "@/services/storage_services";
+import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
-import {
-  InputShopSchemaType,
-  UpdateShopSchemaType,
-} from "@/validations/schemas/shop";
+import { InputShopSchemaType } from "@/validations/schemas/shop";
 
 export async function uploadShopImage(file: File) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(file, "", "shops");
+  const shopImageUrl = await storageService.uploadImage(file, "shops");
 
   return shopImageUrl;
 }
@@ -21,11 +18,7 @@ export async function uploadShopImage(file: File) {
 export async function uploadShopQRCode(file: File) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(
-    file,
-    "",
-    "shop-qrcode"
-  );
+  const shopImageUrl = await storageService.uploadImage(file, "shop-qrcode");
 
   return shopImageUrl;
 }

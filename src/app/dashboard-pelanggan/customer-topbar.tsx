@@ -2,10 +2,22 @@
 
 import TopbarAvatar from "@/components/topbar-avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  IconBellExclamation,
+  IconBellRinging,
+  IconWifi,
+  IconWifiOff,
+} from "@tabler/icons-react";
 import { UtensilsCrossed } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-export default function CustomerTopbar() {
+export default function CustomerTopbar({
+  connected = false,
+  subscribed = false,
+}: {
+  connected: boolean;
+  subscribed: boolean;
+}) {
   const session = useSession();
 
   if (!session.data) {
@@ -17,10 +29,13 @@ export default function CustomerTopbar() {
         </div>
 
         <div className="flex gap-3 items-center">
-          <h1 className="font-semibold hidden md:block text-sm">Username</h1>
+          {connected ? <IconWifi /> : <IconWifiOff />}
+
+          {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
+
           <Avatar className="size-8">
             <AvatarImage
-              src={"/uploads/avatar/default-avatar.jpg"}
+              src={`/uploads/avatar/default-avatar.jpg`}
               alt={"avatar"}
             />
             <AvatarFallback className="text-xs">AV</AvatarFallback>
@@ -38,7 +53,17 @@ export default function CustomerTopbar() {
       </div>
 
       <div className="flex gap-3 items-center">
-        <TopbarAvatar />
+        {connected ? <IconWifi /> : <IconWifiOff />}
+
+        {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
+
+        <Avatar className="size-8">
+          <AvatarImage
+            src={`/uploads/avatar/default-avatar.jpg`}
+            alt={"avatar"}
+          />
+          <AvatarFallback className="text-xs">AV</AvatarFallback>
+        </Avatar>
 
         {/* <ToggleDarkMode /> */}
       </div>

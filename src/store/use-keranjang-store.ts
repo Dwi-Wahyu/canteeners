@@ -44,7 +44,7 @@ export type KeranjangState = {
     setShopPaymentMethod: (
       kedaiId: string,
       paymentMethod?: PaymentMethod
-    ) => void; // Action baru
+    ) => void;
   };
 };
 
@@ -226,20 +226,13 @@ export const useKeranjangStore = create<KeranjangState>((set) => ({
 
         return {
           kedai: updatedKedai,
-          totalQuantity: state.totalQuantity, // Tidak berubah
-          totalPrice: state.totalPrice, // Tidak berubah
+          totalQuantity: state.totalQuantity,
+          totalPrice: state.totalPrice,
         };
       });
     },
   },
 }));
-
-// export const useKeranjang = useKeranjangStore((state) => state.kedai);
-// export const useKeranjangActions = useKeranjangStore((state) => state.actions);
-// export const useKeranjangTotals = useKeranjangStore((state) => ({
-//   totalQuantity: state.totalQuantity,
-//   totalPrice: state.totalPrice,
-// }));
 
 export function useKeranjang() {
   return useKeranjangStore((state) => state.kedai);

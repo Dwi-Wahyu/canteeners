@@ -2,14 +2,14 @@
 
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { LocalStorageService } from "@/services/storage_services";
+import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
 import { InputProductSchemaType } from "@/validations/schemas/product";
 
 export async function uploadProductImage(file: File, name: string) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(file, name, "products");
+  const shopImageUrl = await storageService.uploadImage(file, "product");
 
   return shopImageUrl;
 }

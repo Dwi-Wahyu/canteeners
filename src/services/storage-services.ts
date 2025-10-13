@@ -8,10 +8,11 @@ export interface StorageService {
 
 const UPLOAD_BASE_DIR = "public/uploads";
 const AVATAR_DIR = "avatar";
-
-function sanitizeFileNamePart(input: string): string {
-  return input.replace(/[/\\:*?"<>|]/g, "_");
-}
+const CANTEEN_DIR = "canteen";
+const PAYMENT_PROOF_DIR = "payment-proof";
+const PRODUCT_DIR = "product";
+const SHOP_QRCODE_DIR = "shop-qrcode";
+const TABLE_QRCODE_DIR = "table-qrcode";
 
 function ensureDirExists(dirPath: string) {
   if (!existsSync(dirPath)) {
@@ -22,21 +23,22 @@ function ensureDirExists(dirPath: string) {
 export class LocalStorageService implements StorageService {
   constructor() {
     ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, AVATAR_DIR));
+    ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, CANTEEN_DIR));
+    ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, PAYMENT_PROOF_DIR));
+    ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, PRODUCT_DIR));
+    ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, SHOP_QRCODE_DIR));
+    ensureDirExists(join(process.cwd(), UPLOAD_BASE_DIR, TABLE_QRCODE_DIR));
   }
 
   /**
-   * Mengunggah gambar avatar ke penyimpanan lokal di server.
+   * Mengunggah gambar ke penyimpanan lokal di server.
    *
    * @param file Objek File yang diunggah.
    * @param filename Filename yang terkait dengan gambar (digunakan untuk penamaan file).
    * @param subfolder Subfolder yang terkait dengan gambar (digunakan untuk tempat menyimpan file).
-   * @returns Promise yang resolve dengan URL relatif avatar yang diunggah, atau reject dengan error.
+   * @returns Promise yang resolve dengan URL gambar yang diunggah, atau reject dengan error.
    */
-  public async uploadImage(
-    file: File,
-    filename: string | undefined | null,
-    subfolder: string
-  ): Promise<string> {
+  public async uploadImage(file: File, subfolder: string): Promise<string> {
     const allowedExtensions = [
       ".jpg",
       ".jpeg",
@@ -51,10 +53,6 @@ export class LocalStorageService implements StorageService {
       throw new Error(`Format gambar tidak didukung: ${fileExtension}`);
     }
 
-    // const sanitizedIdentifier = filename ? sanitizeFileNamePart(filename) : "";
-
-    // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    // const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
     const uniqueFileName = `${uuidv4()}${fileExtension}`;
 
     const targetDir = join(process.cwd(), UPLOAD_BASE_DIR, subfolder);
@@ -74,10 +72,7 @@ export class LocalStorageService implements StorageService {
       throw new Error(`Gagal menyimpan gambar: ${error.message}`);
     }
 
-    const relativeUrlPath = `/${UPLOAD_BASE_DIR.split("/")
-      .slice(1)
-      .join("/")}/${subfolder}/${uniqueFileName}`;
-    return relativeUrlPath;
+    return uniqueFileName;
   }
 
   /**
@@ -86,13 +81,9 @@ export class LocalStorageService implements StorageService {
    * @param file Objek File yang diunggah.
    * @param filename Identifier unik untuk file (misalnya ID berita atau judul berita yang disanitasi).
    * @param subfolder Subfolder di dalam UPLOAD_BASE_DIR tempat menyimpan file (misalnya 'berita').
-   * @returns Promise yang resolve dengan URL relatif media yang diunggah, atau reject dengan error.
+   * @returns Promise yang resolve dengan URL media yang diunggah, atau reject dengan error.
    */
-  public async uploadMedia(
-    file: File,
-    filename: string,
-    subfolder: string
-  ): Promise<string> {
+  public async uploadMedia(file: File, subfolder: string): Promise<string> {
     const allowedImageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".svg"];
     const allowedVideoExtensions = [".mp4", ".avi", ".mov", ".webm", ".mkv"];
     const allowedExtensions = [
@@ -110,11 +101,7 @@ export class LocalStorageService implements StorageService {
       );
     }
 
-    // const sanitizedIdentifier = sanitizeFileNamePart(filename);
-
-    // const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const uniqueFileName = `${uuidv4()}${fileExtension}`;
-    // const uniqueFileName = `${sanitizedIdentifier}_${timestamp}_${uuidv4()}${fileExtension}`;
 
     const targetDir = join(process.cwd(), UPLOAD_BASE_DIR, subfolder);
     ensureDirExists(targetDir);
@@ -132,9 +119,6 @@ export class LocalStorageService implements StorageService {
       throw new Error(`Gagal menyimpan media: ${error.message}`);
     }
 
-    const relativeUrlPath = `/${UPLOAD_BASE_DIR.split("/")
-      .slice(1)
-      .join("/")}/${subfolder}/${uniqueFileName}`;
-    return relativeUrlPath;
+    return uniqueFileName;
   }
 }

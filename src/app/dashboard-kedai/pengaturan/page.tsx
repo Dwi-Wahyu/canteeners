@@ -1,158 +1,155 @@
-"use client";
+import { Card, CardContent } from "@/components/ui/card";
 
-import LoadingUserSessionPage from "@/app/_components/loading-user-session-page";
-import UnauthorizedPage from "@/app/_components/unauthorized-page";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { IconDoorExit, IconEdit, IconPlus } from "@tabler/icons-react";
-import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDateToYYYYMMDD } from "@/helper/date-helper";
-import { formatToHour } from "@/helper/hour-helper";
-import AddShopPaymentMethodDialog from "./add-shop-payment-method-dialog";
-import { getUserProfile } from "@/app/admin/users/queries";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { auth } from "@/config/auth";
+import { redirect } from "next/navigation";
+import {
+  IconBell,
+  IconChevronRight,
+  IconCreditCard,
+  IconExclamationCircle,
+  IconFileTextShield,
+  IconMessageUser,
+  IconUserEdit,
+} from "@tabler/icons-react";
+import { MessagesSquare, Store } from "lucide-react";
+import Link from "next/link";
+import LogoutButtonDialog from "@/app/dashboard-pelanggan/pengaturan/logout-button-dialog";
 
-type UserProfile = Awaited<ReturnType<typeof getUserProfile>>;
+export default async function OwnerSettingsPage() {
+  const session = await auth();
 
-export default function PengaturanPage() {
-  const session = useSession();
-  const [userProfile, setUserProfile] = useState<UserProfile>(null);
-
-  function handleLogout() {
-    signOut({
-      redirectTo: "/auth/signin",
-    });
-  }
-
-  useEffect(() => {
-    if (session.data) {
-      getUserProfile(session.data.user.id).then((data) => {
-        setUserProfile(data);
-      });
-    }
-  }, [session.data]);
-
-  if (session.status === "loading") {
-    return <LoadingUserSessionPage />;
-  }
-
-  if (!session.data) {
-    return <UnauthorizedPage />;
+  if (!session) {
+    redirect("/auth/signin");
   }
 
   return (
-    <div>
-      <h1 className="text-xl mb-5 font-semibold">Pengaturan</h1>
+    <div className="">
+      {/* <Card className="p-4">
+        <CardContent className="flex items-center gap-4 px-0">
+          <Avatar className="size-16">
+            <AvatarImage
+              src={`/uploads/avatar/${session.user.avatar}`}
+              alt={session.user.name}
+            />
+            <AvatarFallback className="text-xs">HR</AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-lg font-semibold">{session.user.name}</h1>
+            <h1 className="text-muted-foreground">{session.user.username}</h1>
+          </div>
+        </CardContent>
+      </Card> */}
 
-      {userProfile ? (
-        <>
-          <Card>
-            <CardContent>
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-lg font-semibold">Profil Anda</h1>
+      <h1 className="mb-2 font-semibold">Personal</h1>
+      <Link href={"/pengaturan/profil/edit"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconUserEdit className="w-5 h-5" />
+              <h1>Edit Profil Anda</h1>
+            </div>
 
-                <Button onClick={handleLogout} size={"sm"}>
-                  <IconDoorExit />
-                  Logout
-                </Button>
-              </div>
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
-              {userProfile && (
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-10">
-                      <AvatarImage
-                        src={
-                          userProfile.avatar ??
-                          "/uploads/avatar/default-avatar.jpg"
-                        }
-                      />
-                      <AvatarFallback>
-                        {userProfile.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="leading-tight">
-                      <h1 className="font-semibold">{userProfile.name}</h1>
-                      <h1>{userProfile.username}</h1>
-                    </div>
-                  </div>
+      <Link href={"/pengaturan/profil-kedai/edit"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <Store className="w-5 h-5" />
+              <h1>Edit Profil Kedai</h1>
+            </div>
 
-                  <div className="mt-2">
-                    <h1>Login Terakhir Pada</h1>
-                    <h1 className="text-muted-foreground">
-                      {formatDateToYYYYMMDD(userProfile.last_login)}{" "}
-                      {formatToHour(userProfile.last_login)}
-                    </h1>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
-          {userProfile.shop_owned && (
-            <Card className="mt-5">
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="text-lg font-semibold">Profil Warung</h1>
+      <Link href={"/pengaturan/pesan-singkat"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <MessagesSquare className="w-5 h-5" />
+              <h1>Pesan Singkat</h1>
+            </div>
 
-                  <Button onClick={handleLogout} size={"sm"}>
-                    Ubah Data
-                  </Button>
-                </div>
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
-                <img
-                  src={userProfile.shop_owned.image_url}
-                  alt=""
-                  className="rounded-xl"
-                />
+      <LogoutButtonDialog />
 
-                <div>
-                  <h1>Nama</h1>
-                  <h1 className="text-muted-foreground">
-                    {userProfile.shop_owned.name}
-                  </h1>
-                </div>
+      <h1 className="mt-2 mb-2 font-semibold">Notifikasi</h1>
+      <Link href={"/pengaturan/notifikasi"}>
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconBell className="w-5 h-5" />
+              <h1>Atur Notifikasi</h1>
+            </div>
 
-                <div>
-                  <h1>Deskripsi</h1>
-                  <h1 className="text-muted-foreground">
-                    {userProfile.shop_owned.description}
-                  </h1>
-                </div>
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <h1>Metode Pembayaran</h1>
+      <h1 className="mt-4 mb-2 font-semibold">Pembayaran</h1>
+      <Link href={"/pengaturan/metode-pembayaran"}>
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconCreditCard className="w-5 h-5" />
+              <h1>Metode Pembayaran</h1>
+            </div>
 
-                    <AddShopPaymentMethodDialog
-                      shop_id={userProfile.shop_owned.id}
-                    />
-                  </div>
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
-                  {userProfile.shop_owned.payments.length === 0 ? (
-                    <div className="text-muted-foreground">
-                      Belum ada metode pembayaran
-                    </div>
-                  ) : (
-                    <>
-                      {userProfile.shop_owned.payments.map((payment) => (
-                        <div key={payment.id}>
-                          <h1>{payment.method}</h1>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </>
-      ) : (
-        <div>
-          <h1>Data Profil Tidak Ditemukan</h1>
-        </div>
-      )}
+      <h1 className="mt-4 mb-2 font-semibold">Tentang Aplikasi</h1>
+      <Link href={"/pengaturan/kebijakan-privasi"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconFileTextShield className="w-5 h-5" />
+              <h1>Kebijakan & Privasi</h1>
+            </div>
+
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
+
+      <Link href={"/pengaturan/kebijakan-privasi"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconExclamationCircle className="w-5 h-5" />
+              <h1>Versi Aplikasi</h1>
+            </div>
+
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
+
+      <Link href={"/pengaturan/kebijakan-privasi"} className="mb-4 block">
+        <Card className="p-4">
+          <CardContent className="flex px-0 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <IconMessageUser className="w-5 h-5" />
+              <h1>Pusat Bantuan</h1>
+            </div>
+
+            <IconChevronRight className="text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 }

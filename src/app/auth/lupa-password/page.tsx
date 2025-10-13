@@ -35,7 +35,7 @@ export default async function LupaPasswordPage() {
                 <CardContent className="flex flex-col gap-1 items-center justify-center">
                   <Avatar className="size-14">
                     <AvatarImage
-                      src={admin.avatar ?? "/uploads/avatar/default-avatar.jpg"}
+                      src={admin.avatar ?? "default-avatar.jpg"}
                       alt={admin.name}
                     />
                     <AvatarFallback className="text-xs">HR</AvatarFallback>

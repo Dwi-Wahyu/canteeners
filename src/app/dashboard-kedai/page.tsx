@@ -8,8 +8,9 @@ import {
   DollarSign,
   MessageCircleDashed,
 } from "lucide-react";
+import ToggleShopStatus from "./toggle-dashboard-status";
 
-export default async function DashboardWarungAnda() {
+export default async function OwnerDashboard() {
   const session = await auth();
 
   if (!session) {
@@ -48,6 +49,8 @@ export default async function DashboardWarungAnda() {
           value="23"
         />
       </div>
+
+      <ToggleShopStatus />
     </div>
   );
 }

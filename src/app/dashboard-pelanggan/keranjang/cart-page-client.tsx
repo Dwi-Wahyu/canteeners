@@ -106,8 +106,6 @@ export default function CartPageClient({ userId }: { userId: string }) {
               </div>
 
               <div className="mt-4 flex justify-end gap-3">
-                {/* <NavigationButton url="/dashboard-pelanggan" /> */}
-
                 <AlertDialog
                   open={openConfirmation}
                   onOpenChange={setOpenConfirmation}

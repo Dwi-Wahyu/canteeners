@@ -27,8 +27,11 @@ secret.md
 !/public/uploads/avatar/.gitkeep
 !/public/uploads/avatar/default-avatar.jpg
 
-/public/uploads/shops/*
-!/public/uploads/shops/.gitkeep
+/public/uploads/payment-proof/*
+!/public/uploads/payment-proof/.gitkeep
+
+/public/uploads/shop/*
+!/public/uploads/shop/.gitkeep
 
 /public/uploads/shop-qrcode/*
 !/public/uploads/shop-qrcode/.gitkeep
@@ -36,15 +39,11 @@ secret.md
 /public/uploads/table-qrcode/*
 !/public/uploads/table-qrcode/.gitkeep
 
-/public/uploads/products/*
-!/public/uploads/products/.gitkeep
+/public/uploads/product/*
+!/public/uploads/product/.gitkeep
 
-/public/uploads/laporan/*
-!/public/uploads/laporan/.gitkeep
-
-/public/uploads/proof/*
-!/public/uploads/proof/.gitkeep
-
+/public/uploads/testimony/*
+!/public/uploads/testimony/.gitkeep
 
 # next.js
 /.next/

@@ -12,6 +12,15 @@ export async function getUserAllConversations(user_id: string) {
       },
     },
     include: {
+      _count: {
+        select: {
+          messages: {
+            where: {
+              is_read: false,
+            },
+          },
+        },
+      },
       participants: {
         where: {
           user_id: {

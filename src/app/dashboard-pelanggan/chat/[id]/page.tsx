@@ -50,7 +50,7 @@ export default async function ConversationPage({
               <AvatarImage
                 src={
                   conversation.participants[0].user.avatar ??
-                  "/uploads/avatar/default-avatar.jpg"
+                  "default-avatar.jpg"
                 }
               />
               <AvatarFallback>

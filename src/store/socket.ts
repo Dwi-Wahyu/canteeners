@@ -8,6 +8,8 @@ interface SocketStore {
   socket: Socket | null;
   connected: boolean;
   subscribed: boolean;
+  joinedConversation: boolean;
+
   connect: (userId: string) => void;
   disconnect: () => void;
   joinConversation: (conversationId: string) => void;
@@ -15,13 +17,14 @@ interface SocketStore {
   leaveConversation: (conversationId: string) => void;
 }
 
-const useSocketStore = create<SocketStore>((set, get) => ({
+export const useSocketStore = create<SocketStore>((set, get) => ({
   socket: null,
   connected: false,
   subscribed: false,
+  joinedConversation: false,
 
   connect: (userId: string) => {
-    const existing = get().socket;
+    const { socket: existing, subscribed } = get();
     const socket = existing ?? getSocket();
 
     if (!socket.connected) {
@@ -30,17 +33,26 @@ const useSocketStore = create<SocketStore>((set, get) => ({
       socket.on("connect", () => {
         console.log("✅ Socket connected:", socket.id);
         set({ connected: true });
+
+        const { subscribed: currentSubscribed } = get();
+        if (!currentSubscribed) {
+          socket.emit("subscribe_notifications", userId);
+          set({ subscribed: true });
+          console.log("📩 subscribe notifikasi untuk", userId);
+        }
       });
 
       socket.on("disconnect", () => {
         console.log("❌ Socket disconnected");
-        set({ connected: false });
+        set({ connected: false, subscribed: false });
       });
+    } else {
+      if (!subscribed) {
+        socket.emit("subscribe_notifications", userId);
+        set({ subscribed: true });
+        console.log("📩 subscribe notifikasi untuk", userId);
+      }
     }
-
-    socket.emit("subscribe_notifications", userId);
-    set({ subscribed: true });
-    console.log("subscribe notifikasi untuk " + userId);
 
     set({ socket });
   },
@@ -56,7 +68,11 @@ const useSocketStore = create<SocketStore>((set, get) => ({
   joinConversation: (conversationId) => {
     const socket = get().socket;
     if (socket && socket.connected) {
-      socket.emit("join_conversation", conversationId);
+      socket.emit("join_conversation", conversationId, (response: string) => {
+        if (response === "joined") {
+          set({ joinedConversation: true });
+        }
+      });
     }
   },
 
@@ -74,6 +90,7 @@ const useSocketStore = create<SocketStore>((set, get) => ({
     if (socket && socket.connected) {
       socket.emit("leave_conversation", conversationId);
       console.log("keluar dari percakapan ", conversationId);
+      set({ joinedConversation: false });
     }
   },
 }));
