@@ -12,6 +12,7 @@ import Link from "next/link";
 import { getUserAllConversations } from "@/app/chat/server-queries";
 import { useSession } from "next-auth/react";
 import { useRouter } from "nextjs-toploader/app";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ReturnTypeConversations = Awaited<
   ReturnType<typeof getUserAllConversations>
@@ -79,11 +80,29 @@ export default function ChatPage() {
         <Input className="w-full mb-4" placeholder="Cari Nama . . ." />
 
         <ScrollArea>
-          {isLoading && <div>Memuat . . .</div>}
+          {isLoading && (
+            <div className="flex flex-col gap-4">
+              <Skeleton className="w-full h-12" />
+              <Skeleton className="w-full h-12" />
+              <Skeleton className="w-full h-12" />
+              <Skeleton className="w-full h-12" />
+            </div>
+          )}
 
           {!isLoading && conversations.length === 0 && (
-            <div className="text-center text-muted-foreground">
-              Belum ada percakapan
+            <div className="text-center flex-col p-4 border rounded-xl flex justify-center gap-2 items-center text-muted-foreground">
+              <h1 className="font-semibold">Percakapan Masih Kosong</h1>
+
+              <h1 className="text-sm">
+                Percakapan yang lebih dari satu bulan akan dihapus secara
+                otomatis. Silakan buat order untuk memulai percakapan baru.
+              </h1>
+
+              <Button className="mt-2" variant={"outline"}>
+                <Link href={"/kebijakan-dan-privasi"}>
+                  Pelajari Selengkapnya
+                </Link>
+              </Button>
             </div>
           )}
 
@@ -92,7 +111,7 @@ export default function ChatPage() {
               {conversations.map((conversation) => (
                 <Link
                   key={conversation.id}
-                  className="flex mb-4 items-center justify-between px-4 py-3 rounded-xl shadow-xs border border-secondary hover:bg-secondary"
+                  className="flex mb-4 items-center justify-between px-4 py-3 rounded-xl shadow-xs border border-card bg-card hover:bg-secondary"
                   href={"/dashboard-kedai/chat/" + conversation.id}
                 >
                   <div className="flex gap-2 items-center">
@@ -117,8 +136,9 @@ export default function ChatPage() {
                     </div>
                   </div>
 
-                  {/* Ini menampilkan jumlah pesan yang belum dibaca */}
-                  <Badge>{conversation._count.messages}</Badge>
+                  {conversation._count.messages > 0 && (
+                    <Badge>{conversation._count.messages}</Badge>
+                  )}
                 </Link>
               ))}
             </div>

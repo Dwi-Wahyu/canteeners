@@ -10,10 +10,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { IconLogout } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
+
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import { LogOut } from "lucide-react";
 
 export default function LogoutButtonDialog() {
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
@@ -27,16 +34,21 @@ export default function LogoutButtonDialog() {
 
   return (
     <AlertDialog open={openLogoutDialog} onOpenChange={setOpenLogoutDialog}>
-      <button onClick={() => setOpenLogoutDialog(true)} className="w-full mb-3">
-        <Card className="p-4">
-          <CardContent className="flex px-0 justify-between items-center">
-            <div className="flex gap-2 items-center">
-              <IconLogout />
-              <h1>Logout</h1>
-            </div>
-          </CardContent>
-        </Card>
-      </button>
+      <Item
+        variant="outline"
+        size="sm"
+        className="w-full cursor-pointer"
+        asChild
+      >
+        <button onClick={() => setOpenLogoutDialog(true)}>
+          <ItemMedia>
+            <LogOut className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Logout</ItemTitle>
+          </ItemContent>
+        </button>
+      </Item>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Anda yakin logout ?</AlertDialogTitle>

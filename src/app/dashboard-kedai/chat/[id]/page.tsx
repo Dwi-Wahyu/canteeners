@@ -65,7 +65,7 @@ export default async function ConversationPage({
               </AvatarFallback>
             </Avatar>
 
-            <div>
+            <div className="text-center">
               <h1 className="leading-tight font-semibold">
                 {conversation.participants[0].user.name}
               </h1>

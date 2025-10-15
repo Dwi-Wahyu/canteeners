@@ -29,9 +29,9 @@ export default function OwnerTopbar({
         </div>
 
         <div className="flex gap-3 items-center">
-          {connected ? <IconWifi /> : <IconWifiOff />}
+          {/* {connected ? <IconWifi /> : <IconWifiOff />}
 
-          {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
+          {subscribed ? <IconBellRinging /> : <IconBellExclamation />} */}
 
           <Avatar className="size-8">
             <AvatarImage

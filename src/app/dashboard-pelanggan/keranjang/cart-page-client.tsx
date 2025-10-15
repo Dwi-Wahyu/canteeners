@@ -28,6 +28,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { processOrder } from "./actions";
 import { toast } from "sonner";
+import { useRouter } from "nextjs-toploader/app";
 
 export default function CartPageClient({ userId }: { userId: string }) {
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -36,6 +37,8 @@ export default function CartPageClient({ userId }: { userId: string }) {
   const keranjangTotalQuantity = useKeranjangTotalQuantity();
 
   const keranjang = useKeranjang();
+
+  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: processOrder,
@@ -51,6 +54,7 @@ export default function CartPageClient({ userId }: { userId: string }) {
 
     if (result.success) {
       toast.success(result.message);
+      router.push("/dashboard-pelanggan/chat");
     } else {
       console.log(result.error);
 

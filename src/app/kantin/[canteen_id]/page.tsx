@@ -104,7 +104,7 @@ export default async function DetailKantinPage({
                     {shop.products.map((product) => (
                       <div key={product.id} className="flex items-center gap-2">
                         <img
-                          src={product.image_url}
+                          src={"/uploads/product/" + product.image_url}
                           alt=""
                           className="w-14 h-14 rounded-lg object-cover"
                         />
@@ -117,15 +117,6 @@ export default async function DetailKantinPage({
                       </div>
                     ))}
                   </div>
-
-                  {/* <div className="flex justify-center">
-                    <Link
-                      className="text-blue-500 group-hover:underline group-hover:underline-offset-2 text-center"
-                      href={`/admin/kantin/${parsedCanteenId}/${shop.id}`}
-                    >
-                      Lihat Menu Lengkap
-                    </Link>
-                  </div> */}
 
                   <div className="flex justify-end gap-1">
                     <IconStarFilled />
