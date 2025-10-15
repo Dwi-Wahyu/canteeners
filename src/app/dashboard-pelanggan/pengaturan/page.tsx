@@ -1,16 +1,26 @@
 import { Card, CardContent } from "@/components/ui/card";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import {
   IconBell,
   IconChevronRight,
+  IconExclamationCircle,
+  IconMessageUser,
   IconTrash,
   IconUserEdit,
 } from "@tabler/icons-react";
 
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+
 import LogoutButtonDialog from "./logout-button-dialog";
+import Link from "next/link";
 
 export default async function CustomerSettingsPage() {
   const session = await auth();
@@ -21,60 +31,69 @@ export default async function CustomerSettingsPage() {
 
   return (
     <div className="">
-      <Card className="p-4">
-        <CardContent className="flex items-center gap-4 px-0">
-          <Avatar className="size-16">
-            <AvatarImage
-              src={`/uploads/avatar/${session.user.avatar}`}
-              alt={session.user.name}
-            />
-            <AvatarFallback className="text-xs">HR</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-lg font-semibold">{session.user.name}</h1>
-            <h1 className="text-muted-foreground">{session.user.username}</h1>
-          </div>
-        </CardContent>
-      </Card>
+      <h1 className="mb-2 font-semibold">Personal</h1>
 
-      <h1 className="mt-4 mb-2 font-semibold">Profil</h1>
-      <Card className="p-4 mb-4">
-        <CardContent className="flex px-0 justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <IconUserEdit />
-            <h1>Edit Profil Anda</h1>
-          </div>
-
-          <IconChevronRight className="text-muted-foreground" />
-        </CardContent>
-      </Card>
-
-      <h1 className="mt-4 mb-2 font-semibold">Notifikasi</h1>
-      <Card className="p-4">
-        <CardContent className="flex px-0 justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <IconBell />
-            <h1>Atur Notifikasi</h1>
-          </div>
-
-          <IconChevronRight className="text-muted-foreground" />
-        </CardContent>
-      </Card>
-
-      <h1 className="mt-4 mb-2 font-semibold">Lainnya</h1>
+      <Item variant="outline" size="sm" className="mb-4" asChild>
+        <Link href="/pengaturan/profil">
+          <ItemMedia>
+            <IconUserEdit className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Edit Profil Anda</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
 
       <LogoutButtonDialog />
 
-      <button className="w-full">
-        <Card className="p-4 bg-destructive text-destructive-foreground">
-          <CardContent className="flex bg-destructive text-destructive-foreground px-0 justify-between items-center">
-            <div className="flex gap-2 items-center">
-              <IconTrash />
-              <h1>Hapus Akun</h1>
-            </div>
-          </CardContent>
-        </Card>
-      </button>
+      <h1 className="mt-4 mb-2 font-semibold">Notifikasi</h1>
+
+      <Item variant="outline" size="sm" asChild>
+        <Link href="/pengaturan/notifikasi">
+          <ItemMedia>
+            <IconBell className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Atur Notifikasi</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <h1 className="mt-4 mb-2 font-semibold">Lainnya</h1>
+
+      <Item variant="outline" size="sm" className="mb-4" asChild>
+        <Link href="/pengaturan/notifikasi">
+          <ItemMedia>
+            <IconMessageUser className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Pusat Bantuan</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <Item variant="outline" size="sm" className="mb-4" asChild>
+        <Link href="/pengaturan/notifikasi">
+          <ItemMedia>
+            <IconExclamationCircle className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Versi Aplikasi</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
     </div>
   );
 }

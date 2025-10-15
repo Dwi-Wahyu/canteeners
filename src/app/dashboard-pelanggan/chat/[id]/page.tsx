@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { auth } from "@/config/auth";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import Link from "next/link";
 import ChatClient from "../../../chat/chat-client";
 import { getConversationMessages } from "@/app/chat/queries";
@@ -34,12 +34,7 @@ export default async function ConversationPage({
     <div className="relative min-h-screen">
       <div className="w-full fixed z-30 left-0 top-0 bg-secondary shadow text-secondary-foreground">
         <div className="py-4 px-5 md:px-0 container max-w-7xl mx-auto flex justify-between items-center">
-          <Button
-            asChild
-            className="rounded-full"
-            size={"icon"}
-            variant={"secondary"}
-          >
+          <Button asChild size={"icon"}>
             <Link href={"/dashboard-pelanggan/chat"}>
               <ChevronLeft />
             </Link>
@@ -71,9 +66,9 @@ export default async function ConversationPage({
             </div>
           </div>
 
-          <div>
-            <ToggleDarkMode />
-          </div>
+          <Button>
+            <Search />
+          </Button>
         </div>
       </div>
 

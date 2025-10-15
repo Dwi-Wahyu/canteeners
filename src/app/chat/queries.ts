@@ -6,6 +6,8 @@ export async function getConversationMessages(
   user_id: string,
   conversation_id: string
 ) {
+  await readAllMessageInConversation(conversation_id, user_id);
+
   return await prisma.conversation.findFirst({
     where: {
       id: conversation_id,
@@ -43,10 +45,22 @@ export async function getConversationMessages(
   });
 }
 
-export async function readAllMessageInConversation(conversation_id: string) {
+export async function readAllMessageInConversation(
+  conversation_id: string,
+  user_id: string
+) {
   await prisma.message.updateMany({
     where: {
       conversation_id,
+      conversation: {
+        participants: {
+          some: {
+            user: {
+              id: user_id,
+            },
+          },
+        },
+      },
     },
     data: {
       is_read: true,

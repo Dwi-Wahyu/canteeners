@@ -7,6 +7,8 @@ import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { getConversationMessages } from "./queries";
 import { useChatRoom } from "@/hooks/use-chat-room";
 import { formatToHour } from "@/helper/hour-helper";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function ChatClient({
   conversation,
@@ -38,6 +40,51 @@ export default function ChatClient({
       <div className="container mb-96 max-w-7xl mx-auto flex flex-col gap-4">
         {messages.map((msg) => {
           const isSender = msg.sender_id === sender_id;
+
+          if (msg.type === "ORDER") {
+            return (
+              <div
+                key={msg.id}
+                className={`flex flex-col gap-1 ${
+                  isSender ? "items-end" : "items-start"
+                }`}
+              >
+                <div
+                  className={`px-4 py-3 shadow rounded-xl max-w-[80%] ${
+                    isSender
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  }`}
+                >
+                  <p className="text-sm break-words">{msg.content}</p>
+
+                  <Link
+                    className="flex justify-end text-sm underline underline-offset-2 mt-2"
+                    href={"/order/" + msg.order_id}
+                  >
+                    Lihat Detail
+                  </Link>
+                </div>
+
+                <div
+                  className={`flex gap-1 items-center ${
+                    isSender ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <IconChecks
+                    className={`w-4 h-4 ${
+                      msg.is_read ? "text-blue-500" : "text-muted-foreground"
+                    }`}
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    {formatDateToYYYYMMDD(msg.created_at)}{" "}
+                    {formatToHour(msg.created_at)}
+                  </span>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div
               key={msg.id}
@@ -81,10 +128,17 @@ export default function ChatClient({
           <Button size="lg">
             <Image />
           </Button>
-          <Textarea
+
+          {/* <Textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="bg-secondary grow rounded-xl min-h-10 max-h-40"
+            className="bg-secondary grow rounded-xl max-h-40"
+          /> */}
+
+          <Input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="bg-secondary grow rounded-xl max-h-40"
           />
           <Button
             size="lg"

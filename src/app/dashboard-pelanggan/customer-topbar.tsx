@@ -28,18 +28,17 @@ export default function CustomerTopbar({
           <h1 className="text-lg font-semibold">Canteeners</h1>
         </div>
 
-        <div className="flex gap-3 items-center">
-          {connected ? <IconWifi /> : <IconWifiOff />}
-
-          {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
-
-          <Avatar className="size-8">
+        <div className="relative w-fit">
+          <Avatar>
             <AvatarImage
               src={`/uploads/avatar/default-avatar.jpg`}
-              alt={"avatar"}
+              alt="Hallie Richards"
             />
-            <AvatarFallback className="text-xs">AV</AvatarFallback>
+            <AvatarFallback className="text-xs">HR</AvatarFallback>
           </Avatar>
+          <span className="border-background bg-destructive absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2">
+            <span className="sr-only">Busy</span>
+          </span>
         </div>
       </div>
     );
@@ -52,20 +51,21 @@ export default function CustomerTopbar({
         <h1 className="text-lg font-semibold">Canteeners</h1>
       </div>
 
-      <div className="flex gap-3 items-center">
-        {connected ? <IconWifi /> : <IconWifiOff />}
-
-        {subscribed ? <IconBellRinging /> : <IconBellExclamation />}
-
-        <Avatar className="size-8">
+      <div className="relative w-fit">
+        <Avatar>
           <AvatarImage
-            src={`/uploads/avatar/default-avatar.jpg`}
-            alt={"avatar"}
+            src={`/uploads/avatar/` + session.data.user.avatar}
+            alt="Hallie Richards"
           />
-          <AvatarFallback className="text-xs">AV</AvatarFallback>
+          <AvatarFallback className="text-xs">HR</AvatarFallback>
         </Avatar>
-
-        {/* <ToggleDarkMode /> */}
+        <span
+          className={`border-background absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2 ${
+            connected ? "bg-success" : "bg-destructive"
+          }`}
+        >
+          <span className="sr-only">Busy</span>
+        </span>
       </div>
     </div>
   );
