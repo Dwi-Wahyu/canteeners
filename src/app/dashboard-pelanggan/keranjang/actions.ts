@@ -28,7 +28,7 @@ export async function processOrder({
             shop_id: shop.id,
             customer_id: customerId,
             payment_method: shop.paymentMethod ?? "CASH",
-            status: "WAITING_SHOP_CONFIRMATION",
+            status: "PENDING_CONFIRMATION",
             total_price: shop.totalPrice,
             order_items: {
               createMany: {

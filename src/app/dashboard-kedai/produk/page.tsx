@@ -73,7 +73,7 @@ export default function ProductPage() {
                 <img
                   src={"/uploads/product/" + product.image_url}
                   alt=""
-                  className="my-3 rounded-lg"
+                  className="my-3 rounded-lg w-full"
                 />
 
                 <p className="text-muted-foreground mb-3 text-sm">
