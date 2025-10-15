@@ -73,7 +73,7 @@ export default function InputProductForm({ shop_id }: { shop_id: string }) {
       toast.success(result.message);
 
       setTimeout(() => {
-        router.push("/dashboard-warung/produk");
+        router.push("/dashboard-kedai/produk");
       }, 2000);
     } else {
       console.log(result.error);

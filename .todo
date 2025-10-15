@@ -33,3 +33,7 @@
 - buat tampilan sedang mengetik
 
 - fix harus masuk ulang ke detail chat untuk subscribe room conversation id
+
+- fix nanti seeding nya (sesuaikan urutan)
+
+- liat todo di src/app/order/actions.ts

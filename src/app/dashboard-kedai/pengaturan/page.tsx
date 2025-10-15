@@ -25,22 +25,6 @@ export default async function OwnerSettingsPage() {
 
   return (
     <div className="">
-      {/* <Card className="p-4">
-        <CardContent className="flex items-center gap-4 px-0">
-          <Avatar className="size-16">
-            <AvatarImage
-              src={`/uploads/avatar/${session.user.avatar}`}
-              alt={session.user.name}
-            />
-            <AvatarFallback className="text-xs">HR</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-lg font-semibold">{session.user.name}</h1>
-            <h1 className="text-muted-foreground">{session.user.username}</h1>
-          </div>
-        </CardContent>
-      </Card> */}
-
       <h1 className="mb-2 font-semibold">Personal</h1>
       <Link href={"/pengaturan/profil/edit"} className="mb-4 block">
         <Card className="p-4">

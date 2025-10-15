@@ -10,7 +10,7 @@ import { InputShopSchemaType } from "@/validations/schemas/shop";
 export async function uploadShopImage(file: File) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(file, "shops");
+  const shopImageUrl = await storageService.uploadImage(file, "shop");
 
   return shopImageUrl;
 }
