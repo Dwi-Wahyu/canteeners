@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { seedUsers } from "./seed-users";
 import { seedCanteens } from "./seed-canteens";
+import { seedAppTestimony } from "./seed-app-testimony";
 
 async function main() {
+  await seedAppTestimony();
   // await seedUsers();
-  await seedCanteens();
+  // await seedCanteens();
 }
 
 main()

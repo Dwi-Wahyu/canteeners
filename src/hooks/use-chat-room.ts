@@ -2,23 +2,48 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { saveMessage } from "@/app/chat/actions";
 import { useSocketStore } from "@/store/socket";
-import type { Message } from "@/app/generated/prisma";
 
+import {
+  Prisma,
+  Message,
+  MessageMedia,
+  MessageType,
+  MediaMimeType,
+} from "@/app/generated/prisma";
+
+// Definisikan tipe untuk Message dengan include media
+type MessageWithMedia = Prisma.MessageGetPayload<{
+  include: { media: true };
+}>;
+
+enum MessageTypeEnum {
+  TEXT = "TEXT",
+  SYSTEM = "SYSTEM",
+  ORDER = "ORDER",
+  PAYMENT_PROOF = "PAYMENT_PROOF",
+}
+
+enum MediaMimeTypeEnum {
+  IMAGE_JPEG = "image/jpeg",
+  IMAGE_PNG = "image/png",
+  // Tambahkan mime type lain sesuai kebutuhan, misalnya video/mp4
+}
+
+// Interface untuk UseChatRoomProps
 interface UseChatRoomProps {
   conversationId: string;
   senderId: string;
-  receiverId: string;
-  initialMessages: Message[];
+  initialMessages: MessageWithMedia[];
 }
 
 export function useChatRoom({
   conversationId,
   senderId,
-  receiverId,
   initialMessages,
 }: UseChatRoomProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [message, setMessage] = useState("");
+  const [text, setText] = useState("");
+  const [media, setMedia] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const socket = useSocketStore((s) => s.socket);
   const connected = useSocketStore((s) => s.connected);
@@ -27,13 +52,11 @@ export function useChatRoom({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Join / Leave Room otomatis
   useEffect(() => {
     joinConversation(conversationId);
     return () => leaveConversation(conversationId);
   }, [conversationId, joinConversation, leaveConversation]);
 
-  // Listener socket
   useEffect(() => {
     if (!socket || !connected) return;
 
@@ -61,22 +84,20 @@ export function useChatRoom({
     };
   }, [socket, connected, conversationId]);
 
-  // Otomatis scroll ke bawah
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Fungsi kirim pesan
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!text.trim()) return;
     setIsLoading(true);
 
     const saved = await saveMessage({
       conversation_id: conversationId,
       sender_id: senderId,
       type: "TEXT",
-      content: message,
-      image_url: "",
+      content: text,
+      media,
     });
 
     if (!saved.success || !saved.data) {
@@ -92,13 +113,15 @@ export function useChatRoom({
       socket.emit("send_message", newMessage);
     }
 
-    setMessage("");
+    setText("");
     setIsLoading(false);
   };
 
   return {
-    message,
-    setMessage,
+    text,
+    setText,
+    media,
+    setMedia,
     messages,
     handleSend,
     isLoading,

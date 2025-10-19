@@ -10,21 +10,23 @@ export async function saveMessage({
   sender_id,
   type,
   content,
-  image_url,
+  media,
 }: {
   conversation_id: string;
   sender_id: string;
   content?: string;
-  image_url?: string;
   type: MessageType;
+  media: File[];
 }): Promise<ServerActionReturn<Message>> {
   try {
+    if (media.length > 0) {
+    }
+
     const created = await prisma.message.create({
       data: {
         conversation_id,
         sender_id,
         content,
-        image_url,
         type,
       },
     });

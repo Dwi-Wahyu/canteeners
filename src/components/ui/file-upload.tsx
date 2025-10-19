@@ -1,5 +1,6 @@
 "use client";
 
+import { truncateString } from "@/helper/truncate-helper";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import {
@@ -1138,7 +1139,7 @@ function FileUploadItemMetadata(props: FileUploadItemMetadataProps) {
               size === "sm" && "font-normal text-[13px] leading-snug"
             )}
           >
-            {itemContext.fileState.file.name}
+            {truncateString({ string: itemContext.fileState.file.name })}
           </span>
           <span
             id={itemContext.sizeId}

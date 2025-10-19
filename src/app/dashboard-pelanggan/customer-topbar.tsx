@@ -1,13 +1,6 @@
 "use client";
 
-import TopbarAvatar from "@/components/topbar-avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  IconBellExclamation,
-  IconBellRinging,
-  IconWifi,
-  IconWifiOff,
-} from "@tabler/icons-react";
 import { UtensilsCrossed } from "lucide-react";
 import { useSession } from "next-auth/react";
 

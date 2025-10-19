@@ -56,6 +56,7 @@ export default function OrderDetailsClient({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const userIsShopOwner = data.shop.owner_id === user_id;
+  const userIsCustomer = data.customer_id === user_id;
 
   const [openRejectOrder, setOpenRejectOrder] = useState(false);
   const [openConfirmPayment, setOpenConfirmPayment] = useState(false);
@@ -64,6 +65,8 @@ export default function OrderDetailsClient({
   const [rejectOrderReason, setRejectOrderReason] = useState("");
   const [rejectPaymentReason, setRejectPaymentReason] = useState("");
   const [estimation, setEstimation] = useState<number | undefined>();
+
+  const isPaymentMethodCash = data.payment_method === "CASH";
 
   async function handleConfirmOrder() {
     startTransition(async () => {
@@ -131,29 +134,52 @@ export default function OrderDetailsClient({
         </h1>
       </div>
 
-      <h1 className="font-semibold">ID Order</h1>
-      <h1>{data.id}</h1>
+      <h1>ID Order</h1>
+      <h1 className="text-sm text-muted-foreground">{data.id}</h1>
       <Separator className="my-2" />
-      <h1 className="font-semibold">Nama Kedai</h1>
-      <h1>{data.shop.name}</h1>
-      <Separator className="my-2" />
-      <h1 className="font-semibold">Pelanggan</h1>
-      <h1>{data.customer.name}</h1>
-      <Separator className="my-2" />
-      <h1 className="font-semibold">Metode Pembayaran</h1>
-      <h1>{data.payment_method}</h1>
-      <Separator className="my-2" />
-      <h1 className="font-semibold">Status</h1>
-      <Badge variant={"secondary"}>{orderStatusMapping[data.status]}</Badge>
-      <Separator className="mt-3 mb-2" />
-      <h1 className="font-semibold">Estimasi Waktu Tunggu</h1>
-      <h1>{data.estimation} Menit</h1>
-      <Separator className="my-2" />
+      {userIsCustomer && (
+        <>
+          <h1>Nama Kedai</h1>
+          <h1 className="text-sm text-muted-foreground">{data.shop.name}</h1>
+          <Separator className="my-2" />
+        </>
+      )}
+      {userIsShopOwner && (
+        <>
+          <h1>Pelanggan</h1>
+          <h1 className="text-sm text-muted-foreground">
+            {data.customer.name}
+          </h1>
 
-      <h1 className="font-semibold">Pesanan</h1>
+          <Separator className="my-2" />
+        </>
+      )}
+      <h1>Metode Pembayaran</h1>
+      <h1 className="text-sm text-muted-foreground">{data.payment_method}</h1>
+      <Separator className="my-2" />
+      <h1>Status</h1>
+      <Badge variant={"default"}>{orderStatusMapping[data.status]}</Badge>
+      <Separator className="mt-3 mb-2" />
+
+      {data.status === "PROCESSING" && (
+        <>
+          <h1>Pesanan diproses pada</h1>
+          <h1 className="text-sm text-muted-foreground">
+            {formatToHour(data.processed_at)}
+          </h1>
+          <Separator className="my-2" />
+          <h1>Estimasi Waktu Tunggu</h1>
+          <h1 className="text-sm text-muted-foreground">
+            {data.estimation} Menit
+          </h1>
+          <Separator className="my-2" />
+        </>
+      )}
+
+      <h1>Pesanan</h1>
       <div>
         {data.order_items.map((item, idx) => (
-          <Item variant="muted" size="sm" className="mt-2" key={idx}>
+          <Item variant="outline" size="sm" className="mt-2" key={idx}>
             <ItemContent>
               <ItemTitle>{item.product.name}</ItemTitle>
               <ItemDescription>{item.quantity}x</ItemDescription>
@@ -174,6 +200,37 @@ export default function OrderDetailsClient({
         ))}
       </div>
 
+      {data.status === "COMPLETED" && userIsCustomer && (
+        <div>
+          <Separator className="mt-3 mb-2" />
+          <h1>Pesanan selesai</h1>
+          <h1 className="text-sm">
+            Pesanan anda telah selesai, silakan hubungi pemilik kedai
+          </h1>
+        </div>
+      )}
+
+      {data.status === "PROCESSING" && userIsShopOwner && (
+        <div>
+          <Separator className="mt-3 mb-2" />
+          <h1>Pesanan selesai</h1>
+          <h1 className="text-sm text-muted-foreground">
+            Tandai pesanan ini telah selesai
+          </h1>
+
+          <div className="flex gap-2 items-center justify-center mt-2">
+            <Button size={"sm"} variant={"outline"}>
+              Ubah Estimasi
+            </Button>
+
+            <Button size={"sm"}>
+              <IconCheck />
+              Tandai Selesai
+            </Button>
+          </div>
+        </div>
+      )}
+
       {data.status === "PENDING_CONFIRMATION" && userIsShopOwner && (
         <div>
           <Separator className="mt-3 mb-2" />
@@ -188,8 +245,12 @@ export default function OrderDetailsClient({
               onOpenChange={setOpenRejectOrder}
             >
               <AlertDialogTrigger asChild>
-                <Button variant={"destructive"} disabled={isPending}>
-                  <IconX className="mr-2 h-4 w-4" />
+                <Button
+                  size={"sm"}
+                  variant={"destructive"}
+                  disabled={isPending}
+                >
+                  <IconX />
                   Tolak
                 </Button>
               </AlertDialogTrigger>
@@ -211,6 +272,7 @@ export default function OrderDetailsClient({
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
                   <Button
+                    size={"sm"}
                     variant={"destructive"}
                     onClick={handleRejectOrder}
                     disabled={isPending}
@@ -220,21 +282,38 @@ export default function OrderDetailsClient({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            <Button onClick={handleConfirmOrder} disabled={isPending}>
-              <IconCheck className="mr-2 h-4 w-4" />
+            <Button
+              size={"sm"}
+              onClick={handleConfirmOrder}
+              disabled={isPending}
+            >
+              <IconCheck />
               Konfirmasi
             </Button>
           </div>
         </div>
       )}
 
+      {data.status === "WAITING_PAYMENT" &&
+        !isPaymentMethodCash &&
+        userIsCustomer && (
+          <div>
+            <Separator className="mt-3 mb-2" />
+            <h1 className="font-semibold">Pembayaran</h1>
+            <h1 className="text-sm">Silakan kirim bukti pembayaran</h1>
+
+            {/* Todo: Bikin input gambar */}
+          </div>
+        )}
+
       {data.status === "WAITING_SHOP_CONFIRMATION" && userIsShopOwner && (
         <div>
           <Separator className="mt-3 mb-2" />
           <h1 className="font-semibold">Konfirmasi Pembayaran</h1>
-          <h1 className="italic">
-            Pelanggan telah mengunggah bukti pembayaran. Silakan periksa dan
-            konfirmasi atau tolak.
+          <h1 className="text-sm">
+            {!isPaymentMethodCash
+              ? "Pelanggan telah mengunggah bukti pembayaran. Silakan periksa dan konfirmasi atau tolak."
+              : "Konfirmasi pelanggan telah melakukan pembayaran"}
           </h1>
           <div className="flex justify-center gap-3 mt-4">
             <AlertDialog
@@ -242,34 +321,41 @@ export default function OrderDetailsClient({
               onOpenChange={setOpenRejectPayment}
             >
               <AlertDialogTrigger asChild>
-                <Button variant={"destructive"} disabled={isPending}>
-                  <IconX className="mr-2 h-4 w-4" />
+                <Button
+                  size={"sm"}
+                  variant={"destructive"}
+                  disabled={isPending}
+                >
+                  <IconX />
                   Tolak
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Anda Yakin Menolak Pembayaran Ini?
+                    Yakin Menolak Pembayaran Ini?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Berikan alasan penolakan (misal: bukti tidak valid).
+                    Pelanggan akan diminta untuk mengirimkan kembali bukti
+                    pembayaran
                   </AlertDialogDescription>
                   <Input
                     value={rejectPaymentReason}
                     onChange={(e) => setRejectPaymentReason(e.target.value)}
-                    placeholder="Contoh: Bukti pembayaran tidak sesuai."
+                    placeholder="Alasan"
+                    className="mt-1"
                     disabled={isPending}
                   />
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
                   <Button
+                    size={"sm"}
                     variant={"destructive"}
                     onClick={handleRejectPayment}
                     disabled={isPending}
                   >
-                    Tolak Pembayaran
+                    Tolak
                   </Button>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -279,8 +365,8 @@ export default function OrderDetailsClient({
               onOpenChange={setOpenConfirmPayment}
             >
               <AlertDialogTrigger asChild>
-                <Button disabled={isPending}>
-                  <IconCheck className="mr-2 h-4 w-4" />
+                <Button size={"sm"} disabled={isPending}>
+                  <IconCheck />
                   Konfirmasi
                 </Button>
               </AlertDialogTrigger>
@@ -304,7 +390,11 @@ export default function OrderDetailsClient({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
-                  <Button onClick={handleConfirmPayment} disabled={isPending}>
+                  <Button
+                    size={"sm"}
+                    onClick={handleConfirmPayment}
+                    disabled={isPending}
+                  >
                     Konfirmasi Pembayaran
                   </Button>
                 </AlertDialogFooter>
