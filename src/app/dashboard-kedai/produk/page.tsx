@@ -10,6 +10,18 @@ import { useEffect, useState } from "react";
 import { getProductsByOwnerId } from "./queries";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemHeader,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import ProductCard from "./product-card";
+
 type ProductsType = Awaited<ReturnType<typeof getProductsByOwnerId>>;
 
 export default function ProductPage() {
@@ -66,23 +78,25 @@ export default function ProductPage() {
       ) : (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           {products.map((product) => (
-            <Card key={product.id}>
-              <CardContent>
-                <h1 className="font-semibold">{product.name}</h1>
+            // <Card key={product.id}>
+            //   <CardContent>
+            //     <h1 className="font-semibold">{product.name}</h1>
 
-                <img
-                  src={"/uploads/product/" + product.image_url}
-                  alt=""
-                  className="my-3 rounded-lg w-full"
-                />
+            //     <img
+            //       src={"/uploads/product/" + product.image_url}
+            //       alt=""
+            //       className="my-3 rounded-lg w-full"
+            //     />
 
-                <p className="text-muted-foreground mb-3 text-sm">
-                  {product.description}
-                </p>
+            //     <p className="text-muted-foreground mb-3 text-sm">
+            //       {product.description}
+            //     </p>
 
-                <h1 className="text-end font-semibold">Rp {product.price}</h1>
-              </CardContent>
-            </Card>
+            //     <h1 className="text-end font-semibold">Rp {product.price}</h1>
+            //   </CardContent>
+            // </Card>
+
+            <ProductCard product={product} key={product.id} />
           ))}
         </div>
       )}

@@ -6,26 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
-const TestimonialCard = ({
-  name,
-  role,
-  quote,
-}: {
-  name: string;
-  role: string;
-  quote: string;
-}) => (
-  <Card className="rounded-xl shadow-lg transition duration-300 hover:shadow-xl flex flex-col h-full">
-    <CardContent className="flex flex-col justify-between">
-      <p className="text-xl italic mb-4 flex-grow">"{quote}"</p>
-      <div className="pt-4">
-        <p className="font-semibold">{name}</p>
-        <p className="text-sm text-primary font-medium">{role}</p>
-      </div>
-    </CardContent>
-  </Card>
-);
+import AppTestimonySection from "./app-testimony-section";
+import { IconMenu, IconMenu2 } from "@tabler/icons-react";
+import LandingTopbar from "./landing-topbar";
 
 export default async function LandingPage() {
   const canteens = await prisma.canteen.findMany({
@@ -38,6 +21,12 @@ export default async function LandingPage() {
 
   const session = await auth();
 
+  const appTestimonies = await prisma.appTestimony.findMany({
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+
   if (session && session.user.role === "CUSTOMER") {
     redirect("/dashboard-pelanggan");
   }
@@ -48,28 +37,7 @@ export default async function LandingPage() {
 
   return (
     <div>
-      <header className="py-4 px-4 sm:px-8 bg-secondary shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <UtensilsCrossed className="w-6 h-6" />
-            <h1 className="text-2xl font-bold">Canteeners</h1>
-          </div>
-          <div className="hidden md:flex space-x-6 text-foreground">
-            <a href="#hero" className="hover:text-primary transition">
-              Beranda
-            </a>
-            <a href="#about" className="hover:text-primary transition">
-              Tentang Kami
-            </a>
-            <a href="#testimonials" className="hover:text-primary transition">
-              Testimoni
-            </a>
-            <a href="/auth/signin" className="hover:text-primary transition">
-              Login / Mendaftar
-            </a>
-          </div>
-        </div>
-      </header>
+      <LandingTopbar />
 
       <main>
         <section
@@ -209,32 +177,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="testimonials" className="py-16 md:py-24 bg-secondary">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h3 className="text-4xl font-bold text-primary">
-                Apa Kata Mereka?
-              </h3>
-              <p className="mt-3 text-xl">
-                Pengalaman pengguna dan pemilik warung di Canteeners.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <TestimonialCard
-                name="Risa Adelia"
-                role="Mahasiswi Teknik, Pengunjung Kantin"
-                quote="Dulu selalu stres kalau kantin lagi ramai, harus teriak-teriak pesan. Sekarang tinggal scan, pesan, dan tunggu di meja. Waktu istirahat jadi lebih tenang dan efektif. Canteeners benar-benar Kantin Naik Level!"
-              />
-
-              <TestimonialCard
-                name="Ibu Siti"
-                role="Pemilik Warung Nasi Goreng"
-                quote="Awalnya ragu, tapi ternyata sistem Canteeners sangat membantu. Pesanan masuk lebih terorganisir, tidak ada lagi salah catat. Penjualan saya bahkan sedikit meningkat karena pelanggan tidak takut lagi dengan antrian panjang."
-              />
-            </div>
-          </div>
-        </section>
+        <AppTestimonySection data={appTestimonies} />
       </main>
 
       <footer className="bg-secondary py-10 border-background border-t">

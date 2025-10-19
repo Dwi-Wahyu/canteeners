@@ -1,6 +1,7 @@
 "use server";
 
 import { errorResponse, successResponse } from "@/helper/action-helpers";
+import { formatToDatetimeHour } from "@/helper/hour-helper";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
@@ -18,13 +19,17 @@ export async function uploadShopQRCode(file: File) {
 export async function UpdateShop(
   payload: UpdateShopSchemaType
 ): Promise<ServerActionReturn<void>> {
+  const { open_time, close_time, ...data } = payload;
+
   try {
     const createdShop = await prisma.shop.update({
       where: {
         id: payload.id,
       },
       data: {
-        ...payload,
+        ...data,
+        open_time: open_time ? formatToDatetimeHour(open_time) : null,
+        close_time: close_time ? formatToDatetimeHour(close_time) : null,
       },
       select: {
         id: true,

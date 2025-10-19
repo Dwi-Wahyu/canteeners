@@ -34,7 +34,7 @@ export default async function ConversationPage({
   }
 
   if (conversation.participants[0].user.id === session.user.id) {
-    await readAllMessageInConversation(conversation.id);
+    await readAllMessageInConversation(conversation.id, session.user.id);
   }
 
   return (

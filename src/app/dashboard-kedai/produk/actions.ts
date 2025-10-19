@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
 import { InputProductSchemaType } from "@/validations/schemas/product";
+import { revalidatePath } from "next/cache";
 
 export async function uploadProductImage(file: File, name: string) {
   const storageService = new LocalStorageService();
@@ -30,6 +31,36 @@ export async function InputProduct(
     console.log(created);
 
     return successResponse(undefined, "Berhasil input produk");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan");
+  }
+}
+
+export async function ToggleProductAvailable(
+  id: number,
+  is_available: boolean
+): Promise<ServerActionReturn<boolean>> {
+  try {
+    const updated = await prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        is_available: !is_available,
+      },
+      select: {
+        is_available: true,
+      },
+    });
+
+    revalidatePath("/dashboard-kedai/produk");
+
+    return successResponse(
+      updated.is_available,
+      "Berhasil mengubah status produk"
+    );
   } catch (error) {
     console.log(error);
 

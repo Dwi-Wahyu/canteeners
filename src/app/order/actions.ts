@@ -17,6 +17,7 @@ export async function confirmPayment(
       },
       data: {
         status: "PROCESSING",
+        processed_at: new Date(),
         estimation,
       },
     });

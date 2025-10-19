@@ -1,25 +1,25 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Image } from "lucide-react";
-import { IconSend, IconChecks } from "@tabler/icons-react";
+import { IconChecks } from "@tabler/icons-react";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { getConversationMessages } from "./queries";
 import { useChatRoom } from "@/hooks/use-chat-room";
 import { formatToHour } from "@/helper/hour-helper";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { Order } from "../generated/prisma";
+import ChatInput from "./chat-input";
 
 export default function ChatClient({
   conversation,
   sender_id,
   receiver_id,
+  current_order,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
   receiver_id: string;
+  current_order?: Order;
 }) {
   const {
     messages,
@@ -31,7 +31,6 @@ export default function ChatClient({
   } = useChatRoom({
     conversationId: conversation.id,
     senderId: sender_id,
-    receiverId: receiver_id,
     initialMessages: conversation.messages,
   });
 
@@ -124,30 +123,25 @@ export default function ChatClient({
       </div>
 
       <div className="fixed bottom-0 left-0 w-full">
-        <div className="container max-w-7xl mx-auto flex gap-2 items-end py-4 px-5 md:px-0">
-          <Button size="lg">
-            <Image />
-          </Button>
+        <ChatInput conversation={conversation} sender_id={sender_id} />
 
-          {/* <Textarea
+        {/* <div className="container max-w-7xl mx-auto flex gap-2 items-end py-4 px-5 md:px-0">
+          <ImageFilePickerDialog />
+
+          <Textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="bg-secondary grow rounded-xl max-h-40"
-          /> */}
-
-          <Input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="bg-secondary grow rounded-xl max-h-40"
+            className="field-sizing-content max-h-30 min-h-0 resize-none py-1.75"
           />
+
           <Button
-            size="lg"
+            size="icon"
             onClick={handleSend}
             disabled={isLoading || message.trim() === ""}
           >
             <IconSend />
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

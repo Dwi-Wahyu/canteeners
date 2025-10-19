@@ -1,5 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
-
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import {
@@ -7,8 +5,7 @@ import {
   IconChevronRight,
   IconExclamationCircle,
   IconMessageUser,
-  IconTrash,
-  IconUserEdit,
+  IconUser,
 } from "@tabler/icons-react";
 
 import {
@@ -34,12 +31,12 @@ export default async function CustomerSettingsPage() {
       <h1 className="mb-2 font-semibold">Personal</h1>
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/pengaturan/profil">
+        <Link href="/profil">
           <ItemMedia>
-            <IconUserEdit className="size-5" />
+            <IconUser className="size-5" />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>Edit Profil Anda</ItemTitle>
+            <ItemTitle>Profil Anda</ItemTitle>
           </ItemContent>
           <ItemActions>
             <IconChevronRight className="size-4" />

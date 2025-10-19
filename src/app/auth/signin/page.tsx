@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/config/auth";
-import { Copyright, UtensilsCrossed } from "lucide-react";
 import LoginForm from "../login-form";
+import Image from "next/image";
 
 export default async function LoginPage() {
   const session = await auth();
@@ -14,8 +14,13 @@ export default async function LoginPage() {
             href="#"
             className="flex items-center gap-2 self-center font-medium"
           >
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <UtensilsCrossed className="size-4" />
+            <div className="flex size-7 items-center justify-center rounded-md">
+              <Image
+                src={"/app-logo.svg"}
+                width={16}
+                height={16}
+                alt="app-logo"
+              />
             </div>
             Canteneers.
           </a>
@@ -36,8 +41,13 @@ export default async function LoginPage() {
             href="#"
             className="flex items-center gap-2 self-center font-medium"
           >
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <UtensilsCrossed className="size-4" />
+            <div className="border flex size-6 items-center justify-center rounded-md">
+              <Image
+                src={"/app-logo.svg"}
+                width={16}
+                height={16}
+                alt="app-logo"
+              />
             </div>
             Canteneers.
           </a>

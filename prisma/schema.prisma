@@ -33,6 +33,8 @@ model User {
 
   conversations ConversationParticipant[]
 
+  violations CustomerViolations[]
+
   @@index([role])
   @@index([last_login])
   @@map("users")
@@ -65,17 +67,33 @@ model Shop {
   status           ShopStatus @default(ACTIVE)
   suspended_reason String?
 
+  open_time  DateTime?
+  close_time DateTime?
+
   products Product[]
   orders   Order[]
   owner    User      @relation(fields: [owner_id], references: [id])
   owner_id String    @unique
 
   payments Payment[]
+  // complaints ShopComplaints[]
 
   @@index([canteen_id])
   @@index([name])
   @@map("shops")
 }
+
+// todo: lengkapi ini
+// ini pelanggaran yang dilakukan kantin
+// model ShopComplaints {
+//   id       Int    @id @default(autoincrement())
+//   order_id String
+
+//   cause String
+
+//   shop    Shop?   @relation(fields: [shop_id], references: [id])
+//   shop_id String?
+// }
 
 enum ShopStatus {
   ACTIVE
@@ -114,6 +132,8 @@ model Product {
   shop_id     String
   order_items OrderItem[]
 
+  is_available Boolean @default(true)
+
   @@index([name])
   @@index([shop_id])
   @@map("products")
@@ -136,6 +156,7 @@ model ConversationParticipant {
   conversation_id String
   user            User         @relation(fields: [user_id], references: [id])
   user_id         String
+  is_read         Boolean      @default(false)
 
   @@id([conversation_id, user_id])
   @@index([user_id])
@@ -151,13 +172,14 @@ model Message {
   conversation    Conversation @relation(fields: [conversation_id], references: [id])
   conversation_id String
 
-  content   String?
-  image_url String?
-  type      MessageType @default(TEXT)
-  is_read   Boolean     @default(false)
+  content String?
+  type    MessageType @default(TEXT)
+  is_read Boolean     @default(false)
 
   order    Order?  @relation(fields: [order_id], references: [id])
   order_id String?
+
+  media MessageMedia[]
 
   @@index([conversation_id])
   @@index([sender_id])
@@ -165,10 +187,26 @@ model Message {
 }
 
 enum MessageType {
-  PAYMENT_PROOF
-  SYSTEM
-  ORDER
-  TEXT
+  TEXT // Pesan teks biasa, bisa punya media
+  SYSTEM // Pesan otomatis sistem
+  ORDER // Pesan berkaitan dengan pesanan
+  PAYMENT_PROOF // Pesan berisi bukti pembayaran (khusus)
+}
+
+model MessageMedia {
+  id         String        @id @default(uuid())
+  url        String
+  mime_type  MediaMimeType
+  message    Message       @relation(fields: [message_id], references: [id])
+  message_id String
+
+  @@index([message_id])
+  @@map("message_media")
+}
+
+enum MediaMimeType {
+  IMAGE
+  VIDEO
 }
 
 model Order {
@@ -179,11 +217,12 @@ model Order {
   customer    User   @relation(fields: [customer_id], references: [id])
   customer_id String
 
-  shop              Shop    @relation(fields: [shop_id], references: [id])
+  shop              Shop      @relation(fields: [shop_id], references: [id])
   shop_id           String
   estimation        Int? // dalam menit
   payment_proof_url String?
   rejected_reason   String?
+  processed_at      DateTime? // waktu ketika order mulai diproses
 
   total_price Float
 
@@ -215,6 +254,35 @@ model OrderItem {
   @@map("order_items")
 }
 
+model Faq {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String @db.LongText
+
+  @@map("faqs")
+}
+
+model AppTestimony {
+  id      Int    @id @default(autoincrement())
+  message String @db.LongText
+  from    String
+  role    String
+
+  created_at DateTime @default(now())
+
+  @@map("app_testimonies")
+}
+
+model ShopTestimony {
+  id      Int     @id @default(autoincrement())
+  message String  @db.LongText
+  from    String?
+
+  created_at DateTime @default(now())
+
+  @@map("shop_testimonies")
+}
+
 model QuickChat {
   id      Int     @id @default(autoincrement())
   message String
@@ -232,4 +300,20 @@ enum OrderStatus {
   COMPLETED // order selesai
   REJECTED // ditolak karena stok tidak ada
   PAYMENT_REJECTED // bukti pembayaran tidak valid
+  CANCELLED // pembatalan oleh customer
+}
+
+model CustomerViolations {
+  id          Int                   @id @default(autoincrement())
+  timestamp   DateTime
+  sum         Int?                  @default(0)
+  type        CustomerViolationType
+  user        User?                 @relation(fields: [customer_id], references: [id])
+  customer_id String?
+
+  @@map("customer_violations")
+}
+
+enum CustomerViolationType {
+  ORDER_CANCEL_WITHOUT_PAY
 }
