@@ -25,8 +25,16 @@ import { Loader, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUploadImage } from "@/app/_components/file-upload-image";
+import { Category } from "@/app/generated/prisma";
+import { SelectWithSearch } from "@/components/select-with-search";
 
-export default function InputProductForm({ shop_id }: { shop_id: string }) {
+export default function InputProductForm({
+  shop_id,
+  categories,
+}: {
+  shop_id: string;
+  categories: Category[];
+}) {
   const [files, setFiles] = useState<File[]>([]);
 
   const form = useForm<InputProductSchemaType>({
@@ -37,6 +45,7 @@ export default function InputProductForm({ shop_id }: { shop_id: string }) {
       image_url: "",
       price: "",
       shop_id,
+      category: null,
     },
   });
 
@@ -73,6 +82,11 @@ export default function InputProductForm({ shop_id }: { shop_id: string }) {
       toast.error(result.error.message);
     }
   };
+
+  const categoryOptions = categories.map((category) => ({
+    label: category.name,
+    value: category.slug,
+  }));
 
   return (
     <Form {...form}>
@@ -132,8 +146,26 @@ export default function InputProductForm({ shop_id }: { shop_id: string }) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Kategori</FormLabel>
+              <FormControl>
+                <SelectWithSearch
+                  options={categoryOptions}
+                  onValueChange={field.onChange}
+                  placeholder="Pilih kategori"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="w-full">
-          <h1 className="mb-2 text-sm">Gambar</h1>
+          <FormLabel className="mb-2">Gambar</FormLabel>
 
           <FileUploadImage
             multiple={false}

@@ -1,0 +1,80 @@
+model Shop {
+    id          String  @id @default(uuid())
+    name        String
+    description String?
+    image_url   String
+    canteen     Canteen @relation(fields: [canteen_id], references: [id])
+    canteen_id  Int
+
+    status           ShopStatus @default(ACTIVE)
+    suspended_reason String?
+
+    open_time  DateTime?
+    close_time DateTime?
+
+    products Product[]
+    orders   Order[]
+    owner    User      @relation(fields: [owner_id], references: [id])
+    owner_id String    @unique
+
+    order_mode OrderMode @default(READY_ONLY) // metode menyiapkan order
+
+    payments   Payment[]
+    complaints ShopComplaint[]
+
+    average_rating Float           @default(0)
+    total_ratings  Int             @default(0)
+    testimonies    ShopTestimony[]
+
+    @@index([canteen_id])
+    @@index([name])
+    @@map("shops")
+}
+
+enum OrderMode {
+    PREORDER_ONLY // hanya preorder
+    READY_ONLY // hanya pemesanan langsung
+    BOTH // bisa keduanya
+}
+
+enum ShopStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
+
+model ShopComplaint {
+    id         Int      @id @default(autoincrement())
+    created_at DateTime @default(now())
+
+    order    Order?  @relation(fields: [order_id], references: [id])
+    order_id String?
+
+    cause String @db.LongText
+
+    shop    Shop?   @relation(fields: [shop_id], references: [id])
+    shop_id String?
+
+    @@map("shop_complaints")
+}
+
+model Payment {
+    id Int @id @default(autoincrement())
+
+    method           PaymentMethod
+    qr_url           String?
+    account_number   String?
+    note             String? // bisa berupa nama akun dan bank
+    additional_price Float?
+
+    shop    Shop   @relation(fields: [shop_id], references: [id])
+    shop_id String
+
+    @@map("payments")
+}
+
+enum PaymentMethod {
+    QRIS
+    BANK_TRANSFER
+    CASH
+}

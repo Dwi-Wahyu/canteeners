@@ -26,11 +26,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { createQuickChat } from "../actions";
 import { toast } from "sonner";
 import { Loader, Save } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function QuickChatForm({ user_id }: { user_id: string }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -76,7 +76,7 @@ export default function QuickChatForm({ user_id }: { user_id: string }) {
                   <FormItem>
                     <FormLabel>Tambahkan Pesan Singkat</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

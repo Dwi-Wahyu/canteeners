@@ -1,0 +1,57 @@
+model Order {
+    id         String   @id @default(uuid())
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    customer    User   @relation(fields: [customer_id], references: [id])
+    customer_id String
+
+    shop              Shop      @relation(fields: [shop_id], references: [id])
+    shop_id           String
+    estimation        Int? // dalam menit
+    payment_proof_url String?
+    rejected_reason   String?
+    processed_at      DateTime? // waktu ketika order mulai diproses
+
+    total_price Float
+
+    status OrderStatus
+
+    complaint ShopComplaint[]
+
+    message        Message[]
+    payment_method PaymentMethod
+
+    order_items OrderItem[]
+
+    @@index([customer_id])
+    @@index([shop_id])
+    @@index([status])
+    @@index([created_at])
+    @@map("orders")
+}
+
+model OrderItem {
+    id         Int     @id @default(autoincrement())
+    order      Order   @relation(onDelete: Cascade, fields: [order_id], references: [id])
+    order_id   String
+    product    Product @relation(fields: [product_id], references: [id])
+    product_id String
+    quantity   Int
+    price      Float
+    note       String?
+
+    @@index([order_id])
+    @@map("order_items")
+}
+
+enum OrderStatus {
+    PENDING_CONFIRMATION // customer buat order, tunggu shop konfirmasi
+    WAITING_PAYMENT // shop setuju, customer harus bayar
+    WAITING_SHOP_CONFIRMATION // customer sudah upload bukti
+    PROCESSING // shop terima pembayaran, pesanan diproses
+    COMPLETED // order selesai
+    REJECTED // ditolak karena stok tidak ada
+    PAYMENT_REJECTED // bukti pembayaran tidak valid
+    CANCELLED // pembatalan oleh customer
+}

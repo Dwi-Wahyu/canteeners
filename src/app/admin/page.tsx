@@ -10,7 +10,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-semibold text-primary-foreground text-xl">
+      <h1 className="mb-4 font-semibold text-xl">
         Selamat Datang, {session.user.name}
       </h1>
     </div>

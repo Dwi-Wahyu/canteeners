@@ -1,37 +1,57 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 import { getShops } from "./queries-action";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Link from "next/link";
+import { IconEye, IconPencil } from "@tabler/icons-react";
+import { Badge } from "@/components/ui/badge";
+import { orderModeMapping } from "@/constant/order-mode-mapping";
+import { shopStatusMapping } from "@/constant/shop-status-mapping";
 
-export default function KedaiPage() {
-  const { data, isLoading, error, isLoadingError } = useQuery({
-    queryKey: ["shops"],
-    queryFn: getShops,
-  });
+export default async function KedaiPage() {
+  const data = await getShops();
 
   return (
     <div className="container max-w-7xl mx-auto">
       <h1 className="font-semibold text-lg mb-4">Daftar Kedai</h1>
 
-      {isLoading && <div>Loading . . .</div>}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {data.map((kedai, idx) => (
+          <Link key={idx} href={`/admin/kedai/${kedai.id}`}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{kedai.name}</CardTitle>
+                <CardDescription>{kedai.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <img
+                  src={"/uploads/shop/" + kedai.image_url}
+                  className="rounded-lg w-full"
+                  alt=""
+                />
 
-      {!isLoading && isLoadingError && <div>Error</div>}
-
-      {!isLoading && !isLoadingError && data && (
-        <div className="grid grid-cols-3 gap-4">
-          {data.map((kedai, idx) => (
-            <Link key={idx} href={`/admin/kedai/${kedai.id}`}>
-              <Card>
-                <CardContent>
-                  <h1>{kedai.name}</h1>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
+                <div className="flex gap-2 justify-center mt-4">
+                  <Badge
+                    variant={
+                      kedai.status === "SUSPENDED" ? "destructive" : "default"
+                    }
+                  >
+                    {shopStatusMapping[kedai.status]}
+                  </Badge>
+                  <Badge variant={"outline"}>
+                    {orderModeMapping[kedai.order_mode]}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,38 @@
+model User {
+    id         String   @id @default(uuid())
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    name       String
+    username   String    @unique
+    password   String
+    avatar     String?
+    last_login DateTime?
+    role       Role
+
+    email        String?
+    phone_number String?
+
+    shop_owned Shop?
+
+    orders Order[]
+
+    messages Message[]
+
+    quick_chats QuickChat[]
+
+    conversations ConversationParticipant[]
+
+    violations CustomerViolations[]
+
+    @@index([role])
+    @@index([last_login])
+    @@map("users")
+}
+
+enum Role {
+    ADMIN
+    CUSTOMER
+    SHOP_OWNER
+    COURIER
+}

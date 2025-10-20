@@ -89,12 +89,6 @@ export default async function OwnerDashboard() {
         />
       </div>
 
-      {/* <Card>
-        <CardContent>
-          <h1 className="text-lg font-semibold">Order Masuk</h1>
-        </CardContent>
-      </Card> */}
-
       <div className="mt-5">
         <h1 className="text-lg font-semibold mb-3">Order Masuk</h1>
 

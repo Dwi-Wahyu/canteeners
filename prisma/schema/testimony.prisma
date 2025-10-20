@@ -1,0 +1,23 @@
+model ShopTestimony {
+    id      Int     @id @default(autoincrement())
+    message String  @db.LongText
+    from    String?
+    rating  Int
+
+    created_at DateTime @default(now())
+    shop       Shop?    @relation(fields: [shop_id], references: [id])
+    shop_id    String?
+
+    @@map("shop_testimonies")
+}
+
+model AppTestimony {
+    id      Int     @id @default(autoincrement())
+    message String  @db.LongText
+    from    String
+    role    String?
+
+    created_at DateTime @default(now())
+
+    @@map("app_testimonies")
+}

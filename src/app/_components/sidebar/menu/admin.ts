@@ -7,7 +7,7 @@ import {
   IconUserCog,
 } from "@tabler/icons-react";
 
-import { LayoutDashboard, Settings, Store } from "lucide-react";
+import { LayoutDashboard, Settings, Store, Tags } from "lucide-react";
 
 export const adminMenu = {
   navMain: [
@@ -25,6 +25,11 @@ export const adminMenu = {
       title: "Kedai",
       url: "/admin/kedai",
       icon: Store,
+    },
+    {
+      title: "Kategori",
+      url: "/admin/kategori",
+      icon: Tags,
     },
     {
       title: "Riwayat Transaksi",

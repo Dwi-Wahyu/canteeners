@@ -13,6 +13,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { QuickChatItem } from "./quick-chat-item";
+import BackButton from "@/app/_components/back-button";
 
 export default async function QuickChatPage() {
   const session = await auth();
@@ -29,7 +30,9 @@ export default async function QuickChatPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <BackButton url="/dashboard-kedai/pengaturan" />
+
+      <div className="flex justify-between items-center mt-4">
         <h1 className="font-semibold text-lg">Pesan Singkat</h1>
 
         <QuickChatForm user_id={session.user.id} />

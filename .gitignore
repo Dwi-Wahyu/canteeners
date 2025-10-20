@@ -27,6 +27,10 @@ secret.md
 !/public/uploads/avatar/.gitkeep
 !/public/uploads/avatar/default-avatar.jpg
 
+/public/uploads/category/*
+!/public/uploads/category/.gitkeep
+
+
 /public/uploads/payment-proof/*
 !/public/uploads/payment-proof/.gitkeep
 

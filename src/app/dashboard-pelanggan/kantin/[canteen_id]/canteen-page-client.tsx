@@ -1,7 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { getCanteenById } from "../queries";
@@ -42,6 +49,30 @@ export default function CanteenPageClient({ id }: { id: number }) {
               Pilih kedai yang tersedia
             </h1>
           </div>
+
+          <Card className="max-w-lg py-0 sm:flex-row sm:gap-0">
+            <CardContent className="grow-1 px-0">
+              <img
+                src="https://cdn.shadcnstudio.com/ss-assets/components/card/image-3.png"
+                alt="Banner"
+                className="size-full rounded-l-xl"
+              />
+            </CardContent>
+            <div className="sm:min-w-54">
+              <CardHeader className="pt-6">
+                <CardTitle>Dreamy Colorwave Gradient</CardTitle>
+                <CardDescription>
+                  A smooth blend of vibrant pinks, purples, and blues for a
+                  magical touch.
+                </CardDescription>
+              </CardHeader>
+              <CardFooter className="gap-3 py-6">
+                <Button className="bg-transparent bg-gradient-to-br from-purple-500 to-pink-500 text-white focus-visible:ring-pink-600/20">
+                  Explore More
+                </Button>
+              </CardFooter>
+            </div>
+          </Card>
 
           <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
             {data.shops.map((shop) => (

@@ -16,6 +16,9 @@ export async function getCanteenById(id: number) {
           id: true,
           image_url: true,
           description: true,
+          status: true,
+          open_time: true,
+          close_time: true,
           owner: {
             select: {
               name: true,
