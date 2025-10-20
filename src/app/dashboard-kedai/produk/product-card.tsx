@@ -12,17 +12,17 @@ import { ToggleProductAvailable } from "./actions";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState } from "react";
+import Link from "next/link";
+import { Edit } from "lucide-react";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isAvailable, setIsAvailable] = useState(product.is_available);
 
-  // 🧠 Gunakan mutationFn dengan parameter (mutation variable)
   const mutation = useMutation({
     mutationFn: async (newStatus: boolean) => {
       return await ToggleProductAvailable(product.id, newStatus);
     },
     onSuccess: (data) => {
-      // update UI setelah sukses
       setIsAvailable((prev) => !prev);
       toast.success("Status produk berhasil diperbarui!");
     },
@@ -50,21 +50,26 @@ export default function ProductCard({ product }: { product: Product }) {
       <CardHeader>
         <CardTitle>{product.name}</CardTitle>
         <CardDescription>{product.description}</CardDescription>
+        <h1 className="text-muted-foreground">Rp {product.price}</h1>
       </CardHeader>
-      <CardFooter className="gap-3 flex justify-center items-center">
+      <CardFooter className="gap-3 flex justify-end items-center">
         <Button
           onClick={handleToggle}
           disabled={mutation.isPending}
           variant={isAvailable ? "default" : "destructive"}
         >
           {mutation.isPending
-            ? "Memproses..."
+            ? "Mengubah Status..."
             : isAvailable
             ? "Produk Tersedia"
             : "Produk Tidak Tersedia"}
         </Button>
 
-        <Button variant={"outline"}>Edit Produk</Button>
+        <Button asChild variant={"outline"} size={"icon"}>
+          <Link href={"/dashboard-kedai/produk/" + product.id}>
+            <Edit />
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );

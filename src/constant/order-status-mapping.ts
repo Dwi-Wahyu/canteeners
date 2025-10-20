@@ -6,4 +6,5 @@ export const orderStatusMapping = {
   COMPLETED: "Selesai",
   REJECTED: "Dibatalkan Toko",
   PAYMENT_REJECTED: "Pembayaran Ditolak",
+  CANCELLED: "Order Dibatalkan",
 };

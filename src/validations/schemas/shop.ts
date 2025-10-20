@@ -53,6 +53,7 @@ export const InputShopSchema = z.object({
     .int("ID Kantin harus berupa bilangan bulat.")
     .positive("ID Kantin harus positif."),
   owner_id: z.string().min(1, { message: "ID Pemilik harus diisi." }),
+  order_mode: z.enum(["PREORDER_ONLY", "READY_ONLY", "BOTH"]),
   payments: z
     .array(InputPaymentSchema)
     .min(1, { error: "Pilih minimal 1 metode pembayaran" }),
@@ -67,6 +68,7 @@ export const UpdateShopSchema = z.object({
   name: z.string().min(1, { message: "Nama toko harus diisi." }),
   description: z.string().optional(),
   image_url: z.string(),
+  order_mode: z.enum(["PREORDER_ONLY", "READY_ONLY", "BOTH"]),
   open_time: z
     .string()
     .regex(timeRegex, { message: "Format waktu harus HH:MM yang valid." }) // Tambahkan regex

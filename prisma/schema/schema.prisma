@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Canteen {
+  id        Int    @id @default(autoincrement())
+  name      String
+  image_url String
+  shops     Shop[]
+
+  @@map("canteens")
+}
+
+model Faq {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String @db.LongText
+
+  @@map("faqs")
+}

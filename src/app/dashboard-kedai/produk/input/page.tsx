@@ -4,6 +4,8 @@ import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { prisma } from "@/lib/prisma";
 import NotFoundResource from "@/app/_components/not-found-resource";
 import BackButton from "@/app/_components/back-button";
+import { getCategories } from "@/app/admin/kategori/queries";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function InputProductPage() {
   const session = await auth();
@@ -22,14 +24,21 @@ export default async function InputProductPage() {
     return <NotFoundResource />;
   }
 
+  const categories = await getCategories();
+
   return (
     <div>
       <BackButton url="/dashboard-kedai/produk" />
 
-      <h1 className="text-lg font-semibold mt-2">Input Produk</h1>
-
       <div className="mt-4">
-        <InputProductForm shop_id={shop_owned.id} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Input Produk</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <InputProductForm shop_id={shop_owned.id} categories={categories} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

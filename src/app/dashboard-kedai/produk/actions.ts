@@ -10,15 +10,15 @@ import { revalidatePath } from "next/cache";
 export async function uploadProductImage(file: File, name: string) {
   const storageService = new LocalStorageService();
 
-  const shopImageUrl = await storageService.uploadImage(file, "product");
+  const productImageUrl = await storageService.uploadImage(file, "product");
 
-  return shopImageUrl;
+  return productImageUrl;
 }
 
 export async function InputProduct(
   payload: InputProductSchemaType
 ): Promise<ServerActionReturn<void>> {
-  const { price, ...data } = payload;
+  const { price, options, ...data } = payload;
 
   try {
     const created = await prisma.product.create({
@@ -39,7 +39,7 @@ export async function InputProduct(
 }
 
 export async function ToggleProductAvailable(
-  id: number,
+  id: string,
   is_available: boolean
 ): Promise<ServerActionReturn<boolean>> {
   try {

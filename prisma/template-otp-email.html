@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kode OTP Canteeners</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              primary: "var(--primary)",
+              "primary-foreground": "var(--primary-foreground)",
+              card: "var(--card)",
+              "card-foreground": "var(--card-foreground)",
+              border: "var(--border)",
+            },
+            fontFamily: {
+              sans: "var(--font-sans)",
+            },
+            borderRadius: {
+              DEFAULT: "var(--radius)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --background: oklch(0.9711 0.0074 80.7211);
+        --foreground: oklch(0.3 0.0358 30.2042);
+        --card: oklch(0.9711 0.0074 80.7211);
+        --card-foreground: oklch(0.3 0.0358 30.2042);
+        --popover: oklch(0.9711 0.0074 80.7211);
+        --popover-foreground: oklch(0.3 0.0358 30.2042);
+        --primary: oklch(0.5234 0.1347 144.1672);
+        --primary-foreground: oklch(1 0 0);
+        --secondary: oklch(0.9571 0.021 147.636);
+        --secondary-foreground: oklch(0.4254 0.1159 144.3078);
+        --muted: oklch(0.937 0.0142 74.4218);
+        --muted-foreground: oklch(0.4495 0.0486 39.211);
+        --accent: oklch(0.8952 0.0504 146.0366);
+        --accent-foreground: oklch(0.4254 0.1159 144.3078);
+        --destructive: oklch(0.5386 0.1937 26.7249);
+        --destructive-foreground: oklch(1 0 0);
+        --border: oklch(0.8805 0.0208 74.6428);
+        --input: oklch(0.8805 0.0208 74.6428);
+        --ring: oklch(0.5234 0.1347 144.1672);
+        --chart-1: oklch(0.6731 0.1624 144.2083);
+        --chart-2: oklch(0.5752 0.1446 144.1813);
+        --chart-3: oklch(0.5234 0.1347 144.1672);
+        --chart-4: oklch(0.4254 0.1159 144.3078);
+        --chart-5: oklch(0.2157 0.0453 145.7256);
+        --sidebar: oklch(0.937 0.0142 74.4218);
+        --sidebar-foreground: oklch(0.3 0.0358 30.2042);
+        --sidebar-primary: oklch(0.5234 0.1347 144.1672);
+        --sidebar-primary-foreground: oklch(1 0 0);
+        --sidebar-accent: oklch(0.8952 0.0504 146.0366);
+        --sidebar-accent-foreground: oklch(0.4254 0.1159 144.3078);
+        --sidebar-border: oklch(0.8805 0.0208 74.6428);
+        --sidebar-ring: oklch(0.5234 0.1347 144.1672);
+        --font-sans: "Montserrat", sans-serif;
+        --font-serif: "Merriweather", serif;
+        --font-mono: "Source Code Pro", monospace;
+        --radius: 0.5rem;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--background);
+        color: var(--foreground);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .otp-container {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .otp-box {
+        width: 3rem;
+        height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary);
+        background-color: var(--card);
+      }
+
+      .otp-box:nth-child(even) {
+        border-color: var(--primary);
+      }
+    </style>
+  </head>
+  <body class="font-sans">
+    <div
+      class="p-8 rounded-lg shadow-lg max-w-sm w-full bg-card text-card-foreground border-t-4 border-t-primary"
+    >
+      <div class="text-center space-y-4">
+        <div class="flex justify-center items-center">
+          <img src="/app-logo.svg" alt="" class="w-10" />
+
+          <h1 class="text-3xl font-bold text-primary">Canteeners</h1>
+        </div>
+        <h2 class="text-xl font-semibold">Kode OTP Sekali Pakai</h2>
+        <p class="text-sm text-foreground/80">
+          Masukkan kode 6 digit di bawah ini untuk verifikasi.
+        </p>
+
+        <div class="otp-container justify-center mt-6 mb-8">
+          <div class="otp-box">1</div>
+          <div class="otp-box">4</div>
+          <div class="otp-box">3</div>
+          <div class="otp-box">8</div>
+          <div class="otp-box">9</div>
+          <div class="otp-box">0</div>
+        </div>
+
+        <p class="text-xs text-foreground/60">
+          Kode ini berlaku selama 5 menit.
+        </p>
+        <!-- <button
+          class="w-full mt-4 py-2 px-4 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+        >
+          Konfirmasi
+        </button> -->
+      </div>
+    </div>
+  </body>
+</html>
