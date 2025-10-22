@@ -18,6 +18,7 @@ import {
 
 import LogoutButtonDialog from "./logout-button-dialog";
 import Link from "next/link";
+import ToggleSettingDarkMode from "@/app/toggle-setting-dark-mode";
 
 export default async function CustomerSettingsPage() {
   const session = await auth();
@@ -63,6 +64,8 @@ export default async function CustomerSettingsPage() {
       </Item>
 
       <h1 className="mt-4 mb-2 font-semibold">Lainnya</h1>
+
+      <ToggleSettingDarkMode />
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
         <Link href="/pengaturan/notifikasi">

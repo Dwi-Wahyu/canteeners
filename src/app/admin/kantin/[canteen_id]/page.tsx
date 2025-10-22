@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/empty";
 import { IconMap } from "@tabler/icons-react";
 import { getCanteenWithAllRelations } from "../queries";
+import InputCanteenMapDialog from "../input-canteen-map-dialog";
 
 export default async function DetailKantinPage({
   params,
@@ -33,15 +34,19 @@ export default async function DetailKantinPage({
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardContent>
-          <h1 className="text-xl font-bold mb-4">{canteen.name}</h1>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <img
+            src={"/uploads/canteen/" + canteen.image_url}
+            alt=""
+            className="rounded-lg md:w-lg w-full"
+          />
 
-          <div className="flex justify-center">
-            <img
-              src={"/uploads/canteen/" + canteen.image_url}
-              alt=""
-              className="rounded-lg md:w-xl w-full"
-            />
+          <div className="flex flex-col gap-2">
+            <h1 className="text-lg font-bold">{canteen.name}</h1>
+            <h1 className="">Jumlah Lantai : {canteen.maps.length}</h1>
+            <h1 className="">Jumlah Pengunjung Hari Ini : 192</h1>
+            <h1 className="">Jumlah Transaksi Hari Ini : 123</h1>
+            <h1 className="">Jumlah Kedai : {canteen.shops.length}</h1>
           </div>
         </CardContent>
       </Card>
@@ -49,29 +54,62 @@ export default async function DetailKantinPage({
       <Card>
         <CardContent>
           <div className="flex justify-between mb-4 items-center">
-            <h1 className="font-semibold">Denah Kantin</h1>
+            <h1 className="font-semibold">Denah & Nomor Meja</h1>
 
-            <Button>Input Denah</Button>
+            {canteen.maps.length > 0 && (
+              <InputCanteenMapDialog
+                canteen_id={canteen.id}
+                last_floor={canteen.maps.length}
+              />
+            )}
           </div>
 
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <IconMap />
-              </EmptyMedia>
-              <EmptyTitle>Belum Ada Data</EmptyTitle>
-              <EmptyDescription>Ketuk tambah denah</EmptyDescription>
-            </EmptyHeader>
-            <EmptyContent>
-              <Button>Tambah denah</Button>
-            </EmptyContent>
-          </Empty>
+          {canteen.maps.length === 0 && (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <IconMap />
+                </EmptyMedia>
+                <EmptyTitle>Belum Ada Data</EmptyTitle>
+                <EmptyDescription>Ketuk tambah denah</EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <InputCanteenMapDialog
+                  canteen_id={canteen.id}
+                  last_floor={canteen.maps.length}
+                />
+              </EmptyContent>
+            </Empty>
+          )}
+
+          <div className="flex flex-col gap-5">
+            {canteen.maps.map((map) => {
+              return (
+                <div className="grid grid-cols-3 gap-4" key={map.id}>
+                  <img
+                    src={"/uploads/map/" + map.image_url}
+                    className="shadow rounded-lg col-span-2"
+                    alt=""
+                  />
+
+                  <div className="col-span-1 flex flex-col gap-4">
+                    <h1 className="font-semibold">Lantai {map.floor}</h1>
+                    <h1>Jumlah QR Code : {map.qrcodes.length}</h1>
+                    <NavigationButton
+                      label="Kelola QR Code"
+                      url={`/admin/kantin/${canteen_id}/qrcode-meja/${map.id}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardContent>
-          <div className="mt-7 mb-3 flex justify-between items-center">
+          <div className="mb-4 flex justify-between items-center">
             <h1 className="text-lg font-semibold">Daftar Kedai</h1>
 
             <NavigationButton

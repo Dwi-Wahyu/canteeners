@@ -3,7 +3,14 @@
 import { NavigationButton } from "@/app/_components/navigation-button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { IconCheck, IconShoppingCartQuestion } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconExclamationCircle,
+  IconQrcode,
+  IconRun,
+  IconScan,
+  IconShoppingCartQuestion,
+} from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -87,6 +94,33 @@ export default function CartPageClient({ userId }: { userId: string }) {
           {Object.values(keranjang).map((shop, shopIdx) => (
             <EachShopCartSummary shop={shop} key={shopIdx} />
           ))}
+
+          <Card>
+            <CardContent>
+              <div className="flex justify-between mb-4 items-center">
+                <h1 className="font-semibold ">Nomor Meja</h1>
+
+                <Button className="p-0" variant={"ghost"}>
+                  <IconExclamationCircle />
+                </Button>
+              </div>
+
+              <div className="flex flex-col justify-center items-center gap-3">
+                <h1 className="text-muted-foreground">
+                  Belum menentukan nomor meja
+                </h1>
+
+                <Button>
+                  <IconQrcode />
+                  Scan QR Code
+                </Button>
+
+                <Button variant={"outline"}>
+                  <IconRun /> Takeaway
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           <Card>
             <CardContent>

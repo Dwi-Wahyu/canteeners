@@ -5,7 +5,17 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
+import { InputCanteenMapSchemaType } from "@/validations/schemas/canteen";
 import { InputShopSchemaType } from "@/validations/schemas/shop";
+import { revalidatePath } from "next/cache";
+
+export async function uploadCanteenMapImage(file: File) {
+  const storageService = new LocalStorageService();
+
+  const mapImageUrl = await storageService.uploadImage(file, "map");
+
+  return mapImageUrl;
+}
 
 export async function uploadShopImage(file: File) {
   const storageService = new LocalStorageService();
@@ -21,6 +31,22 @@ export async function uploadShopQRCode(file: File) {
   const shopImageUrl = await storageService.uploadImage(file, "shop-qrcode");
 
   return shopImageUrl;
+}
+
+export async function InputCanteenMap(
+  data: InputCanteenMapSchemaType
+): Promise<ServerActionReturn<void>> {
+  try {
+    const created = await prisma.canteenMap.create({
+      data,
+    });
+
+    revalidatePath("/admin/kantin/" + data.canteen_id);
+
+    return successResponse(undefined, "Sukses input denah kantin");
+  } catch (error) {
+    return errorResponse("Terjadi kesalahan yang tidak terduga.");
+  }
 }
 
 export async function InputShop(

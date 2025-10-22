@@ -6,8 +6,6 @@ export async function getConversationMessages(
   user_id: string,
   conversation_id: string
 ) {
-  await readAllMessageInConversation(conversation_id, user_id);
-
   return await prisma.conversation.findFirst({
     where: {
       id: conversation_id,
