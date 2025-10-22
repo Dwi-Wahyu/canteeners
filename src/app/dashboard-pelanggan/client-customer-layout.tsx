@@ -5,7 +5,6 @@ import CustomerTopbar from "./customer-topbar";
 
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-// import { useSocketConnection } from "@/hooks/socket/core";
 
 export default function ClientCustomerLayout({
   children,
@@ -16,8 +15,6 @@ export default function ClientCustomerLayout({
   userId: string;
   role: string;
 }) {
-  // const { connected, subscribed } = useSocketConnection(userId);
-
   const pathname = usePathname();
 
   const router = useRouter();

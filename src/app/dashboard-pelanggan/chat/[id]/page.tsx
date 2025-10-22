@@ -1,6 +1,5 @@
 import LoadingUserSessionPage from "@/app/_components/loading-user-session-page";
 import NotFoundResource from "@/app/_components/not-found-resource";
-import { ToggleDarkMode } from "@/components/toggle-darkmode";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/config/auth";

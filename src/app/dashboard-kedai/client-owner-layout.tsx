@@ -1,6 +1,5 @@
 "use client";
 
-// import { useSocketConnection } from "@/hooks/socket/core";
 import OwnerBottombar from "./owner-bottombar";
 import OwnerTopbar from "./owner-topbar";
 import { usePathname } from "next/navigation";
@@ -15,8 +14,6 @@ export default function ClientOwnerLayout({
   userId: string;
   role: string;
 }) {
-  // const { connected, subscribed } = useSocketConnection(userId);
-
   const pathname = usePathname();
 
   const router = useRouter();
