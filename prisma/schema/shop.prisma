@@ -17,7 +17,7 @@ model Shop {
     owner    User      @relation(fields: [owner_id], references: [id])
     owner_id String    @unique
 
-    order_mode OrderMode @default(READY_ONLY) // metode menyiapkan order
+    order_mode ShopOrderMode @default(READY_ONLY) // metode menyiapkan order
 
     payments   Payment[]
     complaints ShopComplaint[]
@@ -31,7 +31,7 @@ model Shop {
     @@map("shops")
 }
 
-enum OrderMode {
+enum ShopOrderMode {
     PREORDER_ONLY // hanya preorder
     READY_ONLY // hanya pemesanan langsung
     BOTH // bisa keduanya

@@ -28,6 +28,16 @@ import { getShopById } from "../queries";
 import { formatToHour } from "@/helper/hour-helper";
 import { UpdateShop } from "@/app/admin/kedai/actions";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { OrderMode } from "@/app/generated/prisma";
+import { orderModeMapping } from "@/constant/order-mode-mapping";
+
 export default function EditShopForm({
   initialData,
 }: {
@@ -42,6 +52,7 @@ export default function EditShopForm({
       name: initialData.name,
       description: initialData.description ?? "",
       image_url: initialData.image_url,
+      order_mode: initialData.order_mode,
       open_time: formatToHour(initialData.open_time),
       close_time: formatToHour(initialData.close_time),
     },
@@ -63,7 +74,7 @@ export default function EditShopForm({
     if (result.success) {
       toast.success(result.message);
 
-      router.push("/dashboard-kedai/pengaturan" + initialData.canteen_id);
+      router.push("/dashboard-kedai/pengaturan");
     } else {
       console.log(result.error);
 
@@ -124,6 +135,35 @@ export default function EditShopForm({
             </p>
           )}
         </div>
+
+        <FormField
+          control={form.control}
+          name="order_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mode Pemesanan</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue="READY_ONLY"
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Pemilik Warung" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(OrderMode).map((mode, idx) => (
+                      <SelectItem key={idx} value={mode}>
+                        {orderModeMapping[mode]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

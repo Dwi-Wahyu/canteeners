@@ -83,35 +83,37 @@ export default function EditProductForm({
   const router = useRouter();
 
   const onSubmit = async (payload: EditProductSchemaType) => {
-    if (files.length > 0) {
-      payload.image_url = await uploadProductImage(files[0], payload.name);
-    }
+    console.log(payload);
 
-    if (payload.image_url === "") {
-      form.setError("image_url", { message: "Tolong pilih gambar" });
-      return;
-    }
+    // if (files.length > 0) {
+    //   payload.image_url = await uploadProductImage(files[0], payload.name);
+    // }
 
-    const parsedPrice = parseInt(payload.price);
+    // if (payload.image_url === "") {
+    //   form.setError("image_url", { message: "Tolong pilih gambar" });
+    //   return;
+    // }
 
-    if (isNaN(parsedPrice)) {
-      form.setError("price", { message: "Harga tidak valid" });
-      return;
-    }
+    // const parsedPrice = parseInt(payload.price);
 
-    const result = await InputProduct(payload);
+    // if (isNaN(parsedPrice)) {
+    //   form.setError("price", { message: "Harga tidak valid" });
+    //   return;
+    // }
 
-    if (result.success) {
-      toast.success(result.message);
+    // const result = await InputProduct(payload);
 
-      setTimeout(() => {
-        router.push("/dashboard-kedai/produk");
-      }, 2000);
-    } else {
-      console.log(result.error);
+    // if (result.success) {
+    //   toast.success(result.message);
 
-      toast.error(result.error.message);
-    }
+    //   setTimeout(() => {
+    //     router.push("/dashboard-kedai/produk");
+    //   }, 2000);
+    // } else {
+    //   console.log(result.error);
+
+    //   toast.error(result.error.message);
+    // }
   };
 
   const categoryOptions = categories.map((category) => ({

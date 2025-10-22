@@ -21,14 +21,7 @@ export default function ChatClient({
   receiver_id: string;
   current_order?: Order;
 }) {
-  const {
-    messages,
-    message,
-    setMessage,
-    handleSend,
-    isLoading,
-    messagesEndRef,
-  } = useChatRoom({
+  const { messages, handleSend, isLoading, messagesEndRef } = useChatRoom({
     conversationId: conversation.id,
     senderId: sender_id,
     initialMessages: conversation.messages,

@@ -1,5 +1,5 @@
 model Conversation {
-    id         String   @id @default(uuid())
+    id         String   @id @default(cuid())
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
 
@@ -23,7 +23,7 @@ model ConversationParticipant {
 }
 
 model Message {
-    id         String   @id @default(uuid())
+    id         String   @id @default(cuid())
     created_at DateTime @default(now())
     sender     User     @relation(fields: [sender_id], references: [id])
     sender_id  String
@@ -53,7 +53,7 @@ enum MessageType {
 }
 
 model MessageMedia {
-    id         String        @id @default(uuid())
+    id         String        @id @default(cuid())
     url        String
     mime_type  MediaMimeType
     message    Message       @relation(fields: [message_id], references: [id])

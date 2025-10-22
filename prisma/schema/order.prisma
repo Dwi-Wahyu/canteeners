@@ -15,7 +15,12 @@ model Order {
 
     total_price Float
 
+    table_qr   TableQRCode? @relation(fields: [table_qr_id], references: [id])
+    table_qr_id String?
+
     status OrderStatus
+
+    type OrderType @default(READY)
 
     complaint ShopComplaint[]
 
@@ -29,6 +34,11 @@ model Order {
     @@index([status])
     @@index([created_at])
     @@map("orders")
+}
+
+enum OrderType {
+  READY
+  PREORDER
 }
 
 model OrderItem {

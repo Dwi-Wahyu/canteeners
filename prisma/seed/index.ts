@@ -6,8 +6,8 @@ import { seedCategories } from "./seed-categories";
 
 async function main() {
   // await seedCategories();
-  await seedAppTestimony();
   await seedUsers();
+  await seedAppTestimony();
   await seedCanteens();
 }
 

@@ -39,9 +39,7 @@ export default async function InputWarungPage({
       <div className="container">
         <Card className="max-w-xl mx-auto">
           <CardHeader>
-            <h1 className="text-lg font-semibold leading-tight">
-              Input Warung
-            </h1>
+            <h1 className="text-lg font-semibold leading-tight">Input Kedai</h1>
             <h1 className="text-sm text-muted-foreground leading-tight">
               {canteen.name}
             </h1>

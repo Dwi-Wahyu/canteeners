@@ -22,11 +22,13 @@ export default async function CategoryPage() {
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
         <h1 className="text-lg font-semibold mb-4">Kategori Produk</h1>
 
-        <NavigationButton
-          url="/admin/kategori/input"
-          variant="default"
-          label="Tambahkan Kategori"
-        />
+        {categories.length !== 0 && (
+          <NavigationButton
+            url="/admin/kategori/input"
+            variant="default"
+            label="Tambahkan Kategori"
+          />
+        )}
       </div>
 
       {categories.length === 0 && (

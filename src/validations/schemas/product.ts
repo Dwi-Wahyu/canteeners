@@ -13,11 +13,10 @@ export const InputProductSchema = z.object({
   image_url: z.string(),
   price: z.string().min(1, { message: "Harga produk harus diisi." }),
   shop_id: z.string().min(1, { message: "ID Pemilik harus diisi." }),
-  options: z.array(ProductOptionSchema),
   category: z
     .object({
-      product_id: z.int(),
-      category_id: z.int(),
+      label: z.string(),
+      value: z.string(),
     })
     .optional()
     .nullable(),
@@ -26,7 +25,7 @@ export const InputProductSchema = z.object({
 export type InputProductSchemaType = z.infer<typeof InputProductSchema>;
 
 export const EditProductSchema = z.object({
-  id: z.int(),
+  id: z.string(),
   name: z.string().min(1, { message: "Nama produk harus diisi." }),
   description: z.string().optional(),
   image_url: z.string(),
@@ -34,8 +33,8 @@ export const EditProductSchema = z.object({
   options: z.array(ProductOptionSchema),
   category: z
     .object({
-      product_id: z.int(),
-      category_id: z.int(),
+      label: z.string(),
+      value: z.string(),
     })
     .optional()
     .nullable(),
