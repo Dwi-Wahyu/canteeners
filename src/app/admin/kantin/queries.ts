@@ -12,3 +12,16 @@ export async function getShopDataWithPayment(id: string) {
     },
   });
 }
+
+export async function getCanteenWithAllRelations(id: number) {
+  return await prisma.canteen.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      maps: true,
+      qrcodes: true,
+      shops: true,
+    },
+  });
+}

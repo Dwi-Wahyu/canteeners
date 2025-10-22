@@ -14,7 +14,41 @@ model Canteen {
   image_url String
   shops     Shop[]
 
+  maps CanteenMap[]
+  qrcodes TableQRCode[]
+
   @@map("canteens")
+}
+
+model CanteenMap {
+  id Int @id @default(autoincrement())
+
+  image_url String
+  floor Int
+  canteen Canteen @relation(references: [id], fields: [canteen_id])
+  canteen_id Int
+  qrcodes TableQRCode[]
+
+  @@map("canteen_maps")
+}
+
+model TableQRCode {
+  id String @id @default(cuid())
+
+  table_number Int
+  floor Int
+  canteen Canteen @relation(references: [id], fields: [canteen_id])
+  canteen_id Int
+  image_url String
+  map CanteenMap @relation(references: [id], fields: [map_id])
+  map_id Int
+
+  orders Order[]
+
+  @@unique([table_number, canteen_id, floor])
+
+  @@map("table_qrcodes")
+
 }
 
 model Faq {

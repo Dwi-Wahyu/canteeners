@@ -1,6 +1,7 @@
 "use server";
 
 import { errorResponse, successResponse } from "@/helper/action-helpers";
+import { generateCategorySlug } from "@/helper/generate-category-slug";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
@@ -22,7 +23,10 @@ export async function InputCategory(
 ): Promise<ServerActionReturn<void>> {
   try {
     const created = await prisma.category.create({
-      data: payload,
+      data: {
+        slug: generateCategorySlug(payload.name),
+        ...payload,
+      },
     });
 
     console.log(created);
@@ -45,7 +49,10 @@ export async function EditCategory(
       where: {
         id,
       },
-      data,
+      data: {
+        slug: generateCategorySlug(payload.name),
+        ...data,
+      },
     });
 
     console.log(created);

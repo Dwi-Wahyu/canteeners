@@ -1,7 +1,7 @@
 "use client";
 
 import { FileUploadImage } from "@/app/_components/file-upload-image";
-import { Canteen, User } from "@/app/generated/prisma";
+import { Canteen, OrderMode, User } from "@/app/generated/prisma";
 import {
   Form,
   FormControl,
@@ -33,6 +33,7 @@ import { NavigationButton } from "@/app/_components/navigation-button";
 import { InputShop, uploadShopImage } from "../../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { toast } from "sonner";
+import { orderModeMapping } from "@/constant/order-mode-mapping";
 
 export default function InputShopForm({
   canteen,
@@ -50,6 +51,8 @@ export default function InputShopForm({
       description: "",
       image_url: "",
       canteen_id: canteen.id,
+      order_mode: "READY_ONLY",
+      owner_id: "",
       payments: [
         {
           method: "CASH",
@@ -149,6 +152,35 @@ export default function InputShopForm({
                     {ownerOptions.map((owner, idx) => (
                       <SelectItem key={idx} value={owner.value}>
                         {owner.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="order_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mode Pemesanan</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue="READY_ONLY"
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Pemilik Warung" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(OrderMode).map((mode, idx) => (
+                      <SelectItem key={idx} value={mode}>
+                        {orderModeMapping[mode]}
                       </SelectItem>
                     ))}
                   </SelectContent>

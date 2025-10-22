@@ -5,7 +5,7 @@ import CustomerTopbar from "./customer-topbar";
 
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-import { useSocketConnection } from "@/hooks/socket/core";
+// import { useSocketConnection } from "@/hooks/socket/core";
 
 export default function ClientCustomerLayout({
   children,
@@ -16,7 +16,7 @@ export default function ClientCustomerLayout({
   userId: string;
   role: string;
 }) {
-  const { connected, subscribed } = useSocketConnection(userId);
+  // const { connected, subscribed } = useSocketConnection(userId);
 
   const pathname = usePathname();
 
@@ -29,15 +29,10 @@ export default function ClientCustomerLayout({
   return (
     <div className="w-full relative min-h-svh pt-12 pb-16">
       {!pathname.includes("/chat/") && (
-        <CustomerTopbar connected={connected} subscribed={subscribed} />
+        <CustomerTopbar connected={false} subscribed={false} />
       )}
 
-      <div className="p-5 pt-7">
-        {/* {connected ? <div>Terkoneksi</div> : <div>Belum konek</div>}
-        {subscribed ? <div>Disubscribe</div> : <div>Belum subscribe</div>} */}
-
-        {children}
-      </div>
+      <div className="p-5 pt-7">{children}</div>
 
       {!pathname.includes("/chat/") && <CustomerBottombar />}
     </div>

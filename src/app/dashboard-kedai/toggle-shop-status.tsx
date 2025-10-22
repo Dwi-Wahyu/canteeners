@@ -92,11 +92,15 @@ export default function ToggleShopStatus({
           </h1>
         )}
 
-        <h1 className="mt-2">Jam Operasional</h1>
+        {open_time && close_time && (
+          <>
+            <h1 className="mt-2">Jam Operasional</h1>
 
-        <h1 className="text-muted-foreground">
-          {formatToHour(open_time)} - {formatToHour(close_time)}
-        </h1>
+            <h1 className="text-muted-foreground">
+              {formatToHour(open_time)} - {formatToHour(close_time)}
+            </h1>
+          </>
+        )}
       </CardContent>
     </Card>
   );
