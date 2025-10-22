@@ -26,6 +26,12 @@ export async function getCanteenById(id: number) {
           },
         },
       },
+      maps: {
+        select: {
+          image_url: true,
+          floor: true,
+        },
+      },
     },
   });
 }

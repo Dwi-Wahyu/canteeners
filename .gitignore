@@ -30,6 +30,8 @@ secret.md
 /public/uploads/category/*
 !/public/uploads/category/.gitkeep
 
+/public/uploads/map/*
+!/public/uploads/map/.gitkeep
 
 /public/uploads/payment-proof/*
 !/public/uploads/payment-proof/.gitkeep

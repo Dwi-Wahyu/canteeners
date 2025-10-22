@@ -1,0 +1,67 @@
+"use server";
+
+import { join } from "path";
+import { v4 as uuidv4 } from "uuid";
+
+import QRCode from "qrcode";
+import { ServerActionReturn } from "@/types/server-action";
+import { errorResponse, successResponse } from "@/helper/action-helpers";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+
+export async function createNewTableQRCode({
+  previousTableNumber,
+  canteen_id,
+  map_id,
+  floor,
+}: {
+  previousTableNumber: number;
+  canteen_id: number;
+  map_id: number;
+  floor: number;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    const id = uuidv4();
+    const savePath = join(
+      process.cwd(),
+      "public/uploads/table-qrcode",
+      `${id}.png`
+    );
+
+    const created = await prisma.tableQRCode.create({
+      data: {
+        id,
+        floor,
+        image_url: `${id}.png`,
+        table_number: previousTableNumber + 1,
+        canteen_id,
+        map_id,
+      },
+      select: {
+        id: true,
+        floor: true,
+        table_number: true,
+      },
+    });
+
+    const stringifyCreated = JSON.stringify(created);
+
+    await QRCode.toFile(savePath, stringifyCreated, {
+      errorCorrectionLevel: "M",
+      type: "png",
+      margin: 1,
+      color: {
+        dark: "#fff",
+        light: "#000",
+      },
+    });
+
+    revalidatePath(`/admin/kantin/${canteen_id}/qrcode-meja/${map_id}`);
+
+    return successResponse(undefined, "Berhasil generate QR Code");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan");
+  }
+}

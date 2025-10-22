@@ -48,19 +48,6 @@ export default async function DetailKantinPage({
   return (
     <div className="container w-full p-5">
       <div className="mx-auto max-w-5xl">
-        {/* <div className="relative">
-          <img
-            src={"/uploads/canteen/" + canteen.image_url}
-            alt=""
-            className="w-full rounded-xl z-10 object-cover"
-          />
-          <div className="w-full h-full bg-gradient-to-t flex justify-center items-center rounded-xl absolute left-0 top-0 z-20 bg-black/50">
-            <h1 className="font-bold text-2xl text-center mb-5 text-background">
-              {canteen.name}
-            </h1>
-          </div>
-        </div> */}
-
         <div className="mb-4">
           <Link
             href={"/dashboard-pelanggan"}

@@ -17,8 +17,6 @@ import {
   InputProductSchema,
   InputProductSchemaType,
 } from "@/validations/schemas/product";
-import { toast } from "sonner";
-import { InputProduct, uploadProductImage } from "../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { Button } from "@/components/ui/button";
 import { Loader, Save } from "lucide-react";
