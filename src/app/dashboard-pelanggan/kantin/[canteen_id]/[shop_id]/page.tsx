@@ -3,21 +3,27 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
-import BackButton from "@/app/_components/back-button";
+import { getCategories } from "@/app/admin/kategori/queries";
 
 export default async function ShopDetailsPage({
   params,
 }: {
-  params: Promise<{ shop_id: string }>;
+  params: Promise<{ shop_id: string; canteen_id: string }>;
 }) {
-  const { shop_id } = await params;
+  const { shop_id, canteen_id } = await params;
 
   const session = await auth();
 
   const shop = await getShopDataWithPayment(shop_id);
 
+  const categories = await getCategories();
+
+  if (isNaN(parseInt(canteen_id))) {
+    return <NotFoundResource title="Kantin Tidak Ditemukan" />;
+  }
+
   if (!shop) {
-    return <NotFoundResource title="Warung Tidak Ditemukan" />;
+    return <NotFoundResource title="Kedai Tidak Ditemukan" />;
   }
 
   if (!session) {
@@ -25,12 +31,11 @@ export default async function ShopDetailsPage({
   }
 
   return (
-    <div className="">
-      <div className="mb-2 flex justify-between items-center">
-        <BackButton />
-      </div>
-
-      <ShopProductList shop={shop} />
-    </div>
+    <ShopProductList
+      shop={shop}
+      categories={categories}
+      avatar={session.user.avatar}
+      canteen_id={parseInt(canteen_id)}
+    />
   );
 }

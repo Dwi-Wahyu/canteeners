@@ -14,3 +14,18 @@ export async function getProductsByOwnerId(owner_id: string, name: string) {
     },
   });
 }
+
+export async function getProductIncludeCategory(id: string) {
+  return await prisma.product.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+    },
+  });
+}

@@ -40,12 +40,17 @@ export default function OtpForm({
       return;
     }
 
+    if (!customerData) {
+      toast.error("Tolong isi data");
+      return;
+    }
+
     setIsLoading(true);
     setOtpGenerated(null);
 
     const otpGenerated = generateSecureOTP();
 
-    const result = await SendOTPCode(otpGenerated);
+    const result = await SendOTPCode(otpGenerated, customerData?.email);
 
     if (result.success) {
       toast.success(result.message);

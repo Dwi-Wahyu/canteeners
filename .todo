@@ -39,3 +39,5 @@
 - liat todo di src/app/order/actions.ts
 
 - fix semua fungsi update ketika gambar tidak sesuai dengan gambar sebelumnya maka hapus gambar sebelumnya di folder uploads
+
+- bikin fungsionalitas keranjang dan simpan ke model cart

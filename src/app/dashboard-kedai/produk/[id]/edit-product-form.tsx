@@ -11,53 +11,31 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   EditProductSchema,
   EditProductSchemaType,
-  InputProductSchema,
-  InputProductSchemaType,
 } from "@/validations/schemas/product";
 import { toast } from "sonner";
 import { InputProduct, uploadProductImage } from "../actions";
-import { useRouter } from "nextjs-toploader/app";
 import { Button } from "@/components/ui/button";
-import { Loader, Pencil, Save, Trash } from "lucide-react";
+import { Loader, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUploadImage } from "@/app/_components/file-upload-image";
-import { Category, Product, ProductOption } from "@/app/generated/prisma";
-import InputProductOptionDialog from "../input-product-option-dialog";
+import { Category } from "@/app/generated/prisma";
 
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
-
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemTitle,
-} from "@/components/ui/item";
-import { SelectWithSearch } from "@/components/select-with-search";
-
-type ProductWithIncludeOptions = Product & {
-  options: ProductOption[];
-};
+import MultipleSelector from "@/components/multiple-select";
+import { getProductIncludeCategory } from "../queries";
 
 export default function EditProductForm({
   initialData,
   categories,
 }: {
-  initialData: ProductWithIncludeOptions;
+  initialData: NonNullable<
+    Awaited<ReturnType<typeof getProductIncludeCategory>>
+  >;
   categories: Category[];
 }) {
   const [files, setFiles] = useState<File[]>([]);
@@ -69,51 +47,41 @@ export default function EditProductForm({
       name: initialData.name,
       description: initialData.description ?? "",
       image_url: initialData.image_url,
+      shop_id: initialData.shop_id,
       price: initialData.price.toString(),
-      options: initialData.options,
-      categories: null,
+      categories: initialData.categories.map((each) => ({
+        label: each.category.name,
+        value: each.category.id.toString(),
+      })),
     },
   });
 
-  const { append, remove, insert, fields, update } = useFieldArray({
-    control: form.control,
-    name: "options",
-  });
-
-  const router = useRouter();
-
   const onSubmit = async (payload: EditProductSchemaType) => {
-    console.log(payload);
+    if (files.length > 0) {
+      payload.image_url = await uploadProductImage(files[0], payload.name);
+    }
 
-    // if (files.length > 0) {
-    //   payload.image_url = await uploadProductImage(files[0], payload.name);
-    // }
+    if (payload.image_url === "") {
+      form.setError("image_url", { message: "Tolong pilih gambar" });
+      return;
+    }
 
-    // if (payload.image_url === "") {
-    //   form.setError("image_url", { message: "Tolong pilih gambar" });
-    //   return;
-    // }
+    const parsedPrice = parseInt(payload.price);
 
-    // const parsedPrice = parseInt(payload.price);
+    if (isNaN(parsedPrice)) {
+      form.setError("price", { message: "Harga tidak valid" });
+      return;
+    }
 
-    // if (isNaN(parsedPrice)) {
-    //   form.setError("price", { message: "Harga tidak valid" });
-    //   return;
-    // }
+    const result = await InputProduct(payload);
 
-    // const result = await InputProduct(payload);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      console.log(result.error);
 
-    // if (result.success) {
-    //   toast.success(result.message);
-
-    //   setTimeout(() => {
-    //     router.push("/dashboard-kedai/produk");
-    //   }, 2000);
-    // } else {
-    //   console.log(result.error);
-
-    //   toast.error(result.error.message);
-    // }
+      toast.error(result.error.message);
+    }
   };
 
   const categoryOptions = categories.map((category) => ({
@@ -204,9 +172,10 @@ export default function EditProductForm({
             <FormItem>
               <FormLabel>Kategori</FormLabel>
               <FormControl>
-                <SelectWithSearch
+                <MultipleSelector
+                  value={field.value}
                   options={categoryOptions}
-                  onValueChange={field.onChange}
+                  onChange={field.onChange}
                   placeholder="Pilih kategori"
                 />
               </FormControl>
@@ -215,58 +184,7 @@ export default function EditProductForm({
           )}
         />
 
-        <div>
-          <FormLabel>Pilihan Produk</FormLabel>
-          <div className="">
-            {fields.length === 0 && (
-              <Empty className="border mt-2">
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <Trash />
-                  </EmptyMedia>
-                  <EmptyTitle>Belum Ada Pilihan</EmptyTitle>
-                  <EmptyDescription>Ketik tombol dibawah</EmptyDescription>
-                </EmptyHeader>
-                <EmptyContent>
-                  <InputProductOptionDialog
-                    product_name={form.watch("name")}
-                    append={append}
-                  />
-                </EmptyContent>
-              </Empty>
-            )}
-
-            {fields.map((option, idx) => (
-              <Item variant={"outline"} size={"sm"} key={idx} className="mt-2">
-                <ItemContent>
-                  <ItemTitle>{option.option}</ItemTitle>
-
-                  <ItemDescription>
-                    Biaya tambahan : {option.additional_price}
-                  </ItemDescription>
-                </ItemContent>
-                <ItemActions>
-                  <Button size={"icon"} variant={"outline"}>
-                    <Pencil />
-                  </Button>
-
-                  <Button size={"icon"} variant={"outline"}>
-                    <Trash />
-                  </Button>
-                </ItemActions>
-              </Item>
-            ))}
-          </div>
-        </div>
-
         <div className="flex justify-end gap-3">
-          {fields.length > 0 && (
-            <InputProductOptionDialog
-              product_name={form.watch("name")}
-              append={append}
-            />
-          )}
-
           <Button disabled={form.formState.isSubmitting} type="submit">
             {form.formState.isSubmitting ? (
               <>

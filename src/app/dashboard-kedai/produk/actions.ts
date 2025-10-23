@@ -4,7 +4,10 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
-import { InputProductSchemaType } from "@/validations/schemas/product";
+import {
+  EditProductSchemaType,
+  InputProductSchemaType,
+} from "@/validations/schemas/product";
 import { revalidatePath } from "next/cache";
 
 export async function uploadProductImage(file: File, name: string) {
@@ -15,18 +18,72 @@ export async function uploadProductImage(file: File, name: string) {
   return productImageUrl;
 }
 
+async function updateMaximumShopPrice(shop_id: string, maximum_price: number) {
+  await prisma.shop.update({
+    where: {
+      id: shop_id,
+    },
+    data: {
+      maximum_price,
+    },
+  });
+}
+
+async function updateMinimumShopPrice(shop_id: string, minimum_price: number) {
+  await prisma.shop.update({
+    where: {
+      id: shop_id,
+    },
+    data: {
+      minimum_price,
+    },
+  });
+}
+
 export async function InputProduct(
   payload: InputProductSchemaType
 ): Promise<ServerActionReturn<void>> {
-  const { price, options, ...data } = payload;
+  const { price, categories, ...data } = payload;
 
   try {
     const created = await prisma.product.create({
       data: {
         ...data,
         price: parseFloat(price),
+        ...(categories.length > 0
+          ? {
+              categories: {
+                createMany: {
+                  data: categories.map((category) => ({
+                    category_id: parseInt(category.value),
+                  })),
+                  skipDuplicates: true,
+                },
+              },
+            }
+          : {}),
       },
     });
+
+    const priceAggregate = await prisma.product.aggregate({
+      where: {
+        shop_id: payload.shop_id,
+        is_available: true,
+      },
+      _min: { price: true },
+      _max: { price: true },
+    });
+
+    const newMinimumPrice = priceAggregate._min.price;
+    const newMaximumPrice = priceAggregate._max.price;
+
+    if (newMinimumPrice !== null) {
+      await updateMinimumShopPrice(payload.shop_id, newMinimumPrice);
+    }
+
+    if (newMaximumPrice !== null) {
+      await updateMaximumShopPrice(payload.shop_id, newMaximumPrice);
+    }
 
     console.log(created);
 
@@ -35,6 +92,61 @@ export async function InputProduct(
     console.log(error);
 
     return errorResponse("Terjadi kesalahan");
+  }
+}
+
+export async function UpdateProduct(
+  payload: EditProductSchemaType
+): Promise<ServerActionReturn<void>> {
+  const { price, categories, id, ...data } = payload;
+  const productPrice = parseFloat(price);
+
+  try {
+    const updated = await prisma.product.update({
+      where: { id },
+      data: {
+        ...data,
+        price: productPrice,
+        ...(categories.length > 0
+          ? {
+              categories: {
+                deleteMany: {},
+                createMany: {
+                  data: categories.map((category) => ({
+                    category_id: parseInt(category.value),
+                  })),
+                  skipDuplicates: true,
+                },
+              },
+            }
+          : {}),
+      },
+    });
+
+    const priceAggregate = await prisma.product.aggregate({
+      where: {
+        shop_id: payload.shop_id,
+        is_available: true,
+      },
+      _min: { price: true },
+      _max: { price: true },
+    });
+
+    const newMinimumPrice = priceAggregate._min.price;
+    const newMaximumPrice = priceAggregate._max.price;
+
+    if (newMinimumPrice !== null) {
+      await updateMinimumShopPrice(payload.shop_id, newMinimumPrice);
+    }
+
+    if (newMaximumPrice !== null) {
+      await updateMaximumShopPrice(payload.shop_id, newMaximumPrice);
+    }
+
+    return successResponse(undefined, "Berhasil update produk");
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return errorResponse("Terjadi kesalahan saat mengupdate produk");
   }
 }
 

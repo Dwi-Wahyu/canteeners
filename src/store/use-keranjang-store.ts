@@ -4,8 +4,9 @@ import { PaymentMethod } from "@/app/generated/prisma";
 import { create } from "zustand";
 
 export type KeranjangItem = {
-  productId: number;
+  productId: string;
   name: string;
+  image_url: string;
   price: number;
   quantity: number;
   note?: string;
@@ -38,7 +39,7 @@ export type KeranjangState = {
     addItem: (kedaiId: string, item: KeranjangItem) => void;
     updateItem: (
       kedaiId: string,
-      productId: number,
+      productId: string,
       updates: { quantity?: number; note?: string }
     ) => void;
     setShopPaymentMethod: (

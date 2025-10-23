@@ -10,27 +10,17 @@ model Product {
     price       Float
     shop        Shop        @relation(fields: [shop_id], references: [id])
     shop_id     String
+
     order_items OrderItem[]
+    cart_items CartItem[]
 
     is_available Boolean @default(true)
 
     categories ProductCategory[]
-    options    ProductOption[]
 
     @@index([name])
     @@index([shop_id])
     @@map("products")
-}
-
-model ProductOption {
-    id               String  @id @default(cuid())
-    option           String
-    additional_price Float   @default(0)
-    product          Product @relation(fields: [product_id], references: [id])
-    product_id       String
-
-    @@unique([option, product_id])
-    @@map("product_options")
 }
 
 model Category {

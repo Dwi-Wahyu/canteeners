@@ -2,6 +2,7 @@ import { auth } from "@/config/auth";
 import UnauthorizedPage from "../_components/unauthorized-page";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import CustomerTopbar from "./customer-topbar";
 
 export default async function DashboardPelanggan() {
   const session = await auth();
@@ -13,7 +14,9 @@ export default async function DashboardPelanggan() {
   const canteens = await prisma.canteen.findMany();
 
   return (
-    <div>
+    <div className="pt-14">
+      <CustomerTopbar subscribed={false} connected={false} />
+
       <h1 className="text-xl font-semibold">
         Selamat Datang,{" "}
         <span className="text-primary">{session.user.name}</span>

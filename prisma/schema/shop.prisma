@@ -17,14 +17,19 @@ model Shop {
     owner    User      @relation(fields: [owner_id], references: [id])
     owner_id String    @unique
 
-    order_mode ShopOrderMode @default(READY_ONLY) // metode menyiapkan order
+    order_mode ShopOrderMode @default(READY_ONLY) // metode menyiapkan order    
 
     payments   Payment[]
     complaints ShopComplaint[]
 
+    minimum_price Int?
+    maximum_price Int?
+
     average_rating Float           @default(0)
     total_ratings  Int             @default(0)
     testimonies    ShopTestimony[]
+
+    shop_carts ShopCart[]
 
     @@index([canteen_id])
     @@index([name])
@@ -78,3 +83,47 @@ enum PaymentMethod {
     BANK_TRANSFER
     CASH
 }
+
+// Todo: bikin model refund
+
+// model Refund {
+//   id                String         @id @default(uuid())
+//   order_id          String
+//   order             Order          @relation(fields: [order_id], references: [id])
+  
+//   complaint_id      Int?
+//   complaint         ShopComplaint? @relation(fields: [complaint_id], references: [id])
+
+//   amount            Decimal        @db.Decimal(10,2)  // jumlah refund
+//   reason            RefundReason
+//   status            RefundStatus   @default(PENDING)
+  
+//   requested_at      DateTime       @default(now())
+//   processed_at      DateTime?
+//   rejected_reason   String?
+
+//   // Siapa yang proses
+//   processed_by      String?        // admin_id atau shop_owner_id
+//   processed_by_role String?        // "ADMIN" / "SHOP"
+
+//   @@index([order_id])
+//   @@index([status])
+//   @@index([complaint_id])
+//   @@map("refunds")
+// }
+
+// enum RefundReason {
+//   LATE_DELIVERY        // terlambat > estimasi
+//   WRONG_ORDER          // salah pesanan
+//   DAMAGED_FOOD         // rusak
+//   MISSING_ITEM         // kurang item
+//   OTHER                // lain-lain
+// }
+
+// enum RefundStatus {
+//   PENDING              // menunggu proses
+//   APPROVED             // disetujui
+//   REJECTED             // ditolak
+//   PROCESSED            // uang sudah dikembalikan
+//   CANCELLED            // dibatalkan user
+// }

@@ -8,7 +8,6 @@ import {
   IconExclamationCircle,
   IconQrcode,
   IconRun,
-  IconScan,
   IconShoppingCartQuestion,
 } from "@tabler/icons-react";
 
@@ -25,7 +24,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import BackButton from "@/app/_components/back-button";
 import EachShopCartSummary from "./each-shop-cart-summary";
 import {
   useKeranjang,
@@ -36,6 +34,15 @@ import { useMutation } from "@tanstack/react-query";
 import { processOrder } from "./actions";
 import { toast } from "sonner";
 import { useRouter } from "nextjs-toploader/app";
+
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 export default function CartPageClient({ userId }: { userId: string }) {
   const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -73,22 +80,21 @@ export default function CartPageClient({ userId }: { userId: string }) {
 
   return (
     <div>
-      <BackButton />
-
-      <h1 className="font-semibold mb-3 mt-2">Keranjang Anda</h1>
-
       {Object.values(keranjang).length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col justify-center items-center gap-4">
-            <h1 className="font-semibold text-lg">Keranjang masih kosong</h1>
-
-            <IconShoppingCartQuestion />
-
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <IconShoppingCartQuestion />
+            </EmptyMedia>
+            <EmptyTitle>Keranjang masih kosong nih</EmptyTitle>
+            <EmptyDescription>Yuk masukin produk</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
             <NavigationButton variant="outline" url="/dashboard-pelanggan">
-              Tambahkan Produk
+              Cari Produk
             </NavigationButton>
-          </CardContent>
-        </Card>
+          </EmptyContent>
+        </Empty>
       ) : (
         <div className="flex flex-col gap-4">
           {Object.values(keranjang).map((shop, shopIdx) => (

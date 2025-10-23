@@ -15,20 +15,22 @@ model User {
 
     shop_owned Shop?
 
-    orders Order[]
-
     messages Message[]
 
     quick_chats QuickChat[]
 
     conversations ConversationParticipant[]
 
-    violations CustomerViolations[]
+    customer_violations CustomerViolation[]
+    customer_orders Order[]
+    customer_cart Cart?
 
     @@index([role])
     @@index([last_login])
     @@map("users")
 }
+
+// todo: nanti untuk kurir bikin model profil terpisah isinya is_online, lat, lng, dan delivery
 
 enum Role {
     ADMIN

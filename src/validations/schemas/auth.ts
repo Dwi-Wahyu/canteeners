@@ -28,7 +28,7 @@ export const SignUpSchema = z.object({
     .min(1, { message: "Kata sandi wajib diisi." })
     .min(6, { message: "Kata sandi minimal 6 karakter." })
     .max(100, { message: "Kata sandi tidak lebih dari 100 karakter." }),
-  email: z.email().optional().nullable(),
+  email: z.email().min(1, { message: "Email wajib diisi." }),
   phone_number: z.string().optional().nullable(),
 });
 

@@ -9,6 +9,7 @@ import {
   IconPlus,
   IconShoppingCartPlus,
 } from "@tabler/icons-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -25,7 +26,7 @@ export default function ProductCard({
   shopName: string;
   availablePaymentMethod: PaymentMethod[];
 }) {
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
 
   const keranjang = useKeranjang();
   const { addKedai, addItem } = useKeranjangActions();
@@ -51,6 +52,7 @@ export default function ProductCard({
       productId: product.id,
       name: product.name,
       price: product.price,
+      image_url: product.image_url,
       quantity: qty,
     });
 
@@ -59,22 +61,36 @@ export default function ProductCard({
 
   return (
     <Card className="h-fit">
-      <CardContent>
-        <h1 className="font-semibold">{product.name}</h1>
-
-        <img
+      <CardContent className="flex gap-4">
+        <Image
           src={"/uploads/product/" + product.image_url}
-          alt=""
-          className="my-3 rounded-lg w-full"
+          alt="product image"
+          className="rounded-md object-cover"
+          width={100}
+          height={100}
         />
 
-        <p className="text-muted-foreground mb-3 text-sm">
-          {product.description}
-        </p>
+        <div>
+          <div className="mb-5">
+            <h1 className="font-semibold mb-3">{product.name}</h1>
 
-        <h1 className="text-end font-semibold">Rp {product.price}</h1>
+            {/* <p className="text-muted-foreground text-sm">
+              {product.description}
+            </p> */}
 
-        <div className="flex items-center gap-2 mt-3">
+            <h1 className="text-muted-foreground">Rp {product.price}</h1>
+          </div>
+
+          <Button
+            disabled={qty === 0}
+            onClick={handleAddToCart}
+            variant={added ? "default" : "outline"}
+          >
+            {added ? "Berhasil" : "Tambah"}
+          </Button>
+        </div>
+
+        {/* <div className="flex items-center gap-2 mt-3">
           <div className="grow flex items-center gap-2">
             <Button
               variant={"outline"}
@@ -97,11 +113,7 @@ export default function ProductCard({
           >
             {added ? <IconCheck /> : <IconShoppingCartPlus />}
           </Button>
-        </div>
-
-        {/* {ordering && (
-          
-        )} */}
+        </div> */}
       </CardContent>
     </Card>
   );
