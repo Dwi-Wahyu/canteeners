@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, MessageCircle, Settings, Utensils } from "lucide-react";
+import { Home, MessageCircle, Settings, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,7 +8,7 @@ export default function CustomerBottombar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-full bg-secondary p-4 pb-2 fixed bottom-0 left-0 z-50 flex justify-evenly">
+    <div className="w-full bg-secondary p-4 pb-2 fixed border-t bottom-0 left-0 z-50 flex justify-evenly">
       <Link
         href={"/dashboard-pelanggan"}
         className={` border-b-foreground pb-1 ${
@@ -25,6 +25,15 @@ export default function CustomerBottombar() {
         }`}
       >
         <MessageCircle />
+      </Link>
+
+      <Link
+        href={"/dashboard-pelanggan/keranjang"}
+        className={` border-b-foreground pb-1 ${
+          pathname === "/dashboard-pelanggan/keranjang" && "border-b-[3px]"
+        }`}
+      >
+        <ShoppingBasket />
       </Link>
 
       <Link

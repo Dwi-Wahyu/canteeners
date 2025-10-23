@@ -32,27 +32,33 @@ export default function ProductCard({ product }: { product: Product }) {
     },
   });
 
-  // Fungsi untuk toggle
   const handleToggle = () => {
     const newStatus = !isAvailable;
     mutation.mutate(newStatus);
   };
 
   return (
-    <Card className="max-w-md pt-0">
-      <CardContent className="px-0">
-        <img
-          src={"/uploads/product/" + product.image_url}
-          alt="Banner"
-          className="aspect-video h-80 rounded-t-xl object-cover"
-        />
-      </CardContent>
-      <CardHeader>
-        <CardTitle>{product.name}</CardTitle>
-        <CardDescription>{product.description}</CardDescription>
-        <h1 className="text-muted-foreground">Rp {product.price}</h1>
-      </CardHeader>
-      <CardFooter className="gap-3 flex justify-end items-center">
+    <Card className="max-w-xl">
+      <div className="flex p-4 py-0">
+        <div className="w-1/3 pr-4">
+          <img
+            src={"/uploads/product/" + product.image_url}
+            alt="Product Image"
+            className="aspect-square w-full rounded-md object-cover"
+          />
+        </div>
+
+        <div className="w-2/3">
+          <div className="p-0 mb-2">
+            <CardTitle>{product.name}</CardTitle>
+            <CardDescription>{product.description}</CardDescription>{" "}
+          </div>
+          <div className="p-0">
+            <h1 className="font-semibold text-primary">Rp {product.price}</h1>
+          </div>
+        </div>
+      </div>
+      <CardFooter className="gap-3 flex justify-end items-center border-t pt-3">
         <Button
           onClick={handleToggle}
           disabled={mutation.isPending}
@@ -67,7 +73,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <Button asChild variant={"outline"} size={"icon"}>
           <Link href={"/dashboard-kedai/produk/" + product.id}>
-            <Edit />
+            <Edit className="w-4 h-4" />
           </Link>
         </Button>
       </CardFooter>

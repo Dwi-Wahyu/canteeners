@@ -5,6 +5,7 @@ import {
   IconChevronRight,
   IconExclamationCircle,
   IconMessageUser,
+  IconReceipt,
   IconUser,
 } from "@tabler/icons-react";
 
@@ -32,7 +33,7 @@ export default async function CustomerSettingsPage() {
       <h1 className="mb-2 font-semibold">Personal</h1>
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/profil">
+        <Link href="/dashboard-pelanggan/profil">
           <ItemMedia>
             <IconUser className="size-5" />
           </ItemMedia>
@@ -46,6 +47,20 @@ export default async function CustomerSettingsPage() {
       </Item>
 
       <LogoutButtonDialog />
+
+      <Item variant="outline" size="sm" className="mt-4" asChild>
+        <Link href="/dashboard-pelanggan/riwayat-transaksi">
+          <ItemMedia>
+            <IconReceipt className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Riwayat Transaksi</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
 
       <h1 className="mt-4 mb-2 font-semibold">Notifikasi</h1>
 

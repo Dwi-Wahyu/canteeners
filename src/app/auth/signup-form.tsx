@@ -8,9 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Input } from "@/components/ui/input";
-
 import {
   Form,
   FormControl,
@@ -42,7 +40,7 @@ export function SignupForm({
       name: "",
       username: "",
       password: "",
-      email: null,
+      email: "",
       phone_number: null,
     },
   });

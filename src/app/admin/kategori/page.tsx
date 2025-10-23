@@ -19,8 +19,8 @@ export default async function CategoryPage() {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-        <h1 className="text-lg font-semibold mb-4">Kategori Produk</h1>
+      <div className="flex flex-col md:flex-row mb-4 gap-4 justify-between items-center">
+        <h1 className="text-lg font-semibold ">Kategori Produk</h1>
 
         {categories.length !== 0 && (
           <NavigationButton
@@ -60,7 +60,11 @@ export default async function CategoryPage() {
                   <h1 className="text-center mb-4 font-semibold">
                     {category.name}
                   </h1>
-                  <img src={"/uploads/category/" + category.image_url} alt="" />
+                  <img
+                    className="rounded-lg"
+                    src={"/uploads/category/" + category.image_url}
+                    alt=""
+                  />
                 </CardContent>
               </Card>
             </Link>

@@ -1,12 +1,14 @@
 "use server";
 
+import { config } from "dotenv";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
-import { generateSecureOTP } from "@/helper/otp-helper";
 import { prisma } from "@/lib/prisma";
 import { ServerActionReturn } from "@/types/server-action";
 import { SignUpSchemaType } from "@/validations/schemas/auth";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
+
+config();
 
 export async function SignUpCustomer(
   payload: SignUpSchemaType
@@ -34,21 +36,25 @@ export async function SignUpCustomer(
 }
 
 export async function SendOTPCode(
-  otpCode: number
+  otpCode: number,
+  email: string
 ): Promise<ServerActionReturn<void>> {
   try {
+    const mailerUser = process.env.MAILER_USERNAME;
+    const mailerPass = process.env.MAILER_PASSWORD;
+
     const transporter = nodemailer.createTransport({
       host: "smtp.mailersend.net",
       port: "2525",
       auth: {
-        user: "MS_UFwaxW@test-yxj6lj95dnq4do2r.mlsender.net",
-        pass: "mssp.NKIMNDq.351ndgwp0nrlzqx8.1hcuYD5",
+        user: mailerUser,
+        pass: mailerPass,
       },
     });
 
     const mailOptions = {
-      from: "MS_UFwaxW@test-yxj6lj95dnq4do2r.mlsender.net",
-      to: "dwiwahyuilahi123@gmail.com",
+      from: mailerUser,
+      to: email,
       subject: "Kode OTP Sekali Pakai",
       text: "Ini adalah kode otp anda jangan berikan ke siapapun, " + otpCode,
     };

@@ -24,7 +24,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUploadImage } from "@/app/_components/file-upload-image";
 import { Category } from "@/app/generated/prisma";
-import { SelectWithSearch } from "@/components/select-with-search";
+import { InputProduct, uploadProductImage } from "../actions";
+import { toast } from "sonner";
+import MultipleSelector from "@/components/multiple-select";
 
 export default function InputProductForm({
   shop_id,
@@ -43,49 +45,49 @@ export default function InputProductForm({
       image_url: "",
       price: "",
       shop_id,
-      category: null,
+      categories: [],
     },
   });
 
   const router = useRouter();
 
   const onSubmit = async (payload: InputProductSchemaType) => {
-    console.log(payload);
+    if (files.length > 0) {
+      payload.image_url = await uploadProductImage(files[0], payload.name);
+    }
 
-    // if (files.length > 0) {
-    //   payload.image_url = await uploadProductImage(files[0], payload.name);
-    // }
+    if (payload.image_url === "") {
+      form.setError("image_url", { message: "Tolong pilih gambar" });
+      return;
+    }
 
-    // if (payload.image_url === "") {
-    //   form.setError("image_url", { message: "Tolong pilih gambar" });
-    //   return;
-    // }
+    const parsedPrice = parseInt(payload.price);
 
-    // const parsedPrice = parseInt(payload.price);
+    if (isNaN(parsedPrice)) {
+      form.setError("price", { message: "Harga tidak valid" });
+      return;
+    }
 
-    // if (isNaN(parsedPrice)) {
-    //   form.setError("price", { message: "Harga tidak valid" });
-    //   return;
-    // }
+    const result = await InputProduct(payload);
 
-    // const result = await InputProduct(payload);
+    if (result.success) {
+      toast.success(result.message);
+      form.reset();
+      setFiles([]);
 
-    // if (result.success) {
-    //   toast.success(result.message);
+      setTimeout(() => {
+        router.push("/dashboard-kedai/produk");
+      }, 1000);
+    } else {
+      console.log(result.error);
 
-    //   setTimeout(() => {
-    //     router.push("/dashboard-kedai/produk");
-    //   }, 2000);
-    // } else {
-    //   console.log(result.error);
-
-    //   toast.error(result.error.message);
-    // }
+      toast.error(result.error.message);
+    }
   };
 
   const categoryOptions = categories.map((category) => ({
     label: category.name,
-    value: category.slug,
+    value: category.id.toString(),
   }));
 
   return (
@@ -148,14 +150,14 @@ export default function InputProductForm({
 
         <FormField
           control={form.control}
-          name="category"
+          name="categories"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Kategori</FormLabel>
               <FormControl>
-                <SelectWithSearch
+                <MultipleSelector
                   options={categoryOptions}
-                  onValueChange={field.onChange}
+                  onChange={field.onChange}
                   placeholder="Pilih kategori"
                 />
               </FormControl>
@@ -183,7 +185,7 @@ export default function InputProductForm({
 
         <div className="flex justify-center gap-3">
           <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? (
+            {form.formState.isSubmitting && !form.formState.errors ? (
               <>
                 <Loader className="animate-spin" /> Loading
               </>

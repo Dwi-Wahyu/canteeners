@@ -19,6 +19,8 @@ import {
   KeranjangItem,
   useKeranjangActions,
 } from "@/store/use-keranjang-store";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function CartItemComponent({
   item,
@@ -64,11 +66,19 @@ export default function CartItemComponent({
   }, [item.quantity, item.note, isDialogOpen]);
 
   return (
-    <div className="mb-2">
-      <div className="flex justify-between items-center mb-2">
-        <div className="">
+    <Card className="mb-2">
+      <CardContent className="flex gap-4">
+        <Image
+          src={"/uploads/product/" + item.image_url}
+          alt="product image"
+          className="rounded-md object-cover"
+          width={100}
+          height={100}
+        />
+
+        <div>
           <div className="flex gap-2 items-center">
-            <h1>{item.name}</h1>
+            <h1 className="font-semibold">{item.name}</h1>
 
             <div className="text-xs bg-primary text-primary-foreground py-1 px-2 rounded">
               {item.quantity}
@@ -76,7 +86,7 @@ export default function CartItemComponent({
           </div>
 
           <h1 className="text-muted-foreground">
-            Rp {item.quantity * item.price}
+            Rp {item.quantity * item.price} + Rp 1000
           </h1>
 
           {item.note && (
@@ -84,62 +94,60 @@ export default function CartItemComponent({
               {item.note}
             </div>
           )}
+
+          <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
+            <DialogTrigger asChild>
+              <Button className="mt-4">Edit</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="hidden">Product Details</DialogTitle>
+                <DialogDescription className="hidden">
+                  Product Details Description
+                </DialogDescription>
+
+                <div className="text-start flex flex-col gap-2">
+                  <div>
+                    <h1 className="text-center font-semibold">{item.name}</h1>
+                  </div>
+
+                  <div className="mb-1">
+                    <h1 className="text-sm text-muted-foreground mb-1">
+                      Jumlah
+                    </h1>
+                    <Input
+                      value={qty}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (!isNaN(value) && value > 0) {
+                          setQty(value);
+                        } else if (e.target.value === "") {
+                          setQty(0);
+                        }
+                      }}
+                      type="number"
+                    />
+                  </div>
+
+                  <div>
+                    <h1 className="text-sm text-muted-foreground mb-1">
+                      Catatan
+                    </h1>
+                    <Input
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    />
+                  </div>
+
+                  <Button onClick={handleSave} className="mt-4">
+                    Simpan
+                  </Button>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
-
-        <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
-          <DialogTrigger asChild>
-            <Button size={"icon"} variant={"ghost"}>
-              <Ellipsis />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="hidden">Product Details</DialogTitle>
-              <DialogDescription className="hidden">
-                Product Details Description
-              </DialogDescription>
-
-              <div className="text-start flex flex-col gap-2">
-                <div>
-                  <h1 className="text-center font-semibold">{item.name}</h1>
-                </div>
-
-                <div className="mb-1">
-                  <h1 className="text-sm text-muted-foreground mb-1">Jumlah</h1>
-                  <Input
-                    value={qty}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value);
-                      if (!isNaN(value) && value > 0) {
-                        setQty(value);
-                      } else if (e.target.value === "") {
-                        setQty(0);
-                      }
-                    }}
-                    type="number"
-                  />
-                </div>
-
-                <div>
-                  <h1 className="text-sm text-muted-foreground mb-1">
-                    Catatan
-                  </h1>
-                  <Input
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                  />
-                </div>
-
-                <Button onClick={handleSave} className="mt-4">
-                  Simpan
-                </Button>
-              </div>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <Separator />
-    </div>
+      </CardContent>
+    </Card>
   );
 }

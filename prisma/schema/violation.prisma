@@ -1,4 +1,4 @@
-model CustomerViolations {
+model CustomerViolation {
     id          Int                   @id @default(autoincrement())
     timestamp   DateTime
     sum         Int?                  @default(0)
