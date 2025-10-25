@@ -14,11 +14,13 @@ export async function createNewTableQRCode({
   canteen_id,
   map_id,
   floor,
+  baseUrl,
 }: {
   previousTableNumber: number;
   canteen_id: number;
   map_id: number;
   floor: number;
+  baseUrl: string;
 }): Promise<ServerActionReturn<void>> {
   try {
     const id = uuidv4();
@@ -28,12 +30,22 @@ export async function createNewTableQRCode({
       `${id}.png`
     );
 
+    const params = new URLSearchParams();
+
+    const nextTableNumber = previousTableNumber + 1;
+
+    params.set("canteen_id", canteen_id.toString());
+    params.set("floor", floor.toString());
+    params.set("table_number", nextTableNumber.toString());
+
+    const fullUrl = `${baseUrl}/dashboard-pelanggan/catat-meja?${params.toString()}`;
+
     const created = await prisma.tableQRCode.create({
       data: {
         id,
         floor,
         image_url: `${id}.png`,
-        table_number: previousTableNumber + 1,
+        table_number: nextTableNumber,
         canteen_id,
         map_id,
       },
@@ -44,9 +56,9 @@ export async function createNewTableQRCode({
       },
     });
 
-    const stringifyCreated = JSON.stringify(created);
+    // const stringifyCreated = JSON.stringify(created);
 
-    await QRCode.toFile(savePath, stringifyCreated, {
+    await QRCode.toFile(savePath, fullUrl, {
       errorCorrectionLevel: "M",
       type: "png",
       margin: 1,

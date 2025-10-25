@@ -28,11 +28,13 @@ export default function ShopProductList({
   shop,
   categories,
   avatar,
+  customer_id,
   canteen_id,
 }: {
   shop: NonNullable<Awaited<ReturnType<typeof getShopDataWithPayment>>>;
   categories: Awaited<ReturnType<typeof getCategories>>;
   avatar: string;
+  customer_id: string;
   canteen_id: number;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -157,14 +159,9 @@ export default function ShopProductList({
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           {products.map((product) => (
             <ProductCard
-              product={product}
-              shopId={shop.id}
-              ownerId={shop.owner_id}
-              shopName={shop.name}
               key={product.id}
-              availablePaymentMethod={shop.payments.map(
-                (payment) => payment.method
-              )}
+              product={product}
+              customer_id={customer_id}
             />
           ))}
         </div>

@@ -37,11 +37,27 @@ export default function DenahCard({
   return (
     <Card className="max-w-md pt-0">
       <CardContent className="px-0">
-        <img
-          src={"/uploads/map/" + image_url}
-          alt="Banner"
-          className="aspect-video h-70 rounded-t-xl shadow object-cover"
-        />
+        <Dialog>
+          <DialogTrigger>
+            <img
+              src={"/uploads/map/" + image_url}
+              alt="Banner"
+              className="aspect-video h-70 rounded-t-xl shadow object-cover"
+            />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Lantai {floor}</DialogTitle>
+              <DialogDescription></DialogDescription>
+
+              <img
+                src={"/uploads/map/" + image_url}
+                alt="Banner"
+                className="aspect-video h-70 rounded-t-xl shadow object-cover"
+              />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </CardContent>
       <CardHeader>
         <CardTitle>Lantai {floor}</CardTitle>

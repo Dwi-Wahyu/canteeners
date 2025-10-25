@@ -4,6 +4,7 @@ import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 import { getCategories } from "@/app/admin/kategori/queries";
+import UnauthorizedPage from "@/app/_components/unauthorized-page";
 
 export default async function ShopDetailsPage({
   params,
@@ -30,12 +31,17 @@ export default async function ShopDetailsPage({
     redirect("/auth/signin");
   }
 
+  if (session.user.role !== "CUSTOMER") {
+    return <UnauthorizedPage />;
+  }
+
   return (
     <ShopProductList
       shop={shop}
       categories={categories}
       avatar={session.user.avatar}
       canteen_id={parseInt(canteen_id)}
+      customer_id={session.user.id}
     />
   );
 }

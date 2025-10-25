@@ -41,3 +41,6 @@
 - fix semua fungsi update ketika gambar tidak sesuai dengan gambar sebelumnya maka hapus gambar sebelumnya di folder uploads
 
 - bikin fungsionalitas keranjang dan simpan ke model cart
+
+- mending url yang digenerate di qr code arahkan ke halaman fix saja tapi pake params id kantin, floor, sama nomor meja baru arahkan kembali ke url aplikasi seperti hasil baseUrl di file
+  src\app\admin\kantin\[canteen_id]\qrcode-meja\[map_id]\page.tsx

@@ -12,10 +12,10 @@ export default async function CartPage() {
   }
 
   return (
-    <div className="pt-14">
-      <CustomerTopbar connected={false} subscribed={false} />
+    <div>
+      {/* <CustomerTopbar connected={false} subscribed={false} /> */}
 
-      {/* <h1 className="text-xl font-semibold mb-3">Keranjang Anda</h1> */}
+      <h1 className="text-xl font-semibold mb-5">Keranjang Anda</h1>
 
       <CartPageClient userId={session.user.id} />
     </div>
