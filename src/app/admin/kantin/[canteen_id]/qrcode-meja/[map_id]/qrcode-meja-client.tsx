@@ -16,15 +16,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { createNewTableQRCode } from "./actions";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { IconQrcodeOff } from "@tabler/icons-react";
 import QRCodeMejaCard from "./qrcode-meja-card";
+import { useRouter } from "nextjs-toploader/app";
 
 export default function QrcodeMejaClient({
   map,
+  baseUrl,
 }: {
   map: NonNullable<Awaited<ReturnType<typeof getCanteenMap>>>;
+  baseUrl: string;
 }) {
   const router = useRouter();
 
@@ -36,11 +38,12 @@ export default function QrcodeMejaClient({
         floor: map.floor,
         map_id: map.id,
         previousTableNumber: map.qrcodes.length,
+        baseUrl,
       });
     },
     onSuccess: () => {
       toast.success("Berhasil generate QR Code");
-      router.refresh();
+      // router.refresh();
     },
   });
 

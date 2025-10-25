@@ -24,63 +24,78 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import EachShopCartSummary from "./each-shop-cart-summary";
-import {
-  useKeranjang,
-  useKeranjangTotalPrice,
-  useKeranjangTotalQuantity,
-} from "@/store/use-keranjang-store";
-import { useMutation } from "@tanstack/react-query";
+import { useKeranjang } from "@/store/use-keranjang-store";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { processOrder } from "./actions";
 import { toast } from "sonner";
 import { useRouter } from "nextjs-toploader/app";
 
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
+import { getCustomerCart } from "./server-queries";
+import LoadingCartSkeleton from "./loading-cart-skeleton";
+import EmptyCart from "./empty-cart";
+import ShopCartSummary from "./shop-cart-summary";
 
 export default function CartPageClient({ userId }: { userId: string }) {
   const [openConfirmation, setOpenConfirmation] = useState(false);
 
-  const keranjangTotalPrice = useKeranjangTotalPrice();
-  const keranjangTotalQuantity = useKeranjangTotalQuantity();
+  // const router = useRouter();
 
-  const keranjang = useKeranjang();
-
-  const router = useRouter();
-
-  const mutation = useMutation({
-    mutationFn: processOrder,
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["get-customer-cart"],
+    queryFn: async () => {
+      return await getCustomerCart(userId);
+    },
   });
 
-  async function handleProcessOrder() {
-    if (Object.values(keranjang).length === 0) return;
+  // const mutation = useMutation({
+  //   mutationFn: processOrder,
+  // });
 
-    const result = await mutation.mutateAsync({
-      shopGroupItems: keranjang,
-      customerId: userId,
-    });
+  // async function handleProcessOrder() {
+  //   if (Object.values(keranjang).length === 0) return;
 
-    if (result.success) {
-      toast.success(result.message);
-      router.push("/dashboard-pelanggan/chat");
-    } else {
-      console.log(result.error);
+  //   const result = await mutation.mutateAsync({
+  //     shopGroupItems: keranjang,
+  //     customerId: userId,
+  //   });
 
-      toast.error(result.error.message);
-    }
+  //   if (result.success) {
+  //     toast.success(result.message);
+  //     router.push("/dashboard-pelanggan/chat");
+  //   } else {
+  //     console.log(result.error);
 
-    setOpenConfirmation(false);
-  }
+  //     toast.error(result.error.message);
+  //   }
+
+  //   setOpenConfirmation(false);
+  // }
 
   return (
     <div>
-      {Object.values(keranjang).length === 0 ? (
+      {isFetching && <LoadingCartSkeleton />}
+
+      {!isFetching && isError && (
+        <div>
+          <h1>Terjadi kesalahan</h1>
+        </div>
+      )}
+
+      {!isFetching && data && (
+        <>
+          {data.shopCarts.length === 0 ? (
+            <EmptyCart />
+          ) : (
+            <div>
+              {data.shopCarts.map((shopCart, idx) => (
+                <ShopCartSummary shopCart={shopCart} key={idx} />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* {Object.values(keranjang).length === 0 ? (
         <Empty className="border">
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -186,7 +201,7 @@ export default function CartPageClient({ userId }: { userId: string }) {
             </CardContent>
           </Card>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

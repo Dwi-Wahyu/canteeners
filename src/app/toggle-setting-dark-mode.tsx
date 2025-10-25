@@ -15,8 +15,8 @@ import { SunIcon, MoonIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function ToggleSettingDarkMode() {
-  const { setTheme } = useTheme();
-  const [isDark, setIsDark] = useState(true);
+  const { setTheme, theme } = useTheme();
+  const [isDark, setIsDark] = useState(theme === "dark" ? true : false);
 
   function handleToggle() {
     setIsDark(!isDark);

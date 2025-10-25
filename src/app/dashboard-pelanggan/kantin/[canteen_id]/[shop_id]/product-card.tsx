@@ -1,62 +1,39 @@
-import { PaymentMethod, Product } from "@/app/generated/prisma";
+import { addCartItem } from "@/app/dashboard-pelanggan/keranjang/actions";
+import { Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useKeranjang, useKeranjangActions } from "@/store/use-keranjang-store";
-import {
-  IconCheck,
-  IconMinus,
-  IconPlus,
-  IconShoppingCartPlus,
-} from "@tabler/icons-react";
+import { IconLoader } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function ProductCard({
   product,
-  shopId,
-  ownerId,
-  shopName,
-  availablePaymentMethod,
+  customer_id,
 }: {
   product: Product;
-  shopId: string;
-  ownerId: string;
-  shopName: string;
-  availablePaymentMethod: PaymentMethod[];
+  customer_id: string;
 }) {
-  const [qty, setQty] = useState(1);
-
-  const keranjang = useKeranjang();
-  const { addKedai, addItem } = useKeranjangActions();
-
-  useEffect(() => {
-    if (qty < 0) {
-      setQty(0);
-    }
-  }, [qty]);
+  const mutations = useMutation({
+    mutationKey: ["add-product-to-cart"],
+    mutationFn: async () => {
+      return await addCartItem({ product, customer_id });
+    },
+  });
 
   const [added, setAdded] = useState(false);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     setAdded(true);
 
-    if (qty === 0) return;
+    const result = await mutations.mutateAsync();
 
-    if (!keranjang[shopId]) {
-      addKedai(shopId, shopName, availablePaymentMethod, ownerId);
+    if (result.success) {
+      toast.success(`Menambahkan ${product.name} ke keranjang`);
+    } else {
+      toast.error(result.error.message);
     }
-
-    addItem(shopId, {
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      image_url: product.image_url,
-      quantity: qty,
-    });
-
-    toast.success(`Menambahkan ${product.name} x${qty} ke keranjang`);
   };
 
   return (
@@ -82,11 +59,15 @@ export default function ProductCard({
           </div>
 
           <Button
-            disabled={qty === 0}
+            disabled={mutations.isPending || added}
             onClick={handleAddToCart}
             variant={added ? "default" : "outline"}
           >
-            {added ? "Berhasil" : "Tambah"}
+            {mutations.isPending ? (
+              <IconLoader className="animate-spin" />
+            ) : (
+              <div>{added ? "Berhasil" : "Tambah"}</div>
+            )}
           </Button>
         </div>
 

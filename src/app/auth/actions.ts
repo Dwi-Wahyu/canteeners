@@ -19,7 +19,16 @@ export async function SignUpCustomer(
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const created = await prisma.user.create({
-      data: { ...data, password: hashedPassword, role: "CUSTOMER" },
+      data: {
+        ...data,
+        password: hashedPassword,
+        role: "CUSTOMER",
+        customer_cart: {
+          create: {
+            status: "ACTIVE",
+          },
+        },
+      },
     });
 
     console.log(created);
