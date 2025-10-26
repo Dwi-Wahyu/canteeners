@@ -27,6 +27,7 @@ export default async function ConversationPage({
     <DetailConversationClient
       conversation={conversation}
       sender_id={session.user.id}
+      role={session.user.role}
     />
   );
 }

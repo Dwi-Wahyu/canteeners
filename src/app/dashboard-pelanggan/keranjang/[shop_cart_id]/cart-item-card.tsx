@@ -13,8 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, NotebookPen } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { IconTrash } from "@tabler/icons-react";
 
 type CartItemType = NonNullable<
   Awaited<ReturnType<typeof getCustomerShopCart>>
@@ -52,6 +53,14 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItemType }) {
     setIsDialogOpen(false);
   }
 
+  function changeQuantity(newQty: number) {
+    if (qty < 2) {
+      setQty(1);
+    } else {
+      setQty(newQty);
+    }
+  }
+
   return (
     <Card>
       <CardContent className="flex gap-4">
@@ -62,15 +71,13 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItemType }) {
           height={100}
           className="rounded-lg"
         />
-        <div>
-          <div className="flex justify-between items-center">
+        <div className="w-full">
+          <div className="flex justify-between items-center w-full">
             <h1 className="font-semibold">{cartItem.product.name}</h1>
 
             <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
-              <DialogTrigger asChild>
-                <Button className="p-0" variant={"ghost"}>
-                  <Ellipsis />
-                </Button>
+              <DialogTrigger>
+                <NotebookPen className="w-4 h-4 text-muted-foreground" />
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -84,24 +91,6 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItemType }) {
                       <h1 className="text-center font-semibold">
                         {cartItem.product.name}
                       </h1>
-                    </div>
-
-                    <div className="mb-1">
-                      <h1 className="text-sm text-muted-foreground mb-1">
-                        Jumlah
-                      </h1>
-                      <Input
-                        value={qty}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value);
-                          if (!isNaN(value) && value > 0) {
-                            setQty(value);
-                          } else if (e.target.value === "") {
-                            setQty(0);
-                          }
-                        }}
-                        type="number"
-                      />
                     </div>
 
                     <div>
@@ -123,9 +112,27 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItemType }) {
             </Dialog>
           </div>
 
-          <h1 className="text-lg font-semibold">{cartItem.quantity}x</h1>
+          <h1>{cartItem.price_at_add * qty}</h1>
 
-          <h1>{(cartItem.price_at_add + 1000) * cartItem.quantity}</h1>
+          <div className="flex gap-4 mt-4 items-center">
+            <div className="flex gap-5 items-center">
+              <Button size={"icon"} onClick={() => changeQuantity(qty - 1)}>
+                -
+              </Button>
+
+              <h1>{qty}</h1>
+
+              <Button size={"icon"} onClick={() => changeQuantity(qty + 1)}>
+                +
+              </Button>
+            </div>
+
+            <Button variant={"destructive"} size={"icon"} disabled>
+              <IconTrash />
+            </Button>
+          </div>
+
+          {/* <h1 className="text-lg font-semibold">{cartItem.quantity}x</h1> */}
         </div>
       </CardContent>
     </Card>

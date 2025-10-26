@@ -3,27 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerShopCart } from "../server-queries";
 import { Button } from "@/components/ui/button";
-import {
-  IconCash,
-  IconCheck,
-  IconDesk,
-  IconExclamationCircle,
-  IconMoped,
-  IconRun,
-  IconTable,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconExclamationCircle, IconTrash } from "@tabler/icons-react";
 import CartItemCard from "./cart-item-card";
-import { paymentMethodMapping } from "@/constant/payment-method";
-import { Checkbox } from "@/components/ui/checkbox";
 import { NavigationButton } from "@/app/_components/navigation-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -33,16 +21,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import BackButton from "@/app/_components/back-button";
 
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemHeader,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
+import { PaymentMethod } from "@/app/generated/prisma";
+import SnkCheckoutDialog from "./snk-checkout-dialog";
+import ShopCartPaymentMethod from "./shop-cart-payment-method";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
+import { processShopCart } from "../actions";
+import { toast } from "sonner";
+import { useRouter } from "nextjs-toploader/app";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function ShopCartDetailClient({
   shopCart,
@@ -50,11 +37,38 @@ export default function ShopCartDetailClient({
   shopCart: NonNullable<Awaited<ReturnType<typeof getCustomerShopCart>>>;
 }) {
   const [showSnk, setShowSnk] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    shopCart.payment_method
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [checkouted, setCheckouted] = useState(false);
+
+  const router = useRouter();
 
   function handleClickCheckout() {
     setShowSnk(true);
   }
+
+  const mutations = useMutation({
+    mutationKey: ["process-shop-cart"],
+    mutationFn: async () => {
+      return await processShopCart({ shopCart: shopCart });
+    },
+    onSuccess(data) {
+      if (data.success) {
+        toast.success("Sukses checkout keranjang");
+        router.push("/dashboard-pelanggan/chat");
+      } else {
+        toast.error(data.error.message);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (checkouted) {
+      mutations.mutate();
+    }
+  }, [checkouted]);
 
   return (
     <div className="">
@@ -64,11 +78,13 @@ export default function ShopCartDetailClient({
       </div>
 
       <div className="mb-5">
-        <h1 className="font-semibold mb-3">Daftar Pesanan</h1>
+        <h1 className="font-semibold mb-2">Daftar Pesanan</h1>
 
-        {shopCart.items.map((item, idx) => (
-          <CartItemCard cartItem={item} key={idx} />
-        ))}
+        <div className="flex flex-col gap-3">
+          {shopCart.items.map((item, idx) => (
+            <CartItemCard cartItem={item} key={idx} />
+          ))}
+        </div>
       </div>
 
       <div className="flex justify-between mb-5">
@@ -87,54 +103,24 @@ export default function ShopCartDetailClient({
         </NavigationButton>
       </div>
 
-      <div className="mb-5">
-        <h1 className="font-semibold mb-3">Pilih Metode Pembayaran</h1>
-
-        {shopCart.shop.payments.map((payment, idx) => (
-          <Item key={idx} variant={"outline"}>
-            <ItemMedia>
-              <IconCash />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>{paymentMethodMapping[payment.method]}</ItemTitle>
-            </ItemContent>
-            <ItemActions>
-              <Checkbox />
-            </ItemActions>
-          </Item>
-        ))}
-
-        {/* <Card>
-          <CardContent>
-            {shopCart.shop.payments.map((payment, idx) => (
-              <Item key={idx} variant={"outline"}>
-                <ItemMedia>
-                  <IconCash />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>{paymentMethodMapping[payment.method]}</ItemTitle>
-                </ItemContent>
-                <ItemActions>
-                  <Checkbox />
-                </ItemActions>
-              </Item>          
-            ))}
-          </CardContent>
-        </Card> */}
-      </div>
+      <ShopCartPaymentMethod
+        shopPayments={shopCart.shop.payments}
+        paymentMethod={paymentMethod}
+        setPaymentMethod={setPaymentMethod}
+      />
 
       <div>
         <div className="flex justify-between items-center">
-          <h1 className="font-semibold mb-3">Pilih Jenis Order</h1>
+          <h1 className="font-semibold mb-2">Pilih Jenis Order</h1>
 
-          <IconExclamationCircle className="w-5 h-5" />
+          <IconExclamationCircle className="w-4 h-4 text-muted-foreground" />
         </div>
 
         <Tabs defaultValue="1" className="">
           <TabsList>
             <TabsTrigger value="1">Makan Di Meja</TabsTrigger>
             <TabsTrigger value="2">Take Away</TabsTrigger>
-            <TabsTrigger value="3">Diantarkan</TabsTrigger>
+            {/* <TabsTrigger value="3">Diantarkan</TabsTrigger> */}
           </TabsList>
           <TabsContent value="1">
             <Card>
@@ -159,7 +145,7 @@ export default function ShopCartDetailClient({
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="3">
+          {/* <TabsContent value="3">
             <Card>
               <CardContent>
                 <h1 className="font-semibold mb-1">
@@ -171,96 +157,63 @@ export default function ShopCartDetailClient({
                 </h1>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
-
-        {/* <div className="flex flex-col gap-4">
-          <Item variant={"outline"}>
-            <ItemMedia>
-              <IconDesk />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>Makan Ditempat</ItemTitle>
-              <ItemDescription>Makan diantarin ke meja kamu</ItemDescription>
-            </ItemContent>
-            <ItemActions>
-              <Checkbox />
-            </ItemActions>
-          </Item>
-
-          <Item variant={"outline"}>
-            <ItemMedia>
-              <IconRun />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>Take Away</ItemTitle>
-              <ItemDescription>
-                Ambil pesanan di kedai baru pergi
-              </ItemDescription>
-            </ItemContent>
-            <ItemActions>
-              <Checkbox />
-            </ItemActions>
-          </Item>
-
-          <Item variant={"outline"}>
-            <ItemMedia>
-              <IconMoped />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>Diantarin</ItemTitle>
-              <ItemDescription>
-                Diantarin ke lokasi kamu (+biaya ongkir)
-              </ItemDescription>
-            </ItemContent>
-            <ItemActions>
-              <Checkbox />
-            </ItemActions>
-          </Item>
-        </div> */}
       </div>
 
-      <div className="mt-6 flex justify-end gap-4">
+      <div className="my-6 flex flex-col gap-1">
+        <div className="flex justify-between items-center text-muted-foreground">
+          <h1>Biaya Tambahan Per-Item</h1>
+
+          <h1>1000</h1>
+        </div>
+
+        <div className="flex justify-between items-center text-muted-foreground">
+          <h1>Total Biaya Tambahan</h1>
+
+          <h1>{shopCart.items.length * 1000}</h1>
+        </div>
+
+        <div className="flex font-semibold justify-between items-center text-muted-foreground">
+          <h1>Subtotal {shopCart.items.length} Item</h1>
+
+          <h1>{shopCart.total_price}</h1>
+        </div>
+      </div>
+
+      {shopCart.status === "ORDERED" && (
+        <Button className="w-full mb-6 py-6" size={"lg"} asChild>
+          <Link href={"/dashboard-pelanggan/order/" + shopCart.id}>
+            Lihat Detail Order
+          </Link>
+        </Button>
+      )}
+
+      {shopCart.status === "PENDING" && (
         <Button
-          variant={"destructive"}
+          className="w-full mb-6 flex justify-between py-6 items-center"
           size={"lg"}
-          onClick={() => setConfirmDelete(true)}
+          onClick={handleClickCheckout}
         >
-          <IconTrash />
-          Hapus
+          <h1>{shopCart.items.length} Item</h1>
+
+          <div className="flex gap-2 h-4">
+            <h1>Rp {shopCart.total_price}</h1>
+
+            <Separator orientation="vertical" />
+
+            <h1 className="font-semibold">Checkout</h1>
+          </div>
         </Button>
+      )}
 
-        <Button size={"lg"} onClick={handleClickCheckout}>
-          <IconCheck />
-          Checkout
-        </Button>
-      </div>
-
-      <AlertDialog open={showSnk} onOpenChange={setShowSnk}>
-        <AlertDialogContent>
-          <AlertDialogHeader className="text-start">
-            <AlertDialogTitle>Persetujuan Syarat & Ketentuan</AlertDialogTitle>
-            <AlertDialogDescription>
-              Sebelum melanjutkan ke pembayaran, mohon baca dan setujui Syarat
-              dan Ketentuan layanan kami. Persetujuan ini memastikan Anda
-              memahami hak dan kewajiban saat bertransaksi di platform ini.
-              Dengan menyetujui, Anda siap untuk menyelesaikan pembelian dan
-              kami dapat segera memproses pesanan Anda dengan lancar.
-            </AlertDialogDescription>
-
-            <div className="flex gap-2 my-2">
-              <Checkbox />
-              <h1 className="text-sm text-muted-foreground">
-                Saya menyetujui syaran dan ketentuan
-              </h1>
-            </div>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="grid grid-cols-2 gap-4">
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction disabled>Lanjut</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <SnkCheckoutDialog
+        showSnk={showSnk}
+        setShowSnk={setShowSnk}
+        setCheckouted={setCheckouted}
+        isCheckoutPending={mutations.isPending}
+        checkouted={checkouted}
+      />
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>

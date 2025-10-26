@@ -7,5 +7,5 @@ export default async function ChatPage() {
 
   if (!session) redirect("/auth/signin");
 
-  return <ConversationListClient user_id={session.user.id} />;
+  return <ConversationListClient user_id={session.user.id} role="SHOP_OWNER" />;
 }

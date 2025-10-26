@@ -36,6 +36,12 @@ export async function getCustomerShopCart(shop_cart_id: string) {
       id: shop_cart_id,
     },
     select: {
+      id: true,
+      cart: {
+        select: {
+          user_id: true,
+        },
+      },
       total_price: true,
       notes: true,
       payment_method: true,
@@ -45,6 +51,7 @@ export async function getCustomerShopCart(shop_cart_id: string) {
           id: true,
           name: true,
           canteen_id: true,
+          owner_id: true,
           payments: {
             select: {
               method: true,
@@ -56,6 +63,7 @@ export async function getCustomerShopCart(shop_cart_id: string) {
         select: {
           product: {
             select: {
+              id: true,
               name: true,
               image_url: true,
             },

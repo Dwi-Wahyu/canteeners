@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.bottombar-shadow {
+  /* Offset X | Offset Y | Blur Radius | Spread Radius | Color */
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
 .glassmorphism {
   background: rgba(255, 255, 255, 0.6);
   border-radius: 16px;

@@ -65,7 +65,7 @@ export default async function CustomerSettingsPage() {
       <h1 className="mt-4 mb-2 font-semibold">Notifikasi</h1>
 
       <Item variant="outline" size="sm" asChild>
-        <Link href="/pengaturan/notifikasi">
+        <Link href="/dashboard-pelanggan/pengaturan/notifikasi">
           <ItemMedia>
             <IconBell className="size-5" />
           </ItemMedia>
@@ -83,7 +83,7 @@ export default async function CustomerSettingsPage() {
       <ToggleSettingDarkMode />
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/pengaturan/notifikasi">
+        <Link href="/dashboard-pelanggan/pengaturan/pusat-bantuan">
           <ItemMedia>
             <IconMessageUser className="size-5" />
           </ItemMedia>
@@ -97,7 +97,7 @@ export default async function CustomerSettingsPage() {
       </Item>
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/pengaturan/notifikasi">
+        <Link href="/dashboard-pelanggan/pengaturan/versi-aplikasi">
           <ItemMedia>
             <IconExclamationCircle className="size-5" />
           </ItemMedia>

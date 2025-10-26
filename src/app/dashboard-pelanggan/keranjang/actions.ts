@@ -5,6 +5,7 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { KedaiState } from "@/store/use-keranjang-store";
 import { ServerActionReturn } from "@/types/server-action";
+import { getCustomerShopCart } from "./server-queries";
 
 export async function addCartItem({
   product,
@@ -185,6 +186,88 @@ export async function processOrder({
           },
         });
       }
+    });
+
+    return successResponse(undefined, "Berhasil memproses pesanan");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Gagal memproses pesanan");
+  }
+}
+
+export async function processShopCart({
+  shopCart,
+}: {
+  shopCart: NonNullable<Awaited<ReturnType<typeof getCustomerShopCart>>>;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    const customer_id = shopCart.cart.user_id;
+    const { owner_id } = shopCart.shop;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.shopCart.update({
+        where: {
+          id: shopCart.id,
+        },
+        data: {
+          status: "ORDERED",
+        },
+      });
+
+      const order = await tx.order.create({
+        data: {
+          shop_id: shopCart.shop.id,
+          customer_id,
+          payment_method: shopCart.payment_method,
+          status: "PENDING_CONFIRMATION",
+          total_price: shopCart.total_price,
+          order_items: {
+            createMany: {
+              data: shopCart.items.map((item) => ({
+                product_id: item.product.id,
+                quantity: item.quantity,
+                price: item.price_at_add * item.quantity,
+                note: item.notes,
+              })),
+            },
+          },
+        },
+      });
+
+      const existingConversation = await tx.conversation.findFirst({
+        where: {
+          participants: {
+            every: {
+              user_id: { in: [customer_id, owner_id] },
+            },
+          },
+        },
+      });
+
+      const conversationId =
+        existingConversation?.id ??
+        (
+          await tx.conversation.create({
+            data: {
+              participants: {
+                createMany: {
+                  data: [{ user_id: customer_id }, { user_id: owner_id }],
+                },
+              },
+            },
+          })
+        ).id;
+
+      await tx.message.create({
+        data: {
+          conversation_id: conversationId,
+          sender_id: customer_id,
+          order_id: order.id,
+          type: "ORDER",
+          content: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
+        },
+      });
     });
 
     return successResponse(undefined, "Berhasil memproses pesanan");
