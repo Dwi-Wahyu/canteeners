@@ -38,7 +38,7 @@ export async function createNewTableQRCode({
     params.set("floor", floor.toString());
     params.set("table_number", nextTableNumber.toString());
 
-    const fullUrl = `${baseUrl}/dashboard-pelanggan/catat-meja?${params.toString()}`;
+    const fullUrl = `${baseUrl}/dashboard-pelanggan/pilih-meja?${params.toString()}`;
 
     const created = await prisma.tableQRCode.create({
       data: {

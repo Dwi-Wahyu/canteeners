@@ -1,13 +1,11 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import CartItemComponent from "./cart-item";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { PaymentMethod } from "@/app/generated/prisma";
 import { KedaiState, useKeranjangActions } from "@/store/use-keranjang-store";
-import { Button } from "@/components/ui/button";
 import { NavigationButton } from "@/app/_components/navigation-button";
 
 export default function EachShopCartSummary({ shop }: { shop: KedaiState }) {

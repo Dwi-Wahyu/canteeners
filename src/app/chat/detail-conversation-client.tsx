@@ -7,19 +7,23 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { getConversationMessages } from "@/app/chat/queries";
 import ChatClient from "./chat-client";
-import { IconMessagePlus } from "@tabler/icons-react";
 
 export default function DetailConversationClient({
   conversation,
   sender_id,
+  role,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
+  role: string;
 }) {
+  const backUrl =
+    role === "CUSTOMER" ? "/dashboard-pelanggan/chat" : "/dashboard-kedai/chat";
+
   return (
-    <div className="relative">
+    <div className="relative pt-14">
       <div className="w-full fixed z-30 left-0 top-0 bg-secondary shadow text-secondary-foreground">
         <div className="py-4 px-5 md:px-0 container max-w-7xl mx-auto flex justify-between items-center">
           <Button
@@ -28,7 +32,7 @@ export default function DetailConversationClient({
             size={"icon"}
             variant={"secondary"}
           >
-            <Link href={"/dashboard-kedai/chat"}>
+            <Link href={backUrl}>
               <ChevronLeft />
             </Link>
           </Button>
@@ -65,11 +69,7 @@ export default function DetailConversationClient({
         </div>
       </div>
 
-      <ChatClient
-        conversation={conversation}
-        sender_id={sender_id}
-        receiver_id={conversation.participants[0].user.id}
-      />
+      <ChatClient conversation={conversation} sender_id={sender_id} />
     </div>
   );
 }

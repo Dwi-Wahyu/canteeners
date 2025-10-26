@@ -25,8 +25,10 @@ import { BadgeCheckIcon, ChevronRightIcon } from "lucide-react";
 
 export default function ConversationListClient({
   user_id,
+  role,
 }: {
   user_id: string;
+  role: "CUSTOMER" | "SHOP_OWNER";
 }) {
   const { data, isLoading, isLoadingError, error } = useQuery({
     queryKey: ["conversation-list"],
@@ -34,6 +36,11 @@ export default function ConversationListClient({
       return await getUserAllConversations(user_id);
     },
   });
+
+  const conversationDetailLink =
+    role === "CUSTOMER"
+      ? "/dashboard-pelanggan/chat/"
+      : "/dashboard-kedai/chat/";
 
   return (
     <div>
@@ -70,7 +77,7 @@ export default function ConversationListClient({
                 return (
                   <Link
                     key={conversation.id}
-                    href={"/dashboard-kedai/chat/" + conversation.id}
+                    href={conversationDetailLink + conversation.id}
                   >
                     <Item variant={"outline"}>
                       <ItemMedia>

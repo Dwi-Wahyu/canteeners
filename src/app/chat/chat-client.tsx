@@ -11,15 +11,11 @@ import ChatInput from "./chat-input";
 export default function ChatClient({
   conversation,
   sender_id,
-  receiver_id,
-  current_order,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
-  receiver_id: string;
-  current_order?: Order;
 }) {
   const { messages, handleSend, isLoading, messagesEndRef } = useChatRoom({
     conversationId: conversation.id,

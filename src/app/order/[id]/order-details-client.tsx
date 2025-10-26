@@ -183,19 +183,15 @@ export default function OrderDetailsClient({
             <ItemContent>
               <ItemTitle>{item.product.name}</ItemTitle>
               <ItemDescription>{item.quantity}x</ItemDescription>
+
+              {item.note && (
+                <div className="text-muted-foreground flex gap-1 items-center">
+                  <IconNote className="w-4 h-4" />
+
+                  {item.note}
+                </div>
+              )}
             </ItemContent>
-            <ItemActions>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <IconNote />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{item.note ? item.note : "Tidak Ada Catatan"}</p>
-                </TooltipContent>
-              </Tooltip>
-            </ItemActions>
           </Item>
         ))}
       </div>
