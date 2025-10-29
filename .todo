@@ -44,3 +44,5 @@
 
 - mending url yang digenerate di qr code arahkan ke halaman fix saja tapi pake params id kantin, floor, sama nomor meja baru arahkan kembali ke url aplikasi seperti hasil baseUrl di file
   src\app\admin\kantin\[canteen_id]\qrcode-meja\[map_id]\page.tsx
+
+- munculkan pilihan meja sebelumnya di choose-table-client.tsx

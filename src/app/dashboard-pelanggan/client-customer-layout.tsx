@@ -24,13 +24,12 @@ export default function ClientCustomerLayout({
   }
 
   return (
-    // <div className="w-full relative min-h-svh pt-12 pb-16">
-    <div className="w-full relative min-h-svh pb-16">
-      {/* {!pathname.includes("/chat/") && (
+    <div className="w-full relative min-h-svh pt-12 pb-16">
+      {!pathname.includes("/chat/") && (
         <CustomerTopbar connected={false} subscribed={false} />
-      )} */}
+      )}
 
-      <div className="p-5">{children}</div>
+      <div className="p-5 pt-7">{children}</div>
 
       {!pathname.includes("/chat/") && <CustomerBottombar />}
     </div>

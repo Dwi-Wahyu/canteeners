@@ -2,24 +2,19 @@
 
 import { getAllShopProducts } from "./queries";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   IconCoin,
   IconFilterX,
-  IconSearch,
-  IconStar,
   IconStarFilled,
-  IconThumbUp,
   IconThumbUpFilled,
 } from "@tabler/icons-react";
 import ProductCard from "./product-card";
 import { ProductsType } from "./type";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
-import BackButton from "@/app/_components/back-button";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { getCategories } from "@/app/admin/kategori/queries";
 import { Button } from "@/components/ui/button";
@@ -27,15 +22,13 @@ import { Button } from "@/components/ui/button";
 export default function ShopProductList({
   shop,
   categories,
-  avatar,
   customer_id,
-  canteen_id,
+  cart_id,
 }: {
   shop: NonNullable<Awaited<ReturnType<typeof getShopDataWithPayment>>>;
   categories: Awaited<ReturnType<typeof getCategories>>;
-  avatar: string;
   customer_id: string;
-  canteen_id: number;
+  cart_id: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<ProductsType | []>([]);
@@ -57,17 +50,6 @@ export default function ShopProductList({
 
   return (
     <div>
-      <div className="mb-5 flex justify-between items-center">
-        <BackButton url={"/dashboard-pelanggan/kantin/" + canteen_id} />
-
-        <div>
-          <Avatar className="size-9">
-            <AvatarImage src={"/uploads/avatar/" + avatar} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
-
       <Card>
         <CardContent>
           <div className="flex gap-4">
@@ -158,11 +140,7 @@ export default function ShopProductList({
       ) : (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              customer_id={customer_id}
-            />
+            <ProductCard key={product.id} product={product} cart_id={cart_id} />
           ))}
         </div>
       )}

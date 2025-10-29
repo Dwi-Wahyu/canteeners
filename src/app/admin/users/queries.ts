@@ -75,3 +75,11 @@ export async function getUserById(id: string) {
     },
   });
 }
+
+export async function getCustomerProfile(user_id: string) {
+  return await prisma.customerProfile.findFirst({
+    where: {
+      user_id,
+    },
+  });
+}

@@ -6,6 +6,7 @@ import { getCustomerShopCart } from "../server-queries";
 import NotFoundResource from "@/app/_components/not-found-resource";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
+import { getCustomerProfile } from "@/app/admin/users/queries";
 
 export default async function ShopCartDetailPage({
   params,
@@ -30,5 +31,16 @@ export default async function ShopCartDetailPage({
     return <UnauthorizedPage />;
   }
 
-  return <ShopCartDetailClient shopCart={shopCart} />;
+  const customerProfile = await getCustomerProfile(session.user.id);
+
+  if (!customerProfile) {
+    return <UnauthorizedPage />;
+  }
+
+  return (
+    <ShopCartDetailClient
+      shopCart={shopCart}
+      customerProfile={customerProfile}
+    />
+  );
 }

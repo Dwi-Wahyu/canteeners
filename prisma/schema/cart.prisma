@@ -5,7 +5,7 @@ model Cart {
   status     CartStatus @default(ACTIVE)
   expires_at DateTime?
 
-  shopCarts  ShopCart[]  
+  shopCarts  ShopCart[]
 
   @@index([user_id])
   @@index([status])
@@ -29,11 +29,13 @@ model ShopCart {
   shop       Shop      @relation(fields: [shop_id], references: [id])
   shop_id    String
   payment_method PaymentMethod @default(CASH)
+  post_order_type PostOrderType @default(DELIVERY_TO_TABLE)
 
   total_price   Float   @default(0)
   notes      String?   
 
   items      CartItem[]
+  order_id   String?
 
   @@index([cart_id])
   @@index([shop_id])
@@ -62,3 +64,4 @@ model CartItem {
   @@index([product_id])
   @@map("cart_items")
 }
+

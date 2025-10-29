@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 import { getCategories } from "@/app/admin/kategori/queries";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import BackButton from "@/app/_components/back-button";
+import { getOrCreateCustomerCart } from "@/app/dashboard-pelanggan/keranjang/actions";
 
 export default async function ShopDetailsPage({
   params,
@@ -35,13 +38,27 @@ export default async function ShopDetailsPage({
     return <UnauthorizedPage />;
   }
 
+  const customerCartId = await getOrCreateCustomerCart(session.user.id);
+
   return (
-    <ShopProductList
-      shop={shop}
-      categories={categories}
-      avatar={session.user.avatar}
-      canteen_id={parseInt(canteen_id)}
-      customer_id={session.user.id}
-    />
+    <div>
+      <div className="mb-5 flex justify-between items-center">
+        <BackButton url={"/dashboard-pelanggan/kantin/" + canteen_id} />
+
+        <div>
+          <Avatar className="size-9">
+            <AvatarImage src={"/uploads/avatar/default-avatar.jpg"} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </div>
+      </div>
+
+      <ShopProductList
+        shop={shop}
+        categories={categories}
+        customer_id={session.user.id}
+        cart_id={customerCartId}
+      />
+    </div>
   );
 }

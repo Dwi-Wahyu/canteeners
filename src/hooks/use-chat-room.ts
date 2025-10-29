@@ -10,23 +10,21 @@ import {
   MediaMimeType,
 } from "@/app/generated/prisma";
 
-// Definisikan tipe untuk Message dengan include media
 type MessageWithMedia = Prisma.MessageGetPayload<{
   include: { media: true };
 }>;
 
-enum MessageTypeEnum {
-  TEXT = "TEXT",
-  SYSTEM = "SYSTEM",
-  ORDER = "ORDER",
-  PAYMENT_PROOF = "PAYMENT_PROOF",
-}
+// enum MessageTypeEnum {
+//   TEXT = "TEXT",
+//   SYSTEM = "SYSTEM",
+//   ORDER = "ORDER",
+//   PAYMENT_PROOF = "PAYMENT_PROOF",
+// }
 
-enum MediaMimeTypeEnum {
-  IMAGE_JPEG = "image/jpeg",
-  IMAGE_PNG = "image/png",
-  // Tambahkan mime type lain sesuai kebutuhan, misalnya video/mp4
-}
+// enum MediaMimeTypeEnum {
+//   IMAGE_JPEG = "image/jpeg",
+//   IMAGE_PNG = "image/png",
+// }
 
 // Interface untuk UseChatRoomProps
 interface UseChatRoomProps {
@@ -40,7 +38,7 @@ export function useChatRoom({
   senderId,
   initialMessages,
 }: UseChatRoomProps) {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<MessageWithMedia[]>(initialMessages);
   const [text, setText] = useState("");
   const [media, setMedia] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);

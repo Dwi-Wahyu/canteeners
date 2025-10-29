@@ -51,3 +51,27 @@ export async function getCanteenMap(id: number) {
     },
   });
 }
+
+export async function getCanteenWithMapsAndTables(id: number) {
+  return await prisma.canteen.findFirst({
+    where: {
+      id,
+    },
+    select: {
+      image_url: true,
+      name: true,
+      maps: {
+        select: {
+          floor: true,
+          image_url: true,
+          qrcodes: {
+            select: {
+              image_url: true,
+              table_number: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

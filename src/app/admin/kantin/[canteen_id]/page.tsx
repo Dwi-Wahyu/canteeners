@@ -124,7 +124,7 @@ export default async function DetailKantinPage({
           {canteen.shops.length > 0 ? (
             <div className="grid grid-cols-3 gap-4">
               {canteen.shops.map((shop, idx) => (
-                <Link href={"/admin/kantin/kedai/" + shop.id} key={idx}>
+                <Link href={"/admin/kedai/" + shop.id} key={idx}>
                   <img
                     src={"/uploads/shop/" + shop.image_url}
                     className="rounded-lg"

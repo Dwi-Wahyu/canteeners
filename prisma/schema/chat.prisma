@@ -6,6 +6,7 @@ model Conversation {
     participants ConversationParticipant[]
 
     messages Message[]
+    order Order[]
 
     @@map("conversations")
 }
@@ -56,6 +57,7 @@ model MessageMedia {
     id         String        @id @default(cuid())
     url        String
     mime_type  MediaMimeType
+    order_id   String?
     message    Message       @relation(fields: [message_id], references: [id])
     message_id String
 

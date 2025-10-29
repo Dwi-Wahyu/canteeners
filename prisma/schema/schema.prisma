@@ -43,8 +43,6 @@ model TableQRCode {
   map          CanteenMap @relation(references: [id], fields: [map_id])
   map_id       Int
 
-  orders Order[]
-
   @@unique([table_number, canteen_id, floor])
   @@map("table_qrcodes")
 }

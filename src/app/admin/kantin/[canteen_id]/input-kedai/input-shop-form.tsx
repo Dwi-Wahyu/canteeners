@@ -1,7 +1,7 @@
 "use client";
 
 import { FileUploadImage } from "@/app/_components/file-upload-image";
-import { Canteen, OrderMode, User } from "@/app/generated/prisma";
+import { Canteen, ShopOrderMode, User } from "@/app/generated/prisma";
 import {
   Form,
   FormControl,
@@ -33,7 +33,7 @@ import { NavigationButton } from "@/app/_components/navigation-button";
 import { InputShop, uploadShopImage } from "../../actions";
 import { useRouter } from "nextjs-toploader/app";
 import { toast } from "sonner";
-import { orderModeMapping } from "@/constant/order-mode-mapping";
+import { shopOrderModeMapping } from "@/constant/order-mode-mapping";
 
 export default function InputShopForm({
   canteen,
@@ -114,7 +114,7 @@ export default function InputShopForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nama Warung</FormLabel>
+              <FormLabel>Nama</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -178,9 +178,9 @@ export default function InputShopForm({
                     <SelectValue placeholder="Pilih Pemilik Warung" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(OrderMode).map((mode, idx) => (
+                    {Object.values(ShopOrderMode).map((mode, idx) => (
                       <SelectItem key={idx} value={mode}>
-                        {orderModeMapping[mode]}
+                        {shopOrderModeMapping[mode]}
                       </SelectItem>
                     ))}
                   </SelectContent>
