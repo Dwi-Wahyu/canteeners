@@ -3,10 +3,11 @@
 import { useState, useTransition } from "react";
 
 import {
-  confirmOrder,
-  rejectOrder,
-  confirmPayment,
-  rejectPayment,
+  ConfirmOrder,
+  RejectOrder,
+  ConfirmPayment,
+  RejectPayment,
+  CompleteOrder,
 } from "../actions";
 import { getOrderDetails } from "../queries";
 
@@ -20,11 +21,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -41,22 +38,26 @@ import { Label } from "@/components/ui/label";
 import { IconCheck, IconNote, IconX } from "@tabler/icons-react";
 
 import { orderStatusMapping } from "@/constant/order-status-mapping";
-import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
 import { toast } from "sonner";
 import { useRouter } from "nextjs-toploader/app";
+import { paymentMethodMapping } from "@/constant/payment-method";
+import { postOrderTypeMapping } from "@/constant/post-order-type-mapping";
+import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 
 export default function OrderDetailsClient({
   data,
   user_id,
+  userIsShopOwner,
+  userIsCustomer,
 }: {
   data: NonNullable<Awaited<ReturnType<typeof getOrderDetails>>>;
   user_id: string;
+  userIsShopOwner: boolean;
+  userIsCustomer: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const userIsShopOwner = data.shop.owner_id === user_id;
-  const userIsCustomer = data.customer_id === user_id;
 
   const [openRejectOrder, setOpenRejectOrder] = useState(false);
   const [openConfirmPayment, setOpenConfirmPayment] = useState(false);
@@ -70,7 +71,13 @@ export default function OrderDetailsClient({
 
   async function handleConfirmOrder() {
     startTransition(async () => {
-      const result = await confirmOrder(data.id, data.payment_method);
+      const result = await ConfirmOrder({
+        order_id: data.id,
+        payment_method: data.payment_method,
+        owner_id: user_id,
+        conversation_id: data.conversation_id,
+        shop_id: data.shop_id,
+      });
       if (result.success) {
         toast.success(result.message);
         router.refresh();
@@ -82,7 +89,7 @@ export default function OrderDetailsClient({
 
   async function handleRejectOrder() {
     startTransition(async () => {
-      const result = await rejectOrder(data.id, rejectOrderReason);
+      const result = await RejectOrder(data.id, rejectOrderReason);
       if (result.success) {
         toast.success(result.message);
         setOpenRejectOrder(false);
@@ -100,7 +107,12 @@ export default function OrderDetailsClient({
     }
 
     startTransition(async () => {
-      const result = await confirmPayment(data.id, estimation);
+      const result = await ConfirmPayment({
+        order_id: data.id,
+        estimation,
+        conversation_id: data.conversation_id,
+        owner_id: user_id,
+      });
       if (result.success) {
         toast.success(result.message);
         setOpenConfirmPayment(false);
@@ -113,7 +125,7 @@ export default function OrderDetailsClient({
 
   async function handleRejectPayment() {
     startTransition(async () => {
-      const result = await rejectPayment(data.id, rejectPaymentReason);
+      const result = await RejectOrder(data.id, rejectPaymentReason);
       if (result.success) {
         toast.success(result.message);
         setOpenRejectPayment(false);
@@ -124,62 +136,83 @@ export default function OrderDetailsClient({
     });
   }
 
+  async function handleOrderCompleted() {
+    startTransition(async () => {
+      const result = await CompleteOrder({
+        order_id: data.id,
+        conversation_id: data.conversation_id,
+        owner_id: user_id,
+      });
+      if (result.success) {
+        toast.success(result.message);
+        router.refresh();
+      } else {
+        toast.error(result.error.message);
+      }
+    });
+  }
+
   return (
-    <div>
-      <div className="text-center">
-        <h1 className="font-semibold text-lg">Detail Order</h1>
-        <h1 className="text-muted-foreground leading-tight mb-4">
+    <div className="flex flex-col gap-2">
+      <div>
+        <h1 className="font-semibold">ID Order</h1>
+        <h1 className="text-muted-foreground">{data.id}</h1>
+      </div>
+
+      <div>
+        <h1 className="font-semibold">Dibuat Pada</h1>
+        <h1 className="text-muted-foreground">
           {formatDateToYYYYMMDD(data.created_at)}{" "}
           {formatToHour(data.created_at)}
         </h1>
       </div>
 
-      <h1>ID Order</h1>
-      <h1 className="text-sm text-muted-foreground">{data.id}</h1>
-      <Separator className="my-2" />
       {userIsCustomer && (
-        <>
-          <h1>Nama Kedai</h1>
-          <h1 className="text-sm text-muted-foreground">{data.shop.name}</h1>
-          <Separator className="my-2" />
-        </>
+        <div>
+          <h1 className="font-semibold">Nama Kedai</h1>
+          <h1 className="text-muted-foreground">{data.shop.name}</h1>
+        </div>
       )}
-      {userIsShopOwner && (
-        <>
-          <h1>Pelanggan</h1>
-          <h1 className="text-sm text-muted-foreground">
-            {data.customer.name}
-          </h1>
 
-          <Separator className="my-2" />
-        </>
+      {userIsShopOwner && (
+        <div>
+          <h1 className="font-semibold">Pelanggan</h1>
+          <h1 className="text-muted-foreground">{data.customer.name}</h1>
+        </div>
       )}
-      <h1>Metode Pembayaran</h1>
-      <h1 className="text-sm text-muted-foreground">{data.payment_method}</h1>
-      <Separator className="my-2" />
-      <h1>Status</h1>
-      <Badge variant={"default"}>{orderStatusMapping[data.status]}</Badge>
-      <Separator className="mt-3 mb-2" />
+
+      <div>
+        <h1 className="font-semibold">Metode Pembayaran</h1>
+        <h1 className="text-muted-foreground">
+          {paymentMethodMapping[data.payment_method]}
+        </h1>
+      </div>
+
+      <div>
+        <h1 className="font-semibold">Status</h1>
+        <Badge variant={"default"}>{orderStatusMapping[data.status]}</Badge>
+      </div>
 
       {data.status === "PROCESSING" && (
         <>
-          <h1>Pesanan diproses pada</h1>
-          <h1 className="text-sm text-muted-foreground">
-            {formatToHour(data.processed_at)}
-          </h1>
-          <Separator className="my-2" />
-          <h1>Estimasi Waktu Tunggu</h1>
-          <h1 className="text-sm text-muted-foreground">
-            {data.estimation} Menit
-          </h1>
-          <Separator className="my-2" />
+          <div>
+            <h1 className="font-semibold">Pesanan diproses pada</h1>
+            <h1 className="text-muted-foreground">
+              {formatToHour(data.processed_at)}
+            </h1>
+          </div>
+
+          <div>
+            <h1 className="font-semibold">Estimasi Waktu Tunggu</h1>
+            <h1 className="text-muted-foreground">{data.estimation} Menit</h1>
+          </div>
         </>
       )}
 
-      <h1>Pesanan</h1>
       <div>
+        <h1 className="font-semibold">Pesanan</h1>
         {data.order_items.map((item, idx) => (
-          <Item variant="outline" size="sm" className="mt-2" key={idx}>
+          <Item variant="outline" size="sm" className="mt-1" key={idx}>
             <ItemContent>
               <ItemTitle>{item.product.name}</ItemTitle>
               <ItemDescription>{item.quantity}x</ItemDescription>
@@ -196,34 +229,30 @@ export default function OrderDetailsClient({
         ))}
       </div>
 
-      {data.status === "COMPLETED" && userIsCustomer && (
-        <div>
-          <Separator className="mt-3 mb-2" />
-          <h1>Pesanan selesai</h1>
-          <h1 className="text-sm">
-            Pesanan anda telah selesai, silakan hubungi pemilik kedai
-          </h1>
+      <div>
+        <h1 className="font-semibold mt-1">
+          {postOrderTypeMapping[data.post_order_type]}
+        </h1>
+        <div className="border p-4 rounded mt-1">
+          <h1>Lantai {data.floor} </h1>
+          <h1>Meja Nomor {data.table_number}</h1>
         </div>
-      )}
+      </div>
 
       {data.status === "PROCESSING" && userIsShopOwner && (
-        <div>
-          <Separator className="mt-3 mb-2" />
-          <h1>Pesanan selesai</h1>
-          <h1 className="text-sm text-muted-foreground">
-            Tandai pesanan ini telah selesai
-          </h1>
+        <div className="mt-3 flex gap-3 flex-col">
+          <Button className="w-full py-6" variant={"outline"}>
+            Ubah Estimasi
+          </Button>
 
-          <div className="flex gap-2 items-center justify-center mt-2">
-            <Button size={"sm"} variant={"outline"}>
-              Ubah Estimasi
-            </Button>
-
-            <Button size={"sm"}>
-              <IconCheck />
-              Tandai Selesai
-            </Button>
-          </div>
+          <Button
+            className="w-full py-6"
+            onClick={handleOrderCompleted}
+            disabled={isPending}
+          >
+            <IconCheck />
+            Order Selesai
+          </Button>
         </div>
       )}
 
@@ -231,20 +260,21 @@ export default function OrderDetailsClient({
         <div>
           <Separator className="mt-3 mb-2" />
           <h1 className="font-semibold">Konfirmasi Order</h1>
-          <h1 className="italic">
+          <h1 className="text-muted-foreground">
             Pilih terima atau tolak pesanan ini, pastikan stok atau bahan
             tersedia.
           </h1>
-          <div className="flex justify-center gap-3 mt-4">
+          <div className="flex flex-col gap-3 mt-4">
             <AlertDialog
               open={openRejectOrder}
               onOpenChange={setOpenRejectOrder}
             >
               <AlertDialogTrigger asChild>
                 <Button
-                  size={"sm"}
+                  size={"lg"}
                   variant={"destructive"}
                   disabled={isPending}
+                  className="w-full "
                 >
                   <IconX />
                   Tolak
@@ -279,9 +309,10 @@ export default function OrderDetailsClient({
               </AlertDialogContent>
             </AlertDialog>
             <Button
-              size={"sm"}
+              size={"lg"}
               onClick={handleConfirmOrder}
               disabled={isPending}
+              className="w-full "
             >
               <IconCheck />
               Konfirmasi
@@ -311,14 +342,14 @@ export default function OrderDetailsClient({
               ? "Pelanggan telah mengunggah bukti pembayaran. Silakan periksa dan konfirmasi atau tolak."
               : "Konfirmasi pelanggan telah melakukan pembayaran"}
           </h1>
-          <div className="flex justify-center gap-3 mt-4">
+          <div className="flex flex-col gap-3 mt-4">
             <AlertDialog
               open={openRejectPayment}
               onOpenChange={setOpenRejectPayment}
             >
               <AlertDialogTrigger asChild>
                 <Button
-                  size={"sm"}
+                  className="w-full py-6"
                   variant={"destructive"}
                   disabled={isPending}
                 >
@@ -361,7 +392,7 @@ export default function OrderDetailsClient({
               onOpenChange={setOpenConfirmPayment}
             >
               <AlertDialogTrigger asChild>
-                <Button size={"sm"} disabled={isPending}>
+                <Button className="w-full py-6" disabled={isPending}>
                   <IconCheck />
                   Konfirmasi
                 </Button>

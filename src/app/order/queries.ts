@@ -24,14 +24,18 @@ export async function getOrderDetails(id: string) {
       customer: {
         select: {
           name: true,
+          avatar: true,
         },
       },
       shop: {
         select: {
+          id: true,
           owner_id: true,
           name: true,
         },
       },
+      testimony: true,
+      complaint: true,
     },
   });
 }

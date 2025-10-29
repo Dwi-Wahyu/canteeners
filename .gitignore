@@ -36,6 +36,18 @@ secret.md
 /public/uploads/payment-proof/*
 !/public/uploads/payment-proof/.gitkeep
 
+/public/uploads/refund-proof/*
+!/public/uploads/refund-proof/.gitkeep
+
+/public/uploads/message-media-image/*
+!/public/uploads/message-media-image/.gitkeep
+
+/public/uploads/message-media-video/*
+!/public/uploads/message-media-video/.gitkeep
+
+/public/uploads/complaint-proof/*
+!/public/uploads/complaint-proof/.gitkeep
+
 /public/uploads/shop/*
 !/public/uploads/shop/.gitkeep
 

@@ -34,11 +34,10 @@ export async function createNewTableQRCode({
 
     const nextTableNumber = previousTableNumber + 1;
 
-    params.set("canteen_id", canteen_id.toString());
     params.set("floor", floor.toString());
     params.set("table_number", nextTableNumber.toString());
 
-    const fullUrl = `${baseUrl}/dashboard-pelanggan/pilih-meja?${params.toString()}`;
+    const fullUrl = `${baseUrl}/dashboard-pelanggan/kantin/${canteen_id}/pilih-meja?${params.toString()}`;
 
     const created = await prisma.tableQRCode.create({
       data: {
@@ -56,8 +55,6 @@ export async function createNewTableQRCode({
       },
     });
 
-    // const stringifyCreated = JSON.stringify(created);
-
     await QRCode.toFile(savePath, fullUrl, {
       errorCorrectionLevel: "M",
       type: "png",
@@ -71,6 +68,37 @@ export async function createNewTableQRCode({
     revalidatePath(`/admin/kantin/${canteen_id}/qrcode-meja/${map_id}`);
 
     return successResponse(undefined, "Berhasil generate QR Code");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan");
+  }
+}
+
+export async function chooseCustomerTable({
+  user_id,
+  canteen_id,
+  floor,
+  table_number,
+}: {
+  user_id: string;
+  floor: number;
+  table_number: number;
+  canteen_id: number;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    await prisma.customerProfile.update({
+      where: {
+        user_id,
+      },
+      data: {
+        canteen_id,
+        floor,
+        table_number,
+      },
+    });
+
+    return successResponse(undefined, "Sukses mencatat meja");
   } catch (error) {
     console.log(error);
 

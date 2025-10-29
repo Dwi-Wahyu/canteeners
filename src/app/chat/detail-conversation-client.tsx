@@ -23,7 +23,7 @@ export default function DetailConversationClient({
     role === "CUSTOMER" ? "/dashboard-pelanggan/chat" : "/dashboard-kedai/chat";
 
   return (
-    <div className="relative pt-14">
+    <div className="relative pt-4">
       <div className="w-full fixed z-30 left-0 top-0 bg-secondary shadow text-secondary-foreground">
         <div className="py-4 px-5 md:px-0 container max-w-7xl mx-auto flex justify-between items-center">
           <Button

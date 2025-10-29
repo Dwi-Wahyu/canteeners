@@ -18,13 +18,11 @@ import { useEffect, useState } from "react";
 export default function SnkCheckoutDialog({
   showSnk,
   setShowSnk,
-  checkouted,
   setCheckouted,
   isCheckoutPending,
 }: {
   showSnk: boolean;
   setShowSnk: (checked: boolean) => void;
-  checkouted: boolean;
   setCheckouted: (checkouted: boolean) => void;
   isCheckoutPending: boolean;
 }) {
@@ -33,12 +31,6 @@ export default function SnkCheckoutDialog({
   function handleClickCheckout() {
     setCheckouted(true);
   }
-
-  useEffect(() => {
-    if (checkouted && !isCheckoutPending) {
-      setShowSnk(false);
-    }
-  }, [isCheckoutPending, checkouted]);
 
   return (
     <AlertDialog open={showSnk} onOpenChange={setShowSnk}>

@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { IconEye, IconPencil } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
-import { orderModeMapping } from "@/constant/order-mode-mapping";
+import { shopOrderModeMapping } from "@/constant/order-mode-mapping";
 import { shopStatusMapping } from "@/constant/shop-status-mapping";
 
 export default async function KedaiPage() {
@@ -44,7 +44,7 @@ export default async function KedaiPage() {
                     {shopStatusMapping[kedai.status]}
                   </Badge>
                   <Badge variant={"outline"}>
-                    {orderModeMapping[kedai.order_mode]}
+                    {shopOrderModeMapping[kedai.order_mode]}
                   </Badge>
                 </div>
               </CardContent>

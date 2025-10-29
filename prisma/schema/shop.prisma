@@ -20,14 +20,12 @@ model Shop {
     order_mode ShopOrderMode @default(READY_ONLY) // metode menyiapkan order    
 
     payments   Payment[]
-    complaints ShopComplaint[]
 
     minimum_price Int?
     maximum_price Int?
 
     average_rating Float           @default(0)
     total_ratings  Int             @default(0)
-    testimonies    ShopTestimony[]
 
     shop_carts ShopCart[]
 
@@ -52,15 +50,25 @@ model ShopComplaint {
     id         Int      @id @default(autoincrement())
     created_at DateTime @default(now())
 
-    order    Order?  @relation(fields: [order_id], references: [id])
-    order_id String?
+    order    Order  @relation(fields: [order_id], references: [id])
+    order_id String @unique
 
+    proof_url String?
     cause String @db.LongText
+    feedback String? @db.LongText
+    status ShopComplaintStatus @default(PENDING)
 
-    shop    Shop?   @relation(fields: [shop_id], references: [id])
-    shop_id String?
+    refund Refund?
 
     @@map("shop_complaints")
+}
+
+enum ShopComplaintStatus {
+  PENDING       // Baru dibuat, belum dilihat shop
+  UNDER_REVIEW  // Shop sedang cek (lihat foto, chat, dll)
+  RESOLVED      // Masalah selesai (bisa dengan/tanpa refund)
+  REJECTED      // Ditolak (tidak valid, tidak cukup bukti)
+  ESCALATED     // Naik ke admin/canteen (kasus berat)
 }
 
 model Payment {

@@ -10,14 +10,14 @@ export default function BackButton({ url }: { url?: string }) {
 
   if (!url) {
     return (
-      <Button onClick={() => router.back()} size={"icon"} variant={"outline"}>
+      <Button onClick={() => router.back()} size={"icon"} variant={"ghost"}>
         <IconChevronLeft />
       </Button>
     );
   }
 
   return (
-    <Button variant={"outline"} asChild size={"icon"}>
+    <Button variant={"ghost"} asChild size={"icon"}>
       <Link href={url}>
         <IconChevronLeft />
       </Link>

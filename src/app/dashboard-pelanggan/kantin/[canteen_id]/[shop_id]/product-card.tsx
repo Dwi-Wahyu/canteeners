@@ -10,15 +10,15 @@ import { toast } from "sonner";
 
 export default function ProductCard({
   product,
-  customer_id,
+  cart_id,
 }: {
   product: Product;
-  customer_id: string;
+  cart_id: string;
 }) {
   const mutations = useMutation({
     mutationKey: ["add-product-to-cart"],
     mutationFn: async () => {
-      return await addCartItem({ product, customer_id });
+      return await addCartItem({ product, cart_id });
     },
   });
 
@@ -49,7 +49,7 @@ export default function ProductCard({
 
         <div>
           <div className="mb-5">
-            <h1 className="font-semibold mb-3">{product.name}</h1>
+            <h1 className="font-semibold mb-1">{product.name}</h1>
 
             {/* <p className="text-muted-foreground text-sm">
               {product.description}
@@ -59,7 +59,7 @@ export default function ProductCard({
           </div>
 
           <Button
-            disabled={mutations.isPending || added}
+            disabled={mutations.isPending || added || !product.is_available}
             onClick={handleAddToCart}
             variant={added ? "default" : "outline"}
           >

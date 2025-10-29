@@ -6,9 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
-import { Button } from "@/components/ui/button";
-import { IconStar } from "@tabler/icons-react";
-import { Textarea } from "@/components/ui/textarea";
+import OrderReviewSection from "./order-review-section";
+import OrderComplaintClient from "./order-complaint-client";
 
 export default async function DetailOrderPage({
   params,
@@ -55,44 +54,59 @@ export default async function DetailOrderPage({
     );
   }
 
+  const backUrl =
+    session.user.role === "SHOP_OWNER"
+      ? "/dashboard-kedai/chat/" + data.conversation_id
+      : "/dashboard-pelanggan/chat/" + data.conversation_id;
+
+  const userIsShopOwner = data.shop.owner_id === session.user.id;
+  const userIsCustomer = data.customer_id === session.user.id;
+
   return (
-    <div className="p-5">
-      <BackButton />
-      <Card className="mt-4">
-        <CardContent>
-          <OrderDetailsClient data={data} user_id={session.user.id} />
-        </CardContent>
-      </Card>
+    <div className="">
+      <div className="px-5 py-3 shadow w-full justify-between flex items-center">
+        <div className="flex items-center">
+          <BackButton url={backUrl} />
+          <h1 className="font-semibold text-lg">Detail Order</h1>
+        </div>
+      </div>
 
-      <Card className="mt-4">
-        <CardContent className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-lg font-semibold">Ulasan / Rating</h1>
-            <h1 className="mt-1 text-muted-foreground">
-              Berikan rating untuk kedai atau aplikasi Canteeners
-            </h1>
-          </div>
+      <div className="p-5 flex flex-col gap-4">
+        <Card>
+          <CardContent className="">
+            <OrderDetailsClient
+              data={data}
+              user_id={session.user.id}
+              userIsCustomer={userIsCustomer}
+              userIsShopOwner={userIsShopOwner}
+            />
+          </CardContent>
+        </Card>
 
-          <div>
-            <h1 className="font-semibold">Rating</h1>
+        {data.status === "COMPLETED" && (
+          <OrderReviewSection
+            order_id={data.id}
+            isUserCustomer={data.customer_id === session.user.id}
+            customer={{
+              avatar: data.customer.avatar,
+              name: data.customer.name,
+            }}
+            prevTestimony={data.testimony}
+          />
+        )}
 
-            <div className="flex gap-2 mt-1 items-center">
-              <IconStar />
-              <IconStar />
-              <IconStar />
-              <IconStar />
-              <IconStar />
-            </div>
-          </div>
-
-          <div>
-            <h1 className="font-semibold">Ulasan</h1>
-            <Textarea className="mt-1" />
-          </div>
-
-          <Button>Tambahkan Ulasan</Button>
-        </CardContent>
-      </Card>
+        {data.status === "COMPLETED" && (
+          <OrderComplaintClient
+            order_id={data.id}
+            isUserCustomer={data.customer_id === session.user.id}
+            customer={{
+              avatar: data.customer.avatar,
+              name: data.customer.name,
+            }}
+            prevComplaint={data.complaint}
+          />
+        )}
+      </div>
     </div>
   );
 }

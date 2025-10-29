@@ -15,12 +15,14 @@ export default function ShopCartPaymentMethod({
   shopPayments,
   paymentMethod,
   setPaymentMethod,
+  disabled,
 }: {
   shopPayments: NonNullable<
     Awaited<ReturnType<typeof getCustomerShopCart>>
   >["shop"]["payments"];
   paymentMethod: PaymentMethod;
   setPaymentMethod: (method: PaymentMethod) => void;
+  disabled: boolean;
 }) {
   function getPaymentMethodIcon(method: PaymentMethod) {
     switch (method) {
@@ -51,7 +53,10 @@ export default function ShopCartPaymentMethod({
               <ItemTitle>{paymentMethodMapping[payment.method]}</ItemTitle>
             </ItemContent>
             <ItemActions>
-              <Checkbox checked={payment.method === paymentMethod} />
+              <Checkbox
+                checked={payment.method === paymentMethod}
+                disabled={disabled}
+              />
             </ItemActions>
           </Item>
         ))}

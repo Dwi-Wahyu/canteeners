@@ -6,7 +6,7 @@ model User {
     name       String
     username   String    @unique
     password   String
-    avatar     String?
+    avatar     String    @default("default-avatar.jpg")
     last_login DateTime?
     role       Role
 
@@ -24,6 +24,7 @@ model User {
     customer_violations CustomerViolation[]
     customer_orders Order[]
     customer_cart Cart?
+    customer_profile CustomerProfile?
 
     @@index([role])
     @@index([last_login])
@@ -37,4 +38,18 @@ enum Role {
     CUSTOMER
     SHOP_OWNER
     COURIER
+}
+
+model CustomerProfile {
+    id         String   @id @default(uuid())
+
+    user User @relation(fields: [user_id], references: [id])
+    user_id String @unique
+    canteen_id        Int?
+    floor          Int?
+    table_number   Int?
+
+    last_visit_at       DateTime?
+
+    @@map("customer_profiles")
 }

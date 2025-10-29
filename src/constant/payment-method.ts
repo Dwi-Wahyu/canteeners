@@ -1,5 +1,5 @@
 export const paymentMethodMapping = {
-  QRIS: "Kode QR Qris",
+  QRIS: "QRIS",
   BANK_TRANSFER: "Transfer Bank",
   CASH: "Tunai",
 };

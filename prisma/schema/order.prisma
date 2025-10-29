@@ -15,19 +15,26 @@ model Order {
 
     total_price Float
 
-    table_qr   TableQRCode? @relation(fields: [table_qr_id], references: [id])
-    table_qr_id String?
-
     status OrderStatus
 
     type OrderType @default(READY)
 
-    complaint ShopComplaint[]
+    testimony ShopTestimony?
+    complaint ShopComplaint?
+    refund Refund?
 
+    conversation Conversation @relation(fields: [conversation_id], references: [id])
+    conversation_id String
     message        Message[]
     payment_method PaymentMethod
 
     order_items OrderItem[]
+
+    post_order_type PostOrderType @default(DELIVERY_TO_TABLE)
+    table_number    Int?       
+    floor           Int?
+    // courier_journey CourierJourney? @relation(fields: [courier_journey_id], references: [id])
+    // courier_journey_id String?     @unique // Relasi ke CourierJourney untuk COURIER_DELIVERY
 
     @@index([customer_id])
     @@index([shop_id])
@@ -66,46 +73,48 @@ enum OrderStatus {
     CANCELLED // pembatalan oleh customer
 }
 
-// Todo: bikin model refund
+enum PostOrderType {
+    DELIVERY_TO_TABLE
+    TAKEAWAY
+    COURIER_DELIVERY
+}
 
-// model Refund {
-//   id                String         @id @default(uuid())
-//   order_id          String
-//   order             Order          @relation(fields: [order_id], references: [id])
+
+model Refund {
+  id                String         @id @default(uuid())
+  order             Order          @relation(fields: [order_id], references: [id])
+  order_id          String @unique
   
-//   complaint_id      Int?
-//   complaint         ShopComplaint? @relation(fields: [complaint_id], references: [id])
-
-//   amount            Decimal        @db.Decimal(10,2)  // jumlah refund
-//   reason            RefundReason
-//   status            RefundStatus   @default(PENDING)
+  complaint         ShopComplaint? @relation(fields: [complaint_id], references: [id])
+  complaint_id      Int? @unique
+ 
+  proof_url         String?
+  amount            Float         // jumlah refund
+  reason            RefundReason
+  status            RefundStatus   @default(PENDING)
   
-//   requested_at      DateTime       @default(now())
-//   processed_at      DateTime?
-//   rejected_reason   String?
+  requested_at      DateTime       @default(now())
+  processed_at      DateTime?
+  rejected_reason   String?
 
-//   // Siapa yang proses
-//   processed_by      String?        // admin_id atau shop_owner_id
-//   processed_by_role String?        // "ADMIN" / "SHOP"
+  @@index([order_id])
+  @@index([status])
+  @@index([complaint_id])
+  @@map("refunds")
+}
 
-//   @@index([order_id])
-//   @@index([status])
-//   @@index([complaint_id])
-//   @@map("refunds")
-// }
+enum RefundReason {
+  LATE_DELIVERY        // terlambat > estimasi
+  WRONG_ORDER          // salah pesanan
+  DAMAGED_FOOD         // rusak
+  MISSING_ITEM         // kurang item
+  OTHER                // lain-lain
+}
 
-// enum RefundReason {
-//   LATE_DELIVERY        // terlambat > estimasi
-//   WRONG_ORDER          // salah pesanan
-//   DAMAGED_FOOD         // rusak
-//   MISSING_ITEM         // kurang item
-//   OTHER                // lain-lain
-// }
-
-// enum RefundStatus {
-//   PENDING              // menunggu proses
-//   APPROVED             // disetujui
-//   REJECTED             // ditolak
-//   PROCESSED            // uang sudah dikembalikan
-//   CANCELLED            // dibatalkan user
-// }
+enum RefundStatus {
+  PENDING              // menunggu proses
+  APPROVED             // disetujui
+  REJECTED             // ditolak
+  PROCESSED            // uang sudah dikembalikan
+  CANCELLED            // dibatalkan user
+}

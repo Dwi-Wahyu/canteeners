@@ -1,9 +1,13 @@
 "use server";
 
 import { ServerActionReturn } from "@/types/server-action";
-import { Message, MessageType } from "../generated/prisma";
+import { Message, MessageType, Prisma } from "../generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
+
+type MessageWithMedia = Prisma.MessageGetPayload<{
+  include: { media: true };
+}>;
 
 export async function saveMessage({
   conversation_id,
@@ -17,7 +21,7 @@ export async function saveMessage({
   content?: string;
   type: MessageType;
   media: File[];
-}): Promise<ServerActionReturn<Message>> {
+}): Promise<ServerActionReturn<MessageWithMedia>> {
   try {
     if (media.length > 0) {
     }
@@ -28,6 +32,9 @@ export async function saveMessage({
         sender_id,
         content,
         type,
+      },
+      include: {
+        media: true,
       },
     });
 
