@@ -39,3 +39,15 @@ export async function getOrderDetails(id: string) {
     },
   });
 }
+
+export async function getOrderWaitingPayment(conversation_id: string) {
+  return await prisma.order.findFirst({
+    where: {
+      conversation_id,
+      status: "WAITING_PAYMENT",
+    },
+    select: {
+      id: true,
+    },
+  });
+}

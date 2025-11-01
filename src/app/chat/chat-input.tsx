@@ -19,17 +19,36 @@ import {
 } from "@/components/ui/file-upload";
 import { useChatRoom } from "@/hooks/use-chat-room";
 import { getConversationMessages } from "./queries";
+import { getOrderWaitingPayment } from "../order/queries";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ChatInput({
   conversation,
   sender_id,
+  order_waiting_payment,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
+  order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
 }) {
   const [isUploading, setIsUploading] = React.useState(false);
+
+  const [isSendingPayment, setIsSendingPayment] = React.useState(false);
 
   const { text, setText, media, setMedia, handleSend, isLoading } = useChatRoom(
     {
@@ -90,7 +109,13 @@ export default function ChatInput({
     });
   }, []);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    if (isSendingPayment) {
+      await handleSend("PAYMENT_PROOF", order_waiting_payment?.id);
+    }
+
+    await handleSend("TEXT");
+
     console.log(media);
     console.log(text);
   };
@@ -152,17 +177,38 @@ export default function ChatInput({
           disabled={isUploading}
         />
         <div className="flex items-center justify-end gap-1.5">
-          <FileUploadTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size={"icon"}
-              className="size-10 rounded-sm"
-            >
-              <Paperclip />
-              <span className="sr-only">Attach file</span>
-            </Button>
-          </FileUploadTrigger>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size={"icon"}
+                type="button"
+                variant="ghost"
+                className="size-10 rounded-sm"
+              >
+                <Paperclip />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <FileUploadTrigger className="w-full">
+                    Kirim Gambar
+                    <span className="sr-only">Attach file</span>
+                  </FileUploadTrigger>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!order_waiting_payment}>
+                  <FileUploadTrigger
+                    className="w-full"
+                    onClick={() => setIsSendingPayment(true)}
+                  >
+                    Kirim bukti pembayaran
+                    <span className="sr-only">Send payment proof</span>
+                  </FileUploadTrigger>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             size="icon"
             type="submit"

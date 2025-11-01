@@ -73,7 +73,7 @@ export default function OrderReviewSection({
   return (
     <Card>
       <CardContent className="flex flex-col">
-        {testimony ? (
+        {testimony && (
           <>
             <div className="flex gap-3 mb-2 items-center">
               <Avatar className="size-12">
@@ -98,7 +98,9 @@ export default function OrderReviewSection({
 
             <h1 className="mt-2">{testimony.message}</h1>
           </>
-        ) : (
+        )}
+
+        {!testimony && !isUserCustomer && (
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
@@ -109,9 +111,6 @@ export default function OrderReviewSection({
                 Customer belum menambahkan ulasan atau rating
               </EmptyDescription>
             </EmptyHeader>
-            <EmptyContent>
-              <Button>Add data</Button>
-            </EmptyContent>
           </Empty>
         )}
 
@@ -145,7 +144,12 @@ export default function OrderReviewSection({
               />
             </div>
 
-            <Button className="py-5" disabled={isPending} onClick={handleSend}>
+            <Button
+              size={"lg"}
+              className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary"
+              disabled={isPending}
+              onClick={handleSend}
+            >
               Kirim
             </Button>
           </>

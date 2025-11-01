@@ -22,15 +22,17 @@ export default function ClientOwnerLayout({
     router.push("/dashboard-pelanggan");
   }
 
+  const excludedPath = ["/chat/", "/pengajuan-refund/"];
+
   return (
     <div className="w-full relative min-h-svh pt-12 pb-16">
-      {!pathname.includes("/chat/") && (
+      {!excludedPath.includes(pathname) && (
         <OwnerTopbar connected={false} subscribed={false} />
       )}
 
       <div className="p-5 pt-7">{children}</div>
 
-      {!pathname.includes("/chat/") && <OwnerBottombar />}
+      {!excludedPath.includes(pathname) && <OwnerBottombar />}
     </div>
   );
 }

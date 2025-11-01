@@ -14,7 +14,7 @@ export default async function DashboardPelanggan() {
   const canteens = await prisma.canteen.findMany();
 
   return (
-    <div className="pt-14">
+    <div className="">
       <CustomerTopbar subscribed={false} connected={false} />
 
       <h1 className="text-xl font-semibold">

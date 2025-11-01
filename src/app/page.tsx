@@ -3,11 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/config/auth";
 import { prisma } from "@/lib/prisma";
-import { UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppTestimonySection from "./app-testimony-section";
-import { IconMenu, IconMenu2 } from "@tabler/icons-react";
 import LandingTopbar from "./landing-topbar";
 
 export default async function LandingPage() {
