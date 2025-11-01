@@ -6,6 +6,7 @@ import {
   IconExclamationCircle,
   IconMessageUser,
   IconReceipt,
+  IconReceiptRefund,
   IconUser,
 } from "@tabler/icons-react";
 
@@ -55,6 +56,20 @@ export default async function CustomerSettingsPage() {
           </ItemMedia>
           <ItemContent>
             <ItemTitle>Riwayat Transaksi</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <Item variant="outline" size="sm" className="mt-4" asChild>
+        <Link href="/dashboard-pelanggan/pengajuan-refund">
+          <ItemMedia>
+            <IconReceiptRefund className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Pengajuan Refund</ItemTitle>
           </ItemContent>
           <ItemActions>
             <IconChevronRight className="size-4" />

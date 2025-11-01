@@ -89,6 +89,10 @@ export default function OrderComplaintClient({
     await mutateAsync(payload);
   };
 
+  if (!complaint && !isUserCustomer) {
+    return <></>;
+  }
+
   return (
     <Card>
       <CardContent>
@@ -158,7 +162,7 @@ export default function OrderComplaintClient({
                 <div className="flex flex-col gap-4">
                   <Button
                     size={"lg"}
-                    className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary py-6"
+                    className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary"
                   >
                     Kirim
                   </Button>

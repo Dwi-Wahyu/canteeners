@@ -337,11 +337,20 @@ export default function OrderDetailsClient({
         <div>
           <Separator className="mt-3 mb-2" />
           <h1 className="font-semibold">Konfirmasi Pembayaran</h1>
+
           <h1 className="text-sm">
             {!isPaymentMethodCash
               ? "Pelanggan telah mengunggah bukti pembayaran. Silakan periksa dan konfirmasi atau tolak."
               : "Konfirmasi pelanggan telah melakukan pembayaran"}
           </h1>
+
+          {data.payment_proof_url && (
+            <img
+              src={"/uploads/payment-proof/" + data.payment_proof_url}
+              alt=""
+            />
+          )}
+
           <div className="flex flex-col gap-3 mt-4">
             <AlertDialog
               open={openRejectPayment}

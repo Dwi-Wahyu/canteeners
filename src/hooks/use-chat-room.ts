@@ -49,16 +49,17 @@ export function useChatRoom({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  const handleSend = async () => {
+  const handleSend = async (type: MessageType, order_id?: string) => {
     if (!text.trim()) return;
     setIsLoading(true);
 
     const saved = await saveMessage({
       conversation_id: conversationId,
       sender_id: senderId,
-      type: "TEXT",
+      type,
       content: text,
       media,
+      order_id,
     });
 
     if (!saved.success || !saved.data) {

@@ -11,30 +11,8 @@ import {
 import ToggleShopStatus from "./toggle-shop-status";
 import { getShopDataAndRecentOrder } from "./owner-dashboard-queries";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemHeader,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
-import { formatDateToYYYYMMDD } from "@/helper/date-helper";
-import { formatToHour } from "@/helper/hour-helper";
-import {
-  IconChevronRight,
-  IconInvoice,
-  IconMessage,
-  IconReceipt,
-} from "@tabler/icons-react";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { orderStatusMapping } from "@/constant/order-status-mapping";
-import { Button } from "@/components/ui/button";
+import HomeRefundSection from "./home-refund-section";
+import HomeOrderSection from "./home-order-section";
 
 export default async function OwnerDashboard() {
   const session = await auth();
@@ -89,45 +67,9 @@ export default async function OwnerDashboard() {
         />
       </div>
 
-      <div className="mt-5">
-        <h1 className="text-lg font-semibold mb-3">Order Masuk</h1>
+      <HomeOrderSection orders={shop.orders} />
 
-        {shop.orders.map((order, idx) => {
-          return (
-            <Item
-              key={idx}
-              variant="outline"
-              className="mt-2 relative shadow rounded-lg"
-            >
-              <Badge
-                className="-top-3 -right-2 absolute"
-                variant={
-                  ["REJECTED", "PAYMENT_REJECTED"].includes(order.status)
-                    ? "destructive"
-                    : "default"
-                }
-              >
-                {orderStatusMapping[order.status]}
-              </Badge>
-
-              <ItemContent>
-                <ItemTitle>{order.customer.name}</ItemTitle>
-                <ItemDescription>
-                  {formatDateToYYYYMMDD(order.created_at)}{" "}
-                  {formatToHour(order.created_at)}
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions className="mt-2">
-                <Button asChild variant={"outline"} size={"icon"}>
-                  <Link href={"/order/" + order.id}>
-                    <IconReceipt />
-                  </Link>
-                </Button>
-              </ItemActions>
-            </Item>
-          );
-        })}
-      </div>
+      <HomeRefundSection shop_id={shop.id} />
     </div>
   );
 }

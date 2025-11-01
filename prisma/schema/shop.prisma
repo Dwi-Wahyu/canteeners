@@ -58,7 +58,6 @@ model ShopComplaint {
     feedback String? @db.LongText
     status ShopComplaintStatus @default(PENDING)
 
-    refund Refund?
 
     @@map("shop_complaints")
 }
