@@ -2,6 +2,7 @@ import BackButton from "@/app/_components/back-button";
 import { getRefund } from "../queries";
 import RefundDetailClient from "./refund-detail-client";
 import NotFoundResource from "@/app/_components/not-found-resource";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 
 export default async function RefundDetailPage({
   params,
@@ -18,12 +19,10 @@ export default async function RefundDetailPage({
 
   return (
     <div>
-      <div className="px-5 py-3 shadow w-full justify-between flex items-center">
-        <div className="flex items-center">
-          <BackButton />
-          <h1 className="font-semibold text-lg">Detail Pengajuan Refund</h1>
-        </div>
-      </div>
+      <TopbarWithBackButton
+        title="Detail Pengajuan Refund"
+        backUrl={"/dashboard-kedai/pengajuan-refund"}
+      />
 
       <RefundDetailClient refund={refund} />
     </div>

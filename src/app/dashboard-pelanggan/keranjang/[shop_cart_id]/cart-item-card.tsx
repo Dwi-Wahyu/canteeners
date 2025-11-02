@@ -90,7 +90,7 @@ export default function CartItemCard({
         <Image
           src={
             cartItem.product.image_url
-              ? `/Uploads/product/${cartItem.product.image_url}`
+              ? `/uploads/product/${cartItem.product.image_url}`
               : "/placeholder-image.jpg"
           }
           alt={cartItem.product.name}

@@ -1,24 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import {
   Item,
   ItemActions,
   ItemContent,
   ItemDescription,
-  ItemFooter,
-  ItemHeader,
-  ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
-import {
-  IconChevronRight,
-  IconInvoice,
-  IconMessage,
-  IconReceipt,
-  IconReceiptOff,
-} from "@tabler/icons-react";
+import { IconReceipt, IconReceiptOff } from "@tabler/icons-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { orderStatusMapping } from "@/constant/order-status-mapping";
@@ -45,7 +34,16 @@ export default function HomeOrderSection({
 }) {
   return (
     <div className="mt-7">
-      <h1 className="text-lg font-semibold mb-3">Order Masuk</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-lg font-semibold">Order Masuk</h1>
+
+        <Link
+          href={"/dashboard-kedai/order/"}
+          className="text-underline text-blue-500 text-sm"
+        >
+          Lihat Selengkapnya
+        </Link>
+      </div>
 
       {orders.length === 0 && (
         <Empty className="border">

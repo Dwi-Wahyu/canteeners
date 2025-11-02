@@ -8,6 +8,7 @@ import {
   IconReceipt,
   IconReceiptRefund,
   IconUser,
+  IconUserExclamation,
 } from "@tabler/icons-react";
 
 import {
@@ -98,7 +99,21 @@ export default async function CustomerSettingsPage() {
       <ToggleSettingDarkMode />
 
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/dashboard-pelanggan/pengaturan/pusat-bantuan">
+        <Link href="/dashboard-pelanggan/pelanggaran">
+          <ItemMedia>
+            <IconUserExclamation className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Pelanggaran</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <Item variant="outline" size="sm" className="mb-4" asChild>
+        <Link href="/dashboard-pelanggan/pusat-bantuan">
           <ItemMedia>
             <IconMessageUser className="size-5" />
           </ItemMedia>

@@ -46,3 +46,7 @@
   src\app\admin\kantin\[canteen_id]\qrcode-meja\[map_id]\page.tsx
 
 - munculkan pilihan meja sebelumnya di choose-table-client.tsx
+
+- todo tampilkan data refund yang sudah di input di /order/id/refund dan juga buat fungsi edit refund
+
+- fix payment proof dikirim 2 kali

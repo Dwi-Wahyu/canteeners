@@ -3,7 +3,7 @@
 import { PaymentMethod, PostOrderType, Product } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { KedaiState } from "@/store/use-keranjang-store";
+import { KedaiState } from "@/store/use-cart-store";
 import { ServerActionReturn } from "@/types/server-action";
 import { getCustomerShopCart } from "./server-queries";
 import { revalidatePath } from "next/cache";
@@ -251,7 +251,7 @@ export async function processOrder({
             sender_id: customerId,
             order_id: order.id,
             type: "ORDER",
-            content: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
+            text: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
           },
         });
       }
@@ -405,7 +405,7 @@ export async function processShopCart({
           sender_id: customer_id,
           order_id: order.id,
           type: "ORDER",
-          content: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
+          text: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
         },
       });
     });

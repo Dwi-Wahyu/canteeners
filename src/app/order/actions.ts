@@ -48,7 +48,7 @@ export async function ConfirmPayment({
         sender_id: owner_id,
         order_id: order_id,
         type: "SYSTEM",
-        content: `Pembayaran telah dikonfirmasi, pesanan anda sedang diproses`,
+        text: `Pembayaran telah dikonfirmasi, pesanan anda sedang diproses`,
       },
     });
 
@@ -119,7 +119,7 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          content: `Pesanan diterima, silakan lakukan pembayaran di kedai`,
+          text: `Pesanan diterima, silakan lakukan pembayaran di kedai`,
         },
       });
 
@@ -161,7 +161,7 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          content: `Pesanan diterima, silakan kirim bukti pembayaran`,
+          text: `Pesanan diterima, silakan kirim bukti pembayaran`,
           media: {
             create: {
               url: shopPaymentExcludeCash.qr_url,
@@ -188,7 +188,7 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          content: `Pesanan diterima, silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
+          text: `Pesanan diterima, silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
         },
       });
 
@@ -253,7 +253,7 @@ export async function CompleteOrder({
         sender_id: owner_id,
         order_id: order_id,
         type: "SYSTEM",
-        content: `Pesanan telah selesai silakan berikan ulasan atau rating untuk kami kak 🙏`,
+        text: `Pesanan telah selesai silakan berikan ulasan atau rating untuk kami kak 🙏`,
       },
     });
 

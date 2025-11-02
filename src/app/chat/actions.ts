@@ -28,13 +28,13 @@ export async function saveMessage({
   conversation_id,
   sender_id,
   type,
-  content,
+  text,
   media,
   order_id,
 }: {
   conversation_id: string;
   sender_id: string;
-  content?: string;
+  text?: string;
   type: MessageType;
   media: File[];
   order_id?: string;
@@ -70,7 +70,7 @@ export async function saveMessage({
       data: {
         conversation_id,
         sender_id,
-        content,
+        text,
         type,
         ...(messageMedia.length > 0
           ? {

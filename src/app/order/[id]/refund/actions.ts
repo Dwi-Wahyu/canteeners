@@ -6,12 +6,12 @@ import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
 import { InputRefundSchemaType } from "@/validations/schemas/refund";
 
-export async function uploadRefundProofImage(file: File) {
+export async function uploadRefundComplaintProofImage(file: File) {
   const storageService = new LocalStorageService();
 
   const refundProofImageUrl = await storageService.uploadImage(
     file,
-    "refund-proof"
+    "complaint-proof"
   );
 
   return refundProofImageUrl;

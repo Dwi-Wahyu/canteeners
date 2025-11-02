@@ -1,32 +1,20 @@
+// use-chat-room.tsx
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { saveMessage } from "@/app/chat/actions";
-
+import { Prisma, MessageType } from "@/app/generated/prisma";
 import {
-  Prisma,
-  Message,
-  MessageMedia,
-  MessageType,
-  MediaMimeType,
-} from "@/app/generated/prisma";
+  useIsSocketConnected,
+  useSocketJoinRoom,
+  useSocketLeaveRoom,
+  useSocketSendMessage,
+} from "./use-socket";
+import { socketStore } from "@/store/socket";
 
 type MessageWithMedia = Prisma.MessageGetPayload<{
   include: { media: true };
 }>;
 
-// enum MessageTypeEnum {
-//   TEXT = "TEXT",
-//   SYSTEM = "SYSTEM",
-//   ORDER = "ORDER",
-//   PAYMENT_PROOF = "PAYMENT_PROOF",
-// }
-
-// enum MediaMimeTypeEnum {
-//   IMAGE_JPEG = "image/jpeg",
-//   IMAGE_PNG = "image/png",
-// }
-
-// Interface untuk UseChatRoomProps
 interface UseChatRoomProps {
   conversationId: string;
   senderId: string;
@@ -38,26 +26,53 @@ export function useChatRoom({
   senderId,
   initialMessages,
 }: UseChatRoomProps) {
-  const [messages, setMessages] = useState<MessageWithMedia[]>(initialMessages);
+  // Ambil dari store
+  const messages = socketStore((s) => s.messages);
+  const connected = useIsSocketConnected();
+  const sendMessage = useSocketSendMessage();
+  const joinRoom = useSocketJoinRoom();
+  const leaveRoom = useSocketLeaveRoom();
+
   const [text, setText] = useState("");
   const [media, setMedia] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Sinkronkan initialMessages ke store (hanya sekali)
+  useEffect(() => {
+    socketStore.setState({ messages: initialMessages });
+  }, [initialMessages]);
+
+  // cek kenapa ini bekerja kalo di watch pi
+  useEffect(() => {
+    console.log(messages.length);
+  }, [messages]);
+
+  // Join room saat connected
+  useEffect(() => {
+    if (!connected) return;
+
+    joinRoom(conversationId);
+
+    return () => {
+      leaveRoom(conversationId);
+    };
+  }, [connected, joinRoom, leaveRoom, conversationId]);
+
+  // Scroll ke bawah saat messages berubah
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [messages]);
 
   const handleSend = async (type: MessageType, order_id?: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() && media.length === 0) return;
     setIsLoading(true);
 
     const saved = await saveMessage({
       conversation_id: conversationId,
       sender_id: senderId,
       type,
-      content: text,
+      text,
       media,
       order_id,
     });
@@ -69,9 +84,25 @@ export function useChatRoom({
     }
 
     const newMessage = saved.data;
-    setMessages((prev) => [...prev, newMessage]);
+
+    // OPTIMISTIC UPDATE: Tambahkan ke store SEKETIKA
+    socketStore.setState((state) => {
+      // Cegah duplikat
+      if (state.messages.some((m) => m.id === newMessage.id)) {
+        return state;
+      }
+      return {
+        messages: [...state.messages, newMessage],
+      };
+    });
+
+    // Kirim ke server via WebSocket
+    if (connected) {
+      sendMessage(JSON.stringify(newMessage));
+    }
 
     setText("");
+    setMedia([]);
     setIsLoading(false);
   };
 
@@ -80,7 +111,7 @@ export function useChatRoom({
     setText,
     media,
     setMedia,
-    messages,
+    messages, // ← dari store
     handleSend,
     isLoading,
     messagesEndRef,

@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import NextTopLoader from "nextjs-toploader";
 import { Providers } from "./_providers";
+import NotificationDialog from "@/components/notification-dialog";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
         />
 
         <Toaster richColors position="top-right" />
+        <NotificationDialog />
         <Providers>{children}</Providers>
       </body>
     </html>

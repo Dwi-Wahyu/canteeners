@@ -47,17 +47,16 @@ enum ShopStatus {
 }
 
 model ShopComplaint {
-    id         Int      @id @default(autoincrement())
+    id         String @id @default(nanoid())
     created_at DateTime @default(now())
 
-    order    Order  @relation(fields: [order_id], references: [id])
+    order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
     order_id String @unique
 
     proof_url String?
     cause String @db.LongText
     feedback String? @db.LongText
     status ShopComplaintStatus @default(PENDING)
-
 
     @@map("shop_complaints")
 }

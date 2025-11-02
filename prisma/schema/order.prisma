@@ -23,6 +23,7 @@ model Order {
     complaint ShopComplaint?
     refund Refund?
 
+    // Todo: cari cara agar jika percakapan dihapus order tidak dihapus
     conversation Conversation @relation(fields: [conversation_id], references: [id])
     conversation_id String
     message        Message[]
@@ -50,7 +51,7 @@ enum OrderType {
 
 model OrderItem {
     id         Int     @id @default(autoincrement())
-    order      Order   @relation(onDelete: Cascade, fields: [order_id], references: [id])
+    order      Order   @relation( fields: [order_id], references: [id], onDelete: Cascade)
     order_id   String
     product    Product @relation(fields: [product_id], references: [id])
     product_id String
@@ -79,13 +80,15 @@ enum PostOrderType {
     COURIER_DELIVERY
 }
 
-
+// todo: buat type untuk disbursement apakah cash atau transfer
 model Refund {
   id                String         @id @default(uuid())
-  order             Order          @relation(fields: [order_id], references: [id])
+  order             Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id          String @unique
 
-  proof_url         String?
+  complaint_proof_url        String? // bukti complaint   
+  disbursement_proof_url     String? // bukti tf refund sudah dibayar
+
   amount            Float         // jumlah refund
   reason            RefundReason
   status            RefundStatus   @default(PENDING)
@@ -112,6 +115,6 @@ enum RefundStatus {
   PENDING              // menunggu proses
   APPROVED             // disetujui
   REJECTED             // ditolak
-  PROCESSED            // uang sudah dikembalikan
+  PROCESSED            // uang sudah dikembalikan (butuh konfirmasi user)
   CANCELLED            // dibatalkan user
 }

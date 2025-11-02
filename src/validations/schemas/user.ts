@@ -8,7 +8,7 @@ export const InputUserSchema = z.object({
   }),
   email: z.string().optional(),
   phone_number: z.string().optional(),
-  avatar: z.string().nullable().optional(),
+  avatar: z.string(),
   role: z.enum(["ADMIN", "CUSTOMER", "SHOP_OWNER"]),
 });
 
@@ -23,7 +23,7 @@ export const UpdateUserSchema = z.object({
   }),
   email: z.string().optional(),
   phone_number: z.string().optional(),
-  avatar: z.string().nullable().optional(),
+  avatar: z.string(),
 });
 
 export type UpdateUserSchemaType = z.infer<typeof UpdateUserSchema>;

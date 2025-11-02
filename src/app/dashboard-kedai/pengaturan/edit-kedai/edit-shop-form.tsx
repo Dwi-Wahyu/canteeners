@@ -35,8 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { OrderMode } from "@/app/generated/prisma";
-import { orderModeMapping } from "@/constant/order-mode-mapping";
+import { shopOrderModeMapping } from "@/constant/order-mode-mapping";
+import { ShopOrderMode } from "@/app/generated/prisma";
 
 export default function EditShopForm({
   initialData,
@@ -152,9 +152,9 @@ export default function EditShopForm({
                     <SelectValue placeholder="Pilih Pemilik Warung" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(OrderMode).map((mode, idx) => (
+                    {Object.values(ShopOrderMode).map((mode, idx) => (
                       <SelectItem key={idx} value={mode}>
-                        {orderModeMapping[mode]}
+                        {shopOrderModeMapping[mode]}
                       </SelectItem>
                     ))}
                   </SelectContent>

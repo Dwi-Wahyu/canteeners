@@ -36,19 +36,27 @@ export async function getHomeOwnerShopRefunds(shop_id: string, take?: number) {
   return { totals, refunds };
 }
 
-export async function getOwnerShopRefunds(shop_id: string) {
+export async function getOwnerShopRefunds(owner_id: string) {
   return await prisma.refund.findMany({
     where: {
       order: {
-        shop_id,
+        shop: {
+          owner_id,
+        },
       },
     },
-    include: {
+    select: {
+      id: true,
+      reason: true,
+      status: true,
+      amount: true,
+      requested_at: true,
       order: {
         select: {
           customer: {
             select: {
               name: true,
+              avatar: true,
             },
           },
         },
@@ -61,6 +69,22 @@ export async function getRefund(id: string) {
   return await prisma.refund.findFirst({
     where: {
       id,
+    },
+    include: {
+      order: {
+        select: {
+          id: true,
+          conversation_id: true,
+          payment_method: true,
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+      },
     },
   });
 }

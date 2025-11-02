@@ -213,7 +213,9 @@ export default function ChatInput({
             size="icon"
             type="submit"
             className="size-10 rounded-sm"
-            disabled={(!text.trim() && media.length === 0) || isUploading}
+            disabled={
+              (!text.trim() && media.length === 0) || isUploading || isLoading
+            }
             onClick={onSubmit}
           >
             <ArrowUp />

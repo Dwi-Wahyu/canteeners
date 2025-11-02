@@ -7,7 +7,7 @@ export const refundReasonMapping = {
 };
 
 export const refundStatusMapping = {
-  PENDING: "Menunggu Diproses",
+  PENDING: "Menunggu Konfirmasi Kedai",
   APPROVED: "Disetujui",
   REJECTED: "Ditolak",
   PROCESSED: "Selesai Diproses",

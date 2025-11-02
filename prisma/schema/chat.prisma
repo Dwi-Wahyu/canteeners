@@ -32,11 +32,11 @@ model Message {
     conversation    Conversation @relation(fields: [conversation_id], references: [id])
     conversation_id String
 
-    content String?
+    text String? @db.LongText
     type    MessageType @default(TEXT)
     is_read Boolean     @default(false)
 
-    order    Order?  @relation(fields: [order_id], references: [id])
+    order    Order?  @relation(fields: [order_id], references: [id], onDelete: SetNull)
     order_id String?
 
     media MessageMedia[]
@@ -58,7 +58,7 @@ model MessageMedia {
     url        String
     mime_type  MediaMimeType
     order_id   String?
-    message    Message       @relation(fields: [message_id], references: [id])
+    message    Message       @relation(fields: [message_id], references: [id], onDelete: Cascade)
     message_id String
 
     @@index([message_id])

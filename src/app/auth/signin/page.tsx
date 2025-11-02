@@ -9,12 +9,12 @@ export default async function LoginPage() {
   if (!session) {
     return (
       <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-        <div className="flex w-full max-w-sm flex-col gap-6">
+        <div className="flex w-full max-w-md flex-col gap-6">
           <a
             href="#"
             className="flex items-center gap-2 self-center font-medium"
           >
-            <div className="flex size-7 items-center justify-center rounded-md">
+            <div className="border flex size-6 items-center justify-center rounded-md">
               <Image
                 src={"/app-logo.svg"}
                 width={16}
@@ -36,7 +36,7 @@ export default async function LoginPage() {
   if (now > expires) {
     return (
       <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-        <div className="flex w-full max-w-sm flex-col gap-6">
+        <div className="flex w-full max-w-md flex-col gap-6">
           <a
             href="#"
             className="flex items-center gap-2 self-center font-medium"

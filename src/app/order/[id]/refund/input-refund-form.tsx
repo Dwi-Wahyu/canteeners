@@ -31,8 +31,9 @@ import { refundReasonMapping } from "@/constant/refund-mapping";
 import { FileUploadImage } from "@/app/_components/file-upload-image";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { InputRefund, uploadRefundProofImage } from "./actions";
+import { InputRefund, uploadRefundComplaintProofImage } from "./actions";
 import { toast } from "sonner";
+import { IconLoader } from "@tabler/icons-react";
 
 export default function InputRefundForm({ order_id }: { order_id: string }) {
   const [files, setFiles] = useState<File[]>([]);
@@ -42,7 +43,7 @@ export default function InputRefundForm({ order_id }: { order_id: string }) {
     defaultValues: {
       order_id,
       amount: "0",
-      proof_url: "",
+      complaint_proof_url: "",
       reason: "LATE_DELIVERY",
       description: "",
       status: "PENDING",
@@ -51,13 +52,20 @@ export default function InputRefundForm({ order_id }: { order_id: string }) {
 
   const onSubmit = async (payload: InputRefundSchemaType) => {
     if (files.length > 0) {
-      payload.proof_url = await uploadRefundProofImage(files[0]);
+      payload.complaint_proof_url = await uploadRefundComplaintProofImage(
+        files[0]
+      );
     }
 
     const parsedPrice = parseInt(payload.amount);
 
     if (isNaN(parsedPrice)) {
-      form.setError("amount", { message: "Harga tidak valid" });
+      form.setError("amount", { message: "Jumlah tidak valid" });
+      return;
+    }
+
+    if (parsedPrice < 1) {
+      form.setError("amount", { message: "Jumlah tidak valid" });
       return;
     }
 
@@ -65,7 +73,6 @@ export default function InputRefundForm({ order_id }: { order_id: string }) {
 
     if (result.success) {
       toast.success(result.message);
-      form.reset();
     } else {
       toast.error(result.error.message);
     }
@@ -149,9 +156,9 @@ export default function InputRefundForm({ order_id }: { order_id: string }) {
             }}
           />
 
-          {form.formState.errors.proof_url && (
+          {form.formState.errors.complaint_proof_url && (
             <p data-slot="form-message" className="text-destructive text-sm">
-              {form.formState.errors.proof_url.message}
+              {form.formState.errors.complaint_proof_url.message}
             </p>
           )}
         </div>
@@ -160,8 +167,15 @@ export default function InputRefundForm({ order_id }: { order_id: string }) {
           className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary"
           type="submit"
           size={"lg"}
+          disabled={
+            form.formState.isSubmitting || form.formState.isSubmitSuccessful
+          }
         >
-          Submit
+          {form.formState.isSubmitting ? (
+            <IconLoader className="animate-spin" />
+          ) : (
+            "Submit"
+          )}
         </Button>
       </form>
     </Form>

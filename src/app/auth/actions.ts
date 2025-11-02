@@ -52,30 +52,30 @@ export async function SendOTPCode(
     const mailerUser = process.env.MAILER_USERNAME;
     const mailerPass = process.env.MAILER_PASSWORD;
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.mailersend.net",
-      port: "2525",
-      auth: {
-        user: mailerUser,
-        pass: mailerPass,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: "smtp.mailersend.net",
+    //   port: "2525",
+    //   auth: {
+    //     user: mailerUser,
+    //     pass: mailerPass,
+    //   },
+    // });
 
-    const mailOptions = {
-      from: mailerUser,
-      to: email,
-      subject: "Kode OTP Sekali Pakai",
-      text: "Ini adalah kode otp anda jangan berikan ke siapapun, " + otpCode,
-    };
+    // const mailOptions = {
+    //   from: mailerUser,
+    //   to: email,
+    //   subject: "Kode OTP Sekali Pakai",
+    //   text: "Ini adalah kode otp anda jangan berikan ke siapapun, " + otpCode,
+    // };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error:", error);
-        return errorResponse("Terjadi kesalahan saat mengirim kode otp");
-      } else {
-        console.log("Email sent:", info.response);
-      }
-    });
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error("Error:", error);
+    //     return errorResponse("Terjadi kesalahan saat mengirim kode otp");
+    //   } else {
+    //     console.log("Email sent:", info.response);
+    //   }
+    // });
 
     return successResponse(undefined, "Sukses mengirim kode otp");
   } catch (error) {

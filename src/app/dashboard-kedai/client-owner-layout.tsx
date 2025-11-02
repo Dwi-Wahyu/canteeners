@@ -1,9 +1,16 @@
 "use client";
 
-import OwnerBottombar from "./owner-bottombar";
-import OwnerTopbar from "./owner-topbar";
+import UnauthorizedPage from "../_components/unauthorized-page";
 import { usePathname } from "next/navigation";
-import { useRouter } from "nextjs-toploader/app";
+import OwnerTopbar from "./owner-topbar";
+import OwnerBottomBar from "./owner-bottombar";
+
+import {
+  useIsSocketConnected,
+  useSocketConnect,
+  useSocketDisconnect,
+} from "@/hooks/use-socket";
+import { useEffect } from "react";
 
 export default function ClientOwnerLayout({
   children,
@@ -16,23 +23,44 @@ export default function ClientOwnerLayout({
 }) {
   const pathname = usePathname();
 
-  const router = useRouter();
+  const connect = useSocketConnect();
+  const connected = useIsSocketConnected();
+  const disconnect = useSocketDisconnect();
+
+  useEffect(() => {
+    if (!userId) return;
+    if (connected) return;
+
+    connect(userId);
+
+    return () => {
+      disconnect();
+    };
+  }, [userId, connect, disconnect]);
 
   if (role === "CUSTOMER") {
-    router.push("/dashboard-pelanggan");
+    return <UnauthorizedPage />;
   }
 
-  const excludedPath = ["/chat/", "/pengajuan-refund/"];
+  const excludedPath = ["chat", "pengajuan-refund", "order"];
+
+  function isExcluded() {
+    return excludedPath.some((path) => pathname.includes(path));
+  }
 
   return (
-    <div className="w-full relative min-h-svh pt-12 pb-16">
-      {!excludedPath.includes(pathname) && (
-        <OwnerTopbar connected={false} subscribed={false} />
+    <>
+      {isExcluded() ? (
+        <div className="p-5 pt-20">{children}</div>
+      ) : (
+        <div className="w-full relative min-h-svh pt-12 pb-16">
+          <OwnerTopbar connected={connected} subscribed={false} />
+
+          <div className="p-5 pt-7">{children}</div>
+
+          <OwnerBottomBar />
+        </div>
       )}
-
-      <div className="p-5 pt-7">{children}</div>
-
-      {!excludedPath.includes(pathname) && <OwnerBottombar />}
-    </div>
+    </>
   );
 }

@@ -141,7 +141,7 @@ export default function DetailConversationClient({
                           : "bg-secondary text-secondary-foreground"
                       }`}
                     >
-                      <p className="text-sm break-words">{msg.content}</p>
+                      <p className="text-sm break-words">{msg.text}</p>
                     </div>
                   </>
                 );
@@ -178,7 +178,7 @@ export default function DetailConversationClient({
                           : "bg-secondary text-secondary-foreground"
                       }`}
                     >
-                      <p className="text-sm break-words">{msg.content}</p>
+                      <p className="text-sm break-words">{msg.text}</p>
                     </div>
                   </>
                 );
@@ -192,7 +192,7 @@ export default function DetailConversationClient({
                       : "bg-secondary text-secondary-foreground"
                   }`}
                 >
-                  <p className="text-sm break-words">{msg.content}</p>
+                  <p className="text-sm break-words">{msg.text}</p>
                 </div>
               );
             };

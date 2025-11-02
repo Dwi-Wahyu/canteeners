@@ -1,104 +1,62 @@
-import React, { useState } from "react";
+"use client";
+
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { CheckCircle, XCircle, Info, Check } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { IconCopy } from "@tabler/icons-react";
-import { Button } from "./ui/button";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-type NotificationVariant = "success" | "error" | "info";
+import { useNotificationDialogStore } from "@/store/use-notification-store";
+import { AlertCircle, CheckCircle, Info } from "lucide-react";
+import { useEffect } from "react";
 
-interface NotificationDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
-  url?: string;
-  variant: NotificationVariant;
-}
+const icons = {
+  success: <CheckCircle className="w-6 h-6 text-success" />,
+  error: <AlertCircle className="w-6 h-6 text-destructive" />,
+  info: <Info className="w-6 h-6 text-blue-600" />,
+};
 
-export function NotificationDialog({
-  isOpen,
-  onClose,
-  title,
-  message,
-  variant,
-  url,
-}: NotificationDialogProps) {
-  const [copied, setCopied] = useState(false);
+const bgColors = {
+  success: "bg-green-50 border-green-200",
+  error: "bg-red-50 border-red-200",
+  info: "bg-blue-50 border-blue-200",
+};
 
-  const getVariantStyles = (variant: NotificationVariant) => {
-    switch (variant) {
-      case "success":
-        return "text-primary";
-      case "error":
-        return "text-destructive";
-      case "info":
-        return "text-muted";
+export default function NotificationDialog() {
+  const { notification, hide } = useNotificationDialogStore();
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(hide, 4000);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [notification, hide]);
 
-  const getVariantIcon = (variant: NotificationVariant) => {
-    switch (variant) {
-      case "success":
-        return <CheckCircle className="h-16 w-16 text-primary" />;
-      case "error":
-        return <XCircle className="h-16 w-16 text-destructive" />;
-      case "info":
-        return <Info className="h-16 w-16 text-muted" />;
-      default:
-        return null;
-    }
-  };
-
-  async function copyToClipboard() {
-    if (!url) return;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // reset after 2 seconds
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  }
-
-  const variantStyles = getVariantStyles(variant);
-  const variantIcon = getVariantIcon(variant);
+  if (!notification) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className={`sm:max-w-[425px] flex items-center justify-center flex-col ${variantStyles}`}
-      >
-        <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
-        {variantIcon}
-        <DialogDescription className={`text-center ${variantStyles}`}>
-          {message}
-        </DialogDescription>
-
-        {url && (
-          <Button
-            variant={copied ? "secondary" : "outline"}
-            onClick={copyToClipboard}
-          >
-            {copied ? (
-              <>
-                <Check className="h-4 w-4" />
-                Disalin
-              </>
-            ) : (
-              <>
-                <IconCopy className="h-4 w-4" />
-                Salin Tautan Media
-              </>
+    <AlertDialog open={!!notification} onOpenChange={() => hide()}>
+      <AlertDialogContent className={`${bgColors[notification.type]}`}>
+        <AlertDialogHeader className="flex flex-row items-start gap-3">
+          <div className="flex-shrink-0 mt-1">{icons[notification.type]}</div>
+          <div className="space-y-1">
+            <AlertDialogTitle className="text-lg font-semibold">
+              {notification.title}
+            </AlertDialogTitle>
+            {notification.message && (
+              <AlertDialogDescription className="text-sm">
+                {notification.message}
+              </AlertDialogDescription>
             )}
-          </Button>
-        )}
-      </DialogContent>
-    </Dialog>
+          </div>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
