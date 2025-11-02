@@ -15,6 +15,10 @@ export async function seedCanteens() {
           name: "Kantin Sastra",
           image_url: "kansas.jpeg",
         },
+        {
+          name: "Kantin Sosiologi",
+          image_url: "kansos.webp",
+        },
       ],
     });
     // await prisma.canteen.createMany({

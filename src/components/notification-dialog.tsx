@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useNotificationDialogStore } from "@/store/use-notification-store";
-import { AlertCircle, CheckCircle, Info } from "lucide-react";
-import { useEffect } from "react";
+import { AlertCircle, Check, Info } from "lucide-react";
+import { Button } from "./ui/button";
 
 const icons = {
-  success: <CheckCircle className="w-6 h-6 text-success" />,
-  error: <AlertCircle className="w-6 h-6 text-destructive" />,
-  info: <Info className="w-6 h-6 text-blue-600" />,
+  success: <Check className="w-24 h-24 text-primary-foreground" />,
+  error: <AlertCircle className="w-24 h-24 text-destructive-foreground" />,
+  info: <Info className="w-24 h-24 text-blue-600" />,
 };
 
 const bgColors = {
@@ -28,31 +28,57 @@ const bgColors = {
   info: "bg-blue-50 border-blue-200",
 };
 
+const colors = {
+  success: "primary",
+  error: "destructive",
+  info: "blue-500",
+};
+
 export default function NotificationDialog() {
   const { notification, hide } = useNotificationDialogStore();
 
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(hide, 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification, hide]);
+  // useEffect(() => {
+  //   if (notification) {
+  //     const timer = setTimeout(hide, 4000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [notification, hide]);
 
   if (!notification) return null;
 
   return (
     <AlertDialog open={!!notification} onOpenChange={() => hide()}>
       <AlertDialogContent className={`${bgColors[notification.type]}`}>
-        <AlertDialogHeader className="flex flex-row items-start gap-3">
-          <div className="flex-shrink-0 mt-1">{icons[notification.type]}</div>
-          <div className="space-y-1">
+        <AlertDialogHeader className="flex flex-col items-center gap-4">
+          <div className="fixed left-0 -top-[50%] w-full flex justify-center">
+            <div
+              className={`rounded-full p-4 bg-${colors[notification.type]}/20`}
+            >
+              <div
+                className={`rounded-full p-4 bg-${
+                  colors[notification.type]
+                }/50`}
+              >
+                <div
+                  className={`rounded-full p-4 bg-${colors[notification.type]}`}
+                >
+                  {icons[notification.type]}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-24">
             <AlertDialogTitle className="text-lg font-semibold">
               {notification.title}
             </AlertDialogTitle>
             {notification.message && (
-              <AlertDialogDescription className="text-sm">
+              <AlertDialogDescription>
                 {notification.message}
               </AlertDialogDescription>
+            )}
+
+            {notification.actionButtons && (
+              <div className="mt-5">{notification.actionButtons}</div>
             )}
           </div>
         </AlertDialogHeader>

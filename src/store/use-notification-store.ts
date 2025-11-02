@@ -6,6 +6,7 @@ interface Notification {
   title: string;
   message?: string;
   type: NotificationDialogType;
+  actionButtons?: React.ReactNode;
 }
 
 interface NotificationStore {

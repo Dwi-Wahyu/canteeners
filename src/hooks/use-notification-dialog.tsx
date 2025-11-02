@@ -3,6 +3,7 @@ import { useNotificationDialogStore } from "@/store/use-notification-store";
 type NotificationOptions = {
   title: string;
   message?: string;
+  actionButtons?: React.ReactNode;
 };
 
 type NotificationDialog = {
