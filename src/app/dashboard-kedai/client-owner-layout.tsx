@@ -42,7 +42,7 @@ export default function ClientOwnerLayout({
     return <UnauthorizedPage />;
   }
 
-  const excludedPath = ["chat", "pengajuan-refund", "order"];
+  const excludedPath = ["pengajuan-refund", "/chat/", "order"];
 
   function isExcluded() {
     return excludedPath.some((path) => pathname.includes(path));

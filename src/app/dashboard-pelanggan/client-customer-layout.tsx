@@ -45,7 +45,14 @@ export default function ClientCustomerLayout({
     router.push("/dashboard-kedai");
   }
 
-  const excludedPath = ["/chat/", "/pengajuan-refund", "/pelanggaran"];
+  const excludedPath = [
+    "/kantin",
+    "/pengajuan-refund",
+    "/pelanggaran",
+    "/chat/",
+    "order",
+    "/keranjang/",
+  ];
 
   function isExcluded() {
     return excludedPath.some((path) => pathname.includes(path));

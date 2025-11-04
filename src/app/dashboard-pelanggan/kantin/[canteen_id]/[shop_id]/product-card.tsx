@@ -2,7 +2,12 @@ import { addCartItem } from "@/app/dashboard-pelanggan/keranjang/actions";
 import { Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { IconLoader } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconLoader,
+  IconShoppingCart,
+  IconShoppingCartCheck,
+} from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
@@ -64,9 +69,22 @@ export default function ProductCard({
             variant={added ? "default" : "outline"}
           >
             {mutations.isPending ? (
-              <IconLoader className="animate-spin" />
+              <>
+                <IconLoader className="animate-spin" />
+                Tambah
+              </>
             ) : (
-              <div>{added ? "Berhasil" : "Tambah"}</div>
+              <>
+                {added ? (
+                  <>
+                    <IconShoppingCartCheck /> Berhasil
+                  </>
+                ) : (
+                  <>
+                    <IconShoppingCart /> Tambah
+                  </>
+                )}
+              </>
             )}
           </Button>
         </div>

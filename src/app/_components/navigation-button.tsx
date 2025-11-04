@@ -26,7 +26,7 @@ export function NavigationButton({
   size = "default",
   children,
   variant = "outline",
-  className,
+  className = "w-fit",
 }: {
   label?: string;
   url: string;
@@ -43,10 +43,14 @@ export function NavigationButton({
   className?: string;
 }) {
   return (
-    <Link href={url} passHref>
-      <Button variant={variant} type="button" className={className} size={size}>
-        {children ?? label}
-      </Button>
-    </Link>
+    <Button
+      asChild
+      variant={variant}
+      type="button"
+      className={className}
+      size={size}
+    >
+      <Link href={url}>{children ?? label}</Link>
+    </Button>
   );
 }

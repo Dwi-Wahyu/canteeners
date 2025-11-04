@@ -10,7 +10,7 @@ import {
 } from "@/validations/schemas/product";
 import { revalidatePath } from "next/cache";
 
-export async function uploadProductImage(file: File, name: string) {
+export async function uploadProductImage(file: File) {
   const storageService = new LocalStorageService();
 
   const productImageUrl = await storageService.uploadImage(file, "product");

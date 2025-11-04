@@ -39,7 +39,7 @@ export default function HomeOrderSection({
 
         <Link
           href={"/dashboard-kedai/order/"}
-          className="text-underline text-blue-500 text-sm"
+          className="underline text-blue-500 text-sm"
         >
           Lihat Selengkapnya
         </Link>
@@ -64,37 +64,17 @@ export default function HomeOrderSection({
 
       {orders.map((order, idx) => {
         return (
-          <Item
-            key={idx}
-            variant="outline"
-            className="mt-2 relative shadow rounded-lg"
-          >
-            <Badge
-              className="-top-3 -right-2 absolute"
-              variant={
-                ["REJECTED", "PAYMENT_REJECTED"].includes(order.status)
-                  ? "destructive"
-                  : "default"
-              }
-            >
-              {orderStatusMapping[order.status]}
-            </Badge>
-
-            <ItemContent>
-              <ItemTitle>{order.customer.name}</ItemTitle>
-              <ItemDescription>
-                {formatDateToYYYYMMDD(order.created_at)}{" "}
-                {formatToHour(order.created_at)}
-              </ItemDescription>
-            </ItemContent>
-            <ItemActions className="mt-2">
-              <Button asChild variant={"outline"} size={"icon"}>
-                <Link href={"/order/" + order.id}>
-                  <IconReceipt />
-                </Link>
-              </Button>
-            </ItemActions>
-          </Item>
+          <Link key={idx} href={"/dashboard-kedai/order/" + order.id}>
+            <Item variant="outline" className="mt-2 relative shadow rounded-lg">
+              <ItemContent>
+                <ItemTitle>{order.customer.name}</ItemTitle>
+                <ItemDescription>
+                  {formatDateToYYYYMMDD(order.created_at)}{" "}
+                  {formatToHour(order.created_at)}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+          </Link>
         );
       })}
     </div>

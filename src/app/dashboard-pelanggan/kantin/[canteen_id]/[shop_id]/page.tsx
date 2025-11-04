@@ -5,9 +5,10 @@ import { redirect } from "next/navigation";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 import { getCategories } from "@/app/admin/kategori/queries";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import BackButton from "@/app/_components/back-button";
 import { getOrCreateCustomerCart } from "@/app/dashboard-pelanggan/keranjang/actions";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
+import { NavigationButton } from "@/app/_components/navigation-button";
+import { IconMessageCircleUser } from "@tabler/icons-react";
 
 export default async function ShopDetailsPage({
   params,
@@ -42,21 +43,14 @@ export default async function ShopDetailsPage({
 
   return (
     <div>
-      <div className="mb-5 flex justify-between items-center">
-        <BackButton url={"/dashboard-pelanggan/kantin/" + canteen_id} />
-
-        <div>
-          <Avatar className="size-9">
-            <AvatarImage src={"/uploads/avatar/default-avatar.jpg"} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
+      <TopbarWithBackButton
+        title="Detail Kedai"
+        backUrl={"/dashboard-pelanggan/kantin/" + canteen_id}
+      />
 
       <ShopProductList
         shop={shop}
         categories={categories}
-        customer_id={session.user.id}
         cart_id={customerCartId}
       />
     </div>

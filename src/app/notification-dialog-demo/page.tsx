@@ -2,10 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { useNotificationDialogStore } from "@/store/use-notification-store";
 
 export default function Page() {
+  const { notification, hide, show } = useNotificationDialogStore();
+
   function handleSuccess() {
-    notificationDialog.success({
+    show({
+      type: "success",
       title: "Operasi Berhasil",
       message: "Data telah disimpan dengan sukses.",
       actionButtons: (

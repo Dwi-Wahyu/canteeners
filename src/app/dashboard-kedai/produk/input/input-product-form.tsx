@@ -53,7 +53,7 @@ export default function InputProductForm({
 
   const onSubmit = async (payload: InputProductSchemaType) => {
     if (files.length > 0) {
-      payload.image_url = await uploadProductImage(files[0], payload.name);
+      payload.image_url = await uploadProductImage(files[0]);
     }
 
     if (payload.image_url === "") {

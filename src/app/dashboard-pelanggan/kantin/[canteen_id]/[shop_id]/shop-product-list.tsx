@@ -2,46 +2,50 @@
 
 import { getAllShopProducts } from "./queries";
 import { useEffect, useState } from "react";
-// import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   IconCoin,
   IconFilterX,
+  IconMessageCircleUser,
+  IconSearch,
   IconStarFilled,
   IconThumbUpFilled,
+  IconTrash,
 } from "@tabler/icons-react";
-import ProductCard from "./product-card";
 import { ProductsType } from "./type";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { getCategories } from "@/app/admin/kategori/queries";
+
+import ShopCategoryScroller from "./shop-category-scroller";
+import { Input } from "@/components/ui/input";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import NoProductFound from "./no-product-found";
+import ProductCard from "./product-card";
+import { NavigationButton } from "@/app/_components/navigation-button";
+import Link from "next/link";
 
 export default function ShopProductList({
   shop,
   categories,
-  customer_id,
   cart_id,
 }: {
   shop: NonNullable<Awaited<ReturnType<typeof getShopDataWithPayment>>>;
   categories: Awaited<ReturnType<typeof getCategories>>;
-  customer_id: string;
   cart_id: string;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<ProductsType | []>([]);
   const [productName, setProductName] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
-  useEffect(() => {
-    setIsLoading(true);
-    getAllShopProducts(shop.id, productName, categoryId).then((products) => {
-      setProducts(products);
-      setIsLoading(false);
-    });
-  }, [productName, categoryId]);
+  const { data, isLoading } = useQuery({
+    queryKey: ["shop-product-list", shop.id, productName, categoryId],
+    queryFn: async () => {
+      return await getAllShopProducts(shop.id, productName, categoryId);
+    },
+  });
 
   function clearFilter() {
     setProductName("");
@@ -64,6 +68,15 @@ export default function ShopProductList({
             <div>
               <h1 className="font-semibold">{shop.name}</h1>
               <h1 className="text-muted-foreground">{shop.description}</h1>
+
+              <Button asChild variant={"outline"} size={"sm"} className="mt-2">
+                <Link
+                  href={`/dashboard-pelanggan/kantin/${shop.canteen_id}/${shop.id}/testimoni`}
+                >
+                  <IconMessageCircleUser />
+                  Lihat testimoni
+                </Link>
+              </Button>
             </div>
           </div>
 
@@ -88,58 +101,64 @@ export default function ShopProductList({
         </CardContent>
       </Card>
 
-      <div className="mt-5 mb-2 flex justify-between items-center">
-        <h1 className="font-semibold">Kategori</h1>
+      <div className="flex mt-5 gap-4 items-center">
+        <div className="relative">
+          <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
+            <IconSearch className="size-4" />
+            <span className="sr-only">User</span>
+          </div>
+          <Input
+            placeholder="Cari nama produk"
+            value={productName}
+            onChange={(ev) => setProductName(ev.target.value)}
+            className="peer pl-9"
+          />
+        </div>
 
-        <Button onClick={clearFilter} variant={"outline"} size={"icon"}>
+        <Button size={"lg"} onClick={clearFilter}>
           <IconFilterX />
         </Button>
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-3">
-        {categories.map((category) => (
-          <div
-            onClick={() => {
-              setCategoryId(category.id);
-            }}
-            className="flex cursor-pointer flex-col gap-2 items-center"
-            key={category.id}
-          >
-            <Image
-              src={"/uploads/category/" + category.image_url}
-              alt="category image"
-              width={120}
-              height={120}
-              className={`rounded-full p-1 shadow ${
-                category.id === categoryId && "outline-4"
-              }`}
-            />
-            <h1 className="text-sm text-muted-foreground">{category.name}</h1>
-          </div>
-        ))}
-      </div>
 
-      {/* <div className="relative">
-        <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
-          <IconSearch className="size-4" />
-          <span className="sr-only">User</span>
+      <ShopCategoryScroller
+        categoryId={categoryId}
+        setCategoryId={setCategoryId}
+        categories={categories}
+      />
+
+      {isLoading && (
+        <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
+          <Skeleton className="w-full h-52" />
+          <Skeleton className="w-full h-52" />
+          <Skeleton className="w-full h-52" />
         </div>
-        <Input
-          placeholder="Cari nama produk"
-          value={productName}
-          onChange={(ev) => setProductName(ev.target.value)}
-          className="peer pl-9"
+      )}
+
+      {!isLoading && !data && (
+        <NoProductFound
+          clearFilterButton={
+            <Button onClick={clearFilter}>
+              <IconFilterX />
+              Bersihkan filter
+            </Button>
+          }
         />
-      </div> */}
+      )}
 
-      {isLoading ? (
+      {!isLoading && data && data.length === 0 && (
+        <NoProductFound
+          clearFilterButton={
+            <Button onClick={clearFilter}>
+              <IconFilterX />
+              Bersihkan filter
+            </Button>
+          }
+        />
+      )}
+
+      {!isLoading && data && data.length > 0 && (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
-          <Skeleton className="w-full h-52" />
-          <Skeleton className="w-full h-52" />
-          <Skeleton className="w-full h-52" />
-        </div>
-      ) : (
-        <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
-          {products.map((product) => (
+          {data.map((product) => (
             <ProductCard key={product.id} product={product} cart_id={cart_id} />
           ))}
         </div>

@@ -96,7 +96,7 @@ export default function CartItemCard({
           alt={cartItem.product.name}
           width={100}
           height={100}
-          className="rounded-lg object-cover"
+          className="rounded-lg object-cover aspect-square"
           onError={(e) => (e.currentTarget.src = "/placeholder-image.jpg")} // Fallback jika gambar gagal dimuat
         />
         <div className="w-full">

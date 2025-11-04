@@ -55,6 +55,7 @@ export default function EditShopForm({
       order_mode: initialData.order_mode,
       open_time: formatToHour(initialData.open_time),
       close_time: formatToHour(initialData.close_time),
+      refund_disbursement_mode: initialData.refund_disbursement_mode,
     },
   });
 

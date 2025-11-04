@@ -7,6 +7,8 @@ import { ServerActionReturn } from "@/types/server-action";
 import { SignUpSchemaType } from "@/validations/schemas/auth";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
+import { join } from "path";
+import { readFile } from "fs/promises";
 
 config();
 
@@ -49,33 +51,48 @@ export async function SendOTPCode(
   email: string
 ): Promise<ServerActionReturn<void>> {
   try {
-    const mailerUser = process.env.MAILER_USERNAME;
-    const mailerPass = process.env.MAILER_PASSWORD;
+    const mailerUser = process.env.CANTEENERS_DOMAIN_MAIL_USERNAME;
+    const mailerPass = process.env.CANTEENERS_DOMAIN_MAIL_PASSWORD;
 
-    // const transporter = nodemailer.createTransport({
-    //   host: "smtp.mailersend.net",
-    //   port: "2525",
-    //   auth: {
-    //     user: mailerUser,
-    //     pass: mailerPass,
-    //   },
-    // });
+    const templatePath = join(
+      process.cwd(),
+      "public/template/email",
+      "otp.html"
+    );
 
-    // const mailOptions = {
-    //   from: mailerUser,
-    //   to: email,
-    //   subject: "Kode OTP Sekali Pakai",
-    //   text: "Ini adalah kode otp anda jangan berikan ke siapapun, " + otpCode,
-    // };
+    const templateString = await readFile(templatePath, "utf-8");
 
-    // transporter.sendMail(mailOptions, (error, info) => {
-    //   if (error) {
-    //     console.error("Error:", error);
-    //     return errorResponse("Terjadi kesalahan saat mengirim kode otp");
-    //   } else {
-    //     console.log("Email sent:", info.response);
-    //   }
-    // });
+    const otpString = otpCode.toString().padStart(6, "0");
+
+    const otpBoxesHtml = otpString
+      .split("")
+      .map((digit) => `<div class="otp-box">${digit}</div>`)
+      .join("");
+
+    const finalHtml = templateString.replace(
+      "{{OTP_BOXES_HERE}}",
+      otpBoxesHtml
+    );
+
+    let transporter = nodemailer.createTransport({
+      host: "smtp.hostinger.com",
+      port: 465,
+      auth: {
+        user: mailerUser,
+        pass: mailerPass,
+      },
+      html: finalHtml,
+    });
+
+    const mailOptions = {
+      from: "no-reply@canteeners.com",
+      to: email,
+      subject: "Kode OTP Sekali Pakai",
+      text: "Ini adalah kode otp anda jangan berikan ke siapapun, " + otpCode,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
 
     return successResponse(undefined, "Sukses mengirim kode otp");
   } catch (error) {

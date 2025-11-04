@@ -10,8 +10,11 @@ model Order {
     shop_id           String
     estimation        Int? // dalam menit
     payment_proof_url String?
+    processed_at      DateTime? // waktu ketika order mulai diproses setelah pembayaran di verifikasi
+
     rejected_reason   String?
-    processed_at      DateTime? // waktu ketika order mulai diproses
+    cancelled_reason  String?
+    cancelled_by_id   String?
 
     total_price Float
 
@@ -71,7 +74,7 @@ enum OrderStatus {
     COMPLETED // order selesai
     REJECTED // ditolak karena stok tidak ada
     PAYMENT_REJECTED // bukti pembayaran tidak valid
-    CANCELLED // pembatalan oleh customer
+    CANCELLED // pembatalan
 }
 
 enum PostOrderType {

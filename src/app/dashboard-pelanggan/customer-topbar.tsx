@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UtensilsCrossed } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function CustomerTopbar({
   connected = false,
@@ -16,8 +17,9 @@ export default function CustomerTopbar({
   if (!session.data) {
     return (
       <div className="justify-between px-5 py-3 bg-secondary shadow flex items-center z-50 fixed top-0 left-0 w-full">
-        <div className="flex gap-2 items-center text-primary">
-          <UtensilsCrossed className="w-5 h-5" />
+        <div className="flex gap-1 items-center text-primary">
+          <Image src={"/app-logo.svg"} width={20} height={20} alt="app logo" />
+
           <h1 className="text-lg font-semibold">Canteeners</h1>
         </div>
 
@@ -39,8 +41,9 @@ export default function CustomerTopbar({
 
   return (
     <div className="justify-between px-5 py-3 bg-secondary shadow flex items-center z-50 fixed top-0 left-0 w-full">
-      <div className="flex gap-2 items-center text-primary">
-        <UtensilsCrossed className="w-5 h-5" />
+      <div className="flex gap-1 items-center text-primary">
+        <Image src={"/app-logo.svg"} width={20} height={20} alt="app logo" />
+
         <h1 className="text-lg font-semibold">Canteeners</h1>
       </div>
 

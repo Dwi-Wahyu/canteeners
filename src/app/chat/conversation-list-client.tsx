@@ -7,7 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { IconChevronRight, IconFilter } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import LoadingConversationList from "./loading-conversation-list";
@@ -21,7 +20,6 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { BadgeCheckIcon, ChevronRightIcon } from "lucide-react";
 
 export default function ConversationListClient({
   user_id,
@@ -48,7 +46,7 @@ export default function ConversationListClient({
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-semibold">Pesan Masuk</h1>
 
-          <Button>
+          <Button size={"icon"}>
             <IconFilter />
           </Button>
         </div>
@@ -92,9 +90,11 @@ export default function ConversationListClient({
                       </ItemMedia>
                       <ItemContent>
                         <ItemTitle>{otherParticipant.name}</ItemTitle>
-                        <ItemDescription>
-                          ini nanti pesan terakhir
-                        </ItemDescription>
+                        {conversation.messages.length > 0 && (
+                          <ItemDescription>
+                            {conversation.messages[0].text}
+                          </ItemDescription>
+                        )}
                       </ItemContent>
                       <ItemActions>
                         <IconChevronRight />

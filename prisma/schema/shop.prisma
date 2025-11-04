@@ -18,6 +18,7 @@ model Shop {
     owner_id String    @unique
 
     order_mode ShopOrderMode @default(READY_ONLY) // metode menyiapkan order    
+    refund_disbursement_mode RefundDisbursementMode @default(CASH)
 
     payments   Payment[]
 
@@ -33,6 +34,12 @@ model Shop {
     @@index([name])
     @@map("shops")
 }
+
+enum RefundDisbursementMode {
+    CASH // tunai
+    TRANSFER // transfer
+}
+
 
 enum ShopOrderMode {
     PREORDER_ONLY // hanya preorder

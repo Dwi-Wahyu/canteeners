@@ -1,3 +1,4 @@
+import { RefundDisbursementMode } from "@/app/generated/prisma";
 import { z } from "zod";
 
 export const PaymentMethodEnum = z.enum(["QRIS", "BANK_TRANSFER", "CASH"]);
@@ -79,6 +80,7 @@ export const UpdateShopSchema = z.object({
     .regex(timeRegex, { message: "Format waktu harus HH:MM yang valid." }) // Tambahkan regex
     .optional()
     .nullable(),
+  refund_disbursement_mode: z.enum(Object.values(RefundDisbursementMode)),
 });
 
 export type UpdateShopSchemaType = z.infer<typeof UpdateShopSchema>;

@@ -17,21 +17,7 @@ export async function addCartItem({
 }): Promise<ServerActionReturn<void>> {
   try {
     await prisma.$transaction(async (tx) => {
-      // 1. Dapatkan atau buat Cart untuk pelanggan
-      // const upsertCustomerCart = await tx.cart.upsert({
-      //   where: {
-      //     user_id: customer_id,
-      //   },
-      //   create: {
-      //     user_id: customer_id,
-      //     status: "ACTIVE",
-      //   },
-      //   update: {
-      //     status: "ACTIVE",
-      //   },
-      // });
-
-      // 2. Dapatkan atau buat ShopCart (keranjang toko) yang sesuai
+      // 1. Dapatkan atau buat ShopCart (keranjang toko) yang sesuai
       // Perhatikan penggunaan include untuk memeriksa CartItem yang sudah ada
       const upsertShopCart = await tx.shopCart.upsert({
         where: {
@@ -58,7 +44,7 @@ export async function addCartItem({
       const newQuantity = 1; // Default quantity
 
       if (existingCartItem) {
-        // 3. Jika produk sudah ada, tambahkan quantity-nya
+        // 2. Jika produk sudah ada, tambahkan quantity-nya
         await tx.cartItem.update({
           where: {
             id: existingCartItem.id,
@@ -70,7 +56,7 @@ export async function addCartItem({
           },
         });
       } else {
-        // 4. Jika produk belum ada, buat CartItem baru
+        // 3. Jika produk belum ada, buat CartItem baru
         await tx.cartItem.create({
           data: {
             shop_cart_id: upsertShopCart.id,
@@ -277,7 +263,9 @@ export async function processShopCart({
   postOrderType: PostOrderType;
   floor: number | null;
   table_number: number | null;
-}): Promise<ServerActionReturn<void>> {
+}): Promise<ServerActionReturn<string>> {
+  let conversation_id;
+
   try {
     await prisma.$transaction(async (tx) => {
       const shopCart = await prisma.shopCart.findFirst({
@@ -350,7 +338,7 @@ export async function processShopCart({
         },
       });
 
-      const conversation_id =
+      conversation_id =
         existingConversation?.id ??
         (
           await tx.conversation.create({
@@ -410,7 +398,7 @@ export async function processShopCart({
       });
     });
 
-    return successResponse(undefined, "Berhasil memproses pesanan");
+    return successResponse(conversation_id, "Berhasil memproses pesanan");
   } catch (error) {
     console.log(error);
 

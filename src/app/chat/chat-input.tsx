@@ -26,29 +26,30 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { QuickChat } from "../generated/prisma";
+import { IconMessage, IconMessages } from "@tabler/icons-react";
 
 export default function ChatInput({
   conversation,
   sender_id,
   order_waiting_payment,
+  quick_chats,
+  is_pending_quick_chat,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
   order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
+  quick_chats: QuickChat[] | undefined;
+  is_pending_quick_chat: boolean;
 }) {
   const [isUploading, setIsUploading] = React.useState(false);
 
   const [isSendingPayment, setIsSendingPayment] = React.useState(false);
+  const [showQuickChats, setShowQuickChats] = React.useState(false);
 
   const { text, setText, media, setMedia, handleSend, isLoading } = useChatRoom(
     {
@@ -121,108 +122,142 @@ export default function ChatInput({
   };
 
   return (
-    <FileUpload
-      value={media}
-      onValueChange={setMedia}
-      onUpload={onUpload}
-      onFileReject={onFileReject}
-      maxFiles={10}
-      maxSize={5 * 1024 * 1024}
-      className="relative w-full items-center p-5"
-      multiple
-      disabled={isUploading}
-    >
-      <FileUploadDropzone
-        tabIndex={-1}
-        onClick={(event) => event.preventDefault()}
-        className="absolute top-0 left-0 z-0 flex size-full items-center justify-center rounded-none border-none bg-background/50 p-0 opacity-0 backdrop-blur transition-opacity duration-200 ease-out data-[dragging]:z-10 data-[dragging]:opacity-100"
+    <div>
+      <FileUpload
+        value={media}
+        onValueChange={setMedia}
+        onUpload={onUpload}
+        onFileReject={onFileReject}
+        maxFiles={10}
+        maxSize={5 * 1024 * 1024}
+        className="relative w-full items-center p-5"
+        multiple
+        disabled={isUploading}
       >
-        <div className="flex flex-col items-center gap-1 text-center">
-          <div className="flex items-center justify-center rounded-full border p-2.5">
-            <Upload className="size-6 text-muted-foreground" />
-          </div>
-          <p className="font-medium text-sm">Drag & drop files here</p>
-          <p className="text-muted-foreground text-xs">
-            Upload max 5 files each up to 5MB
-          </p>
-        </div>
-      </FileUploadDropzone>
-      <div className="relative flex w-full max-w-md flex-col gap-2.5 rounded-md border border-input bg-secondary/70 backdrop-blur-sm shadow-sm px-3 py-2 outline-none focus-within:ring-1 focus-within:ring-ring/50">
-        <FileUploadList
-          orientation="horizontal"
-          className="overflow-x-auto px-0 py-1"
+        <FileUploadDropzone
+          tabIndex={-1}
+          onClick={(event) => event.preventDefault()}
+          className="absolute top-0 left-0 z-0 flex size-full items-center justify-center rounded-none border-none bg-background/50 p-0 opacity-0 backdrop-blur transition-opacity duration-200 ease-out data-[dragging]:z-10 data-[dragging]:opacity-100"
         >
-          {media.map((file, index) => (
-            <FileUploadItem key={index} value={file} className="max-w-52 p-1.5">
-              <FileUploadItemPreview className="size-8 [&>svg]:size-5">
-                <FileUploadItemProgress variant="fill" />
-              </FileUploadItemPreview>
-              <FileUploadItemMetadata size="sm" />
-              <FileUploadItemDelete asChild>
-                <Button
-                  variant="secondary"
-                  className="-top-1 -right-1 absolute size-5 shrink-0 cursor-pointer rounded-full"
-                >
-                  <X />
-                </Button>
-              </FileUploadItemDelete>
-            </FileUploadItem>
-          ))}
-        </FileUploadList>
-        <Textarea
-          value={text}
-          onChange={onInputChange}
-          placeholder="Ketik pesan"
-          className="field-sizing-content min-h-10 w-full resize-none border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
-          disabled={isUploading}
-        />
-        <div className="flex items-center justify-end gap-1.5">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <div className="flex flex-col items-center gap-1 text-center">
+            <div className="flex items-center justify-center rounded-full border p-2.5">
+              <Upload className="size-6 text-muted-foreground" />
+            </div>
+            <p className="font-medium text-sm">Drag & drop files here</p>
+            <p className="text-muted-foreground text-xs">
+              Upload max 5 files each up to 5MB
+            </p>
+          </div>
+        </FileUploadDropzone>
+        {showQuickChats && quick_chats && quick_chats.length > 0 && (
+          <div className="flex flex-row gap-4 mb-2 w-full">
+            {quick_chats.map((chat, idx) => (
+              <button
+                key={idx}
+                className="w-fit flex gap-1 items-center px-3 py-2 bg-secondary/70 backdrop-blur-sm shadow-sm rounded-lg cursor-pointer"
+                onClick={() => setText(chat.message)}
+              >
+                <IconMessage className="w-4 h-4" />
+                <h1 className="text-sm text-muted-foreground">
+                  {chat.message}
+                </h1>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="relative flex w-full max-w-md flex-col gap-2.5 rounded-md border border-input bg-secondary/70 backdrop-blur-sm shadow-sm px-3 py-2 outline-none focus-within:ring-1 focus-within:ring-ring/50">
+          <FileUploadList
+            orientation="horizontal"
+            className="overflow-x-auto px-0 py-1"
+          >
+            {media.map((file, index) => (
+              <FileUploadItem
+                key={index}
+                value={file}
+                className="max-w-52 p-1.5"
+              >
+                <FileUploadItemPreview className="size-8 [&>svg]:size-5">
+                  <FileUploadItemProgress variant="fill" />
+                </FileUploadItemPreview>
+                <FileUploadItemMetadata size="sm" />
+                <FileUploadItemDelete asChild>
+                  <Button
+                    variant="secondary"
+                    className="-top-1 -right-1 absolute size-5 shrink-0 cursor-pointer rounded-full"
+                  >
+                    <X />
+                  </Button>
+                </FileUploadItemDelete>
+              </FileUploadItem>
+            ))}
+          </FileUploadList>
+          <Textarea
+            value={text}
+            onChange={onInputChange}
+            placeholder="Ketik pesan"
+            className="field-sizing-content min-h-10 w-full resize-none border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
+            disabled={isUploading}
+          />
+          <div className="flex items-center justify-end gap-1.5">
+            {quick_chats && quick_chats.length > 0 && (
               <Button
                 size={"icon"}
+                onClick={() => setShowQuickChats(!showQuickChats)}
+                variant={showQuickChats ? "default" : "ghost"}
                 type="button"
-                variant="ghost"
-                className="size-10 rounded-sm"
               >
-                <Paperclip />
+                <IconMessages />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <FileUploadTrigger className="w-full">
-                    Kirim Gambar
-                    <span className="sr-only">Attach file</span>
-                  </FileUploadTrigger>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!order_waiting_payment}>
-                  <FileUploadTrigger
-                    className="w-full"
-                    onClick={() => setIsSendingPayment(true)}
-                  >
-                    Kirim bukti pembayaran
-                    <span className="sr-only">Send payment proof</span>
-                  </FileUploadTrigger>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            )}
 
-          <Button
-            size="icon"
-            type="submit"
-            className="size-10 rounded-sm"
-            disabled={
-              (!text.trim() && media.length === 0) || isUploading || isLoading
-            }
-            onClick={onSubmit}
-          >
-            <ArrowUp />
-            <span className="sr-only">Send message</span>
-          </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size={"icon"}
+                  type="button"
+                  variant="ghost"
+                  className="size-10 rounded-sm"
+                >
+                  <Paperclip />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
+                    <FileUploadTrigger className="w-full">
+                      Kirim Gambar
+                      <span className="sr-only">Attach file</span>
+                    </FileUploadTrigger>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild disabled={!order_waiting_payment}>
+                    <FileUploadTrigger
+                      className="w-full"
+                      onClick={() => setIsSendingPayment(true)}
+                    >
+                      Kirim bukti pembayaran
+                      <span className="sr-only">Send payment proof</span>
+                    </FileUploadTrigger>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              size="icon"
+              type="submit"
+              className="size-10 rounded-sm"
+              disabled={
+                (!text.trim() && media.length === 0) || isUploading || isLoading
+              }
+              onClick={onSubmit}
+            >
+              <ArrowUp />
+              <span className="sr-only">Send message</span>
+            </Button>
+          </div>
         </div>
-      </div>
-    </FileUpload>
+      </FileUpload>
+    </div>
   );
 }

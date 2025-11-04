@@ -7,6 +7,7 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getCustomerProfile } from "@/app/admin/users/queries";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 
 export default async function ShopCartDetailPage({
   params,
@@ -38,9 +39,13 @@ export default async function ShopCartDetailPage({
   }
 
   return (
-    <ShopCartDetailClient
-      shopCart={shopCart}
-      customerProfile={customerProfile}
-    />
+    <div>
+      <TopbarWithBackButton title="Detail Keranjang" />
+
+      <ShopCartDetailClient
+        shopCart={shopCart}
+        customerProfile={customerProfile}
+      />
+    </div>
   );
 }

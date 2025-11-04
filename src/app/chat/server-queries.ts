@@ -56,3 +56,14 @@ export async function getUserAllConversations(user_id: string) {
 
   return conversations;
 }
+
+export async function getUserQuickChats(user_id: string) {
+  return await prisma.quickChat.findMany({
+    where: {
+      user_id,
+    },
+    select: {
+      message: true,
+    },
+  });
+}

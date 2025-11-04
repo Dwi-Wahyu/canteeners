@@ -3,70 +3,71 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { getOrderSummaryForChatBubble } from "../order/server-queries";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OrderChatBubble({
   order_id,
   isSender,
+  role,
 }: {
   order_id: string;
   isSender: boolean;
+  role: string;
 }) {
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["chat-bubble-order-summary", order_id],
     queryFn: () => getOrderSummaryForChatBubble(order_id),
   });
 
+  const detaiUrl =
+    role === "CUSTOMER"
+      ? `/dashboard-pelanggan/order/${order_id}`
+      : `/dashboard-kedai/order/${order_id}`;
+
   return (
     <>
-      <h1 className="text-muted-foreground text-xs">{order_id}</h1>
+      <h1 className="text-muted-foreground text-xs">Klik untuk lihat detail</h1>
 
-      <div
-        className={`px-4 py-3 shadow rounded-xl max-w-[80%] ${
-          isSender
-            ? "bg-primary text-primary-foreground"
-            : "bg-secondary text-secondary-foreground"
-        }`}
-      >
-        {isPending && <div>loading . . .</div>}
+      {isLoading && (
+        <div
+          className={`h-36 px-4 py-3 shadow rounded-xl ${
+            isSender ? "bg-primary" : "bg-secondary"
+          } animate-pulse w-[80%]`}
+        ></div>
+      )}
 
-        {!isPending && !data && (
-          <div>
-            <h1>Tidak ada data</h1>
+      {!isLoading && data && (
+        <div
+          className={`px-4 py-3 shadow rounded-xl w-[80%] ${
+            isSender
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary text-secondary-foreground"
+          }`}
+        >
+          <Link href={detaiUrl} className="w-full flex flex-col gap-2">
+            <h1 className="text-lg font-semibold">Order Baru</h1>
 
-            <Link
-              href={`/order/${order_id}`}
-              className="flex justify-end text-sm underline underline-offset-2 mt-2"
-            >
-              Lihat Detail
-            </Link>
-          </div>
-        )}
-
-        {!isPending && data && (
-          <div>
-            <div className="grid grid-cols-3 gap-2">
-              {data.order_items.map((items, idx) => (
-                <div key={`${order_id}-${idx}`}>
-                  <img
-                    src={"/uploads/product/" + items.product.image_url}
-                    alt=""
-                  />
-                  <h1 className="text-xs">{items.product.name}</h1>
-                </div>
-              ))}
+            <div>
+              <h1 className="font-semibold">Pesanan</h1>
+              <div className="mt-1">
+                {data.order_items.map((items, idx) => (
+                  <div key={`${order_id}-${idx}`} className="flex gap-1">
+                    <h1 className="font-semibold">{items.quantity}x</h1>
+                    <h1>{items.product.name}</h1>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <h1 className="text-sm">Total Harga : {data.total_price}</h1>
+            <h1 className="">
+              Total Harga{" "}
+              <span className="font-semibold">{data.total_price}</span>
+            </h1>
 
-            <Link
-              href={`/order/${order_id}`}
-              className="flex justify-end text-sm underline underline-offset-2 mt-2"
-            >
-              Lihat Detail
-            </Link>
-          </div>
-        )}
-      </div>
+            <h1></h1>
+          </Link>
+        </div>
+      )}
     </>
   );
 }

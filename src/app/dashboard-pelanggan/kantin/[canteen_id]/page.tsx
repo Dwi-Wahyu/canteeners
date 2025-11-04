@@ -1,5 +1,11 @@
 import NotFoundResource from "@/app/_components/not-found-resource";
 import CanteenPageClient from "./canteen-page-client";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
+
+import { Button } from "@/components/ui/button";
+import { IconMap } from "@tabler/icons-react";
+import Link from "next/link";
+import { NavigationButton } from "@/app/_components/navigation-button";
 
 export default async function DetailKantinPage({
   params,

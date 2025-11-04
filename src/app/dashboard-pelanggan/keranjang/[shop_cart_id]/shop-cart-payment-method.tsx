@@ -38,7 +38,7 @@ export default function ShopCartPaymentMethod({
   }
 
   return (
-    <div className="mb-5">
+    <div>
       <h1 className="font-semibold mb-2">Pilih Metode Pembayaran</h1>
 
       <div className="flex flex-col gap-3">
