@@ -52,3 +52,5 @@
 - fix payment proof dikirim 2 kali
 
 - handle ki kenapa kalo confirm order bisa jadi nda ada estimasi
+
+- add created_at attribute to shop cart model

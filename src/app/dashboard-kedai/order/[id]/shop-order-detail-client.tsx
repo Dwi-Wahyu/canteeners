@@ -36,9 +36,12 @@ import ConfirmPaymentDialog from "./confirm-payment-dialog";
 import RejectPaymentDialog from "./reject-payment-dialog";
 import OrderEstimationSection from "./order-estimation-section";
 import { CompleteOrder, ConfirmPayment } from "../actions";
-import { toast } from "sonner";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
+import {
+  useSocketSubscribeOrder,
+  useSocketUnsubscribeOrder,
+} from "@/hooks/use-socket";
 
 export default function ShopOrderDetailClient({
   order,
@@ -46,6 +49,8 @@ export default function ShopOrderDetailClient({
   order: NonNullable<Awaited<ReturnType<typeof getShopOrderDetail>>>;
 }) {
   const [isPending, startTransition] = useTransition();
+  const subscribeOrder = useSocketSubscribeOrder();
+  const unsubscribeOrder = useSocketUnsubscribeOrder();
 
   async function handleCompleteOrder() {
     startTransition(async () => {
@@ -90,6 +95,14 @@ export default function ShopOrderDetailClient({
       }
     });
   }
+
+  useEffect(() => {
+    subscribeOrder(order.id);
+
+    return () => {
+      unsubscribeOrder(order.id);
+    };
+  }, [order.id, subscribeOrder, unsubscribeOrder]);
 
   return (
     <div className="flex flex-col gap-2">

@@ -1,15 +1,12 @@
 "use client";
 
+import { IconShoppingCart } from "@tabler/icons-react";
 import { Home, MessageCircle, Settings, Utensils } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function CustomerBottomBar() {
   const pathname = usePathname();
-
-  const session = useSession();
 
   return (
     <div className="w-full bg-secondary border-t p-4 pb-2 fixed bottom-0 left-0 z-50 flex justify-evenly">
@@ -28,7 +25,7 @@ export default function CustomerBottomBar() {
           pathname === "/dashboard-pelanggan/keranjang" && "border-b-[3px]"
         }`}
       >
-        <Utensils />
+        <IconShoppingCart />
       </Link>
 
       <Link

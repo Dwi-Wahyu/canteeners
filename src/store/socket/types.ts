@@ -33,4 +33,6 @@ export type SocketState = {
   sendMessage: (msg: string) => void;
   joinRoom: (conversation_id: string) => void;
   leaveRoom: (conversation_id: string) => void;
+  subscribeOrder: (order_id: string) => void;
+  unsubscribeOrder: (order_id: string) => void;
 };

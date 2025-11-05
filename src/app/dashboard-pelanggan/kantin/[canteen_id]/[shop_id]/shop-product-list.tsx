@@ -8,6 +8,7 @@ import {
   IconFilterX,
   IconMessageCircleUser,
   IconSearch,
+  IconShoppingCart,
   IconStarFilled,
   IconThumbUpFilled,
   IconTrash,
@@ -55,7 +56,14 @@ export default function ShopProductList({
   return (
     <div>
       <Card>
-        <CardContent>
+        <CardContent className="relative">
+          <Link
+            href={"/dashboard-pelanggan/keranjang/"}
+            className="p-4 bg-primary w-fit fixed bottom-10 right-10 text-primary-foreground rounded-full hover:scale-105 transition-all ease-in-out shadow"
+          >
+            <IconShoppingCart />
+          </Link>
+
           <div className="flex gap-4">
             <Image
               className="w-40 rounded-lg"

@@ -14,3 +14,9 @@ export const useSocketSendMessage = () =>
 export const useSocketJoinRoom = () => socketStore((state) => state.joinRoom);
 
 export const useSocketLeaveRoom = () => socketStore((state) => state.leaveRoom);
+
+export const useSocketSubscribeOrder = () =>
+  socketStore((state) => state.subscribeOrder);
+
+export const useSocketUnsubscribeOrder = () =>
+  socketStore((state) => state.unsubscribeOrder);

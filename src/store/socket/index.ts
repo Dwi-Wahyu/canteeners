@@ -73,7 +73,33 @@ export const socketStore = create<SocketState>((set, get) => ({
           conversation_id: conversation_id,
         })
       );
-      console.log(`🚪 Left room ${conversation_id}`);
+      console.log(`Left room ${conversation_id}`);
+    }
+  },
+
+  subscribeOrder: (order_id) => {
+    const ws = get().socket;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "SUBSCRIBE_ORDER",
+          id: order_id,
+        })
+      );
+      console.log(`Subscribe ${order_id}`);
+    }
+  },
+
+  unsubscribeOrder: (order_id) => {
+    const ws = get().socket;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "UNSUBSCRIBE_ORDER",
+          id: order_id,
+        })
+      );
+      console.log(`Unsubscribe ${order_id}`);
     }
   },
 }));

@@ -5,7 +5,6 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { KedaiState } from "@/store/use-cart-store";
 import { ServerActionReturn } from "@/types/server-action";
-import { getCustomerShopCart } from "./server-queries";
 import { revalidatePath } from "next/cache";
 
 export async function addCartItem({
@@ -17,14 +16,13 @@ export async function addCartItem({
 }): Promise<ServerActionReturn<void>> {
   try {
     await prisma.$transaction(async (tx) => {
-      // 1. Dapatkan atau buat ShopCart (keranjang toko) yang sesuai
-      // Perhatikan penggunaan include untuk memeriksa CartItem yang sudah ada
       const upsertShopCart = await tx.shopCart.upsert({
         where: {
           cart_id_shop_id: {
             cart_id,
             shop_id: product.shop_id,
           },
+          status: "PENDING",
         },
         create: {
           cart_id,
@@ -44,19 +42,16 @@ export async function addCartItem({
       const newQuantity = 1; // Default quantity
 
       if (existingCartItem) {
-        // 2. Jika produk sudah ada, tambahkan quantity-nya
         await tx.cartItem.update({
           where: {
             id: existingCartItem.id,
           },
           data: {
             quantity: existingCartItem.quantity + newQuantity,
-            // update juga price_at_add jika harganya berubah
             price_at_add: product.price,
           },
         });
       } else {
-        // 3. Jika produk belum ada, buat CartItem baru
         await tx.cartItem.create({
           data: {
             shop_cart_id: upsertShopCart.id,
