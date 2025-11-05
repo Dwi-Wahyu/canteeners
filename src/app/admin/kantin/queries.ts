@@ -65,6 +65,9 @@ export async function getCanteenWithMapsAndTables(id: number) {
           floor: true,
           image_url: true,
           qrcodes: {
+            orderBy: {
+              table_number: "asc",
+            },
             select: {
               image_url: true,
               table_number: true,

@@ -1,10 +1,10 @@
 model CustomerViolation {
     id          Int                   @id @default(autoincrement())
     timestamp   DateTime
-    sum         Int?                  @default(0)
     type        CustomerViolationType
-    user        User?                 @relation(fields: [customer_id], references: [id])
+    customer    User?                 @relation(fields: [customer_id], references: [id])
     customer_id String?
+    order_id    String?
 
     @@map("customer_violations")
 }

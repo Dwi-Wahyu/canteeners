@@ -1,88 +1,83 @@
 "use client";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import { useNotificationDialogStore } from "@/store/use-notification-store";
 import { AlertCircle, Check, Info } from "lucide-react";
-import { Button } from "./ui/button";
+import { JSX } from "react";
 
-const icons = {
-  success: <Check className="w-24 h-24 text-primary-foreground" />,
-  error: <AlertCircle className="w-24 h-24 text-destructive-foreground" />,
-  info: <Info className="w-24 h-24 text-blue-600" />,
-};
+type NotificationType = "success" | "error" | "info";
 
-const bgColors = {
-  success: "bg-green-50 border-green-200",
-  error: "bg-red-50 border-red-200",
-  info: "bg-blue-50 border-blue-200",
+const icons: Record<NotificationType, JSX.Element> = {
+  success: <Check className="w-20 h-20 text-success-foreground" />,
+  error: <AlertCircle className="w-20 h-20 text-destructive-foreground" />,
+  info: <Info className="w-20 h-20 text-accent-foreground" />,
 };
 
 const colors = {
-  success: "primary",
-  error: "destructive",
-  info: "blue-500",
+  // Warna solid untuk icon paling dalam (bg-...)
+  solid: {
+    success: "bg-success",
+    error: "bg-destructive",
+    info: "bg-accent",
+  },
+  // Warna dengan opasitas 50% untuk ring tengah
+  ring_middle: {
+    success: "bg-success/50",
+    error: "bg-destructive/50",
+    info: "bg-accent/50",
+  },
+  // Warna dengan opasitas 25% untuk ring luar
+  ring_outer: {
+    success: "bg-success/25",
+    error: "bg-destructive/25",
+    info: "bg-accent/25",
+  },
 };
 
 export default function NotificationDialog() {
   const { notification, hide } = useNotificationDialogStore();
 
-  // useEffect(() => {
-  //   if (notification) {
-  //     const timer = setTimeout(hide, 4000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [notification, hide]);
-
   if (!notification) return null;
 
+  const type = notification.type;
+
   return (
-    <AlertDialog open={!!notification} onOpenChange={() => hide()}>
-      <AlertDialogContent className={`${bgColors[notification.type]}`}>
-        <AlertDialogHeader className="flex flex-col items-center gap-4">
-          <div className="fixed left-0 -top-[50%] w-full flex justify-center">
-            <div
-              className={`rounded-full p-4 bg-${colors[notification.type]}/20`}
-            >
-              <div
-                className={`rounded-full p-4 bg-${
-                  colors[notification.type]
-                }/50`}
-              >
-                <div
-                  className={`rounded-full p-4 bg-${colors[notification.type]}`}
-                >
-                  {icons[notification.type]}
+    <Dialog open={!!notification} onOpenChange={() => hide()}>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader className="flex flex-col items-center gap-4">
+          <div className="fixed left-0 -top-[6.5rem] w-full flex justify-center">
+            <div className={`rounded-full p-4 bg-card`}>
+              <div className={`rounded-full p-4 ${colors.ring_middle[type]}`}>
+                <div className={`rounded-full p-4 ${colors.ring_outer[type]}`}>
+                  <div className={`rounded-full p-4 ${colors.solid[type]}`}>
+                    {icons[type]}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="pt-24">
-            <AlertDialogTitle className="text-lg font-semibold">
+
+          <div className="pt-[5.5rem]">
+            <DialogTitle className="text-xl font-semibold">
               {notification.title}
-            </AlertDialogTitle>
+            </DialogTitle>
             {notification.message && (
-              <AlertDialogDescription>
-                {notification.message}
-              </AlertDialogDescription>
+              <DialogDescription>{notification.message}</DialogDescription>
             )}
 
             {notification.actionButtons && (
               <div className="mt-5">{notification.actionButtons}</div>
             )}
           </div>
-        </AlertDialogHeader>
-      </AlertDialogContent>
-    </AlertDialog>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 }

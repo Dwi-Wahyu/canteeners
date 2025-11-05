@@ -4,7 +4,6 @@ import { orderStatusMapping } from "@/constant/order-status-mapping";
 
 import CustomBadge from "@/components/custom-badge";
 import { OrderStatus } from "@/app/generated/prisma";
-import { formatToHour } from "@/helper/hour-helper";
 
 import {
   Item,
@@ -15,9 +14,8 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { IconEdit, IconNote, IconPencil } from "@tabler/icons-react";
+import { IconCash, IconEdit, IconNote, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { paymentMethodMapping } from "@/constant/payment-method";
 import { postOrderTypeMapping } from "@/constant/post-order-type-mapping";
 import CustomerPositionBreadcrumb from "@/app/dashboard-pelanggan/keranjang/[shop_cart_id]/customer-position-breadcrumb";
@@ -26,6 +24,8 @@ import { getCustomerOrderDetail } from "../queries";
 import SendPaymentProofForm from "./send-payment-proof-form";
 import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import CancelOrderDialog from "./cancel-order-dialog";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CustomerOrderDetailClient({
   order,
@@ -51,6 +51,17 @@ export default function CustomerOrderDetailClient({
         </CustomBadge>
       </div>
 
+      {order.status === "WAITING_SHOP_CONFIRMATION" &&
+        order.payment_method === "CASH" && (
+          <Alert variant="default">
+            <IconCash />
+            <AlertTitle>Order Diterima</AlertTitle>
+            <AlertDescription>
+              Silakan lakukan pembayaran di kedai
+            </AlertDescription>
+          </Alert>
+        )}
+
       <div>
         <h1 className="font-semibold mb-1">Pesanan</h1>
 
@@ -73,7 +84,7 @@ export default function CustomerOrderDetailClient({
                 <h1 className="text-lg font-semibold mr-1">{item.quantity}x</h1>
               </ItemActions>
               {item.note && (
-                <ItemFooter>
+                <ItemFooter className="flex gap-2 justify-start">
                   <IconNote className="w-4 h-4" />
                   <h1>{item.note}</h1>
                 </ItemFooter>
@@ -144,7 +155,7 @@ export default function CustomerOrderDetailClient({
                 />
                 <div className="mt-1">
                   <NavigationButton
-                    url={`/kantin/${order.shop.canteen.id}/pilih-meja`}
+                    url={`/dashboard-pelanggan/kantin/${order.shop.canteen.id}/pilih-meja`}
                     size="sm"
                   >
                     <IconEdit />
@@ -156,12 +167,15 @@ export default function CustomerOrderDetailClient({
         </div>
       </div>
 
-      <CancelOrderDialog
-        conversation_id={order.conversation_id}
-        order_id={order.id}
-        payment_method={order.payment_method}
-        user_id={order.customer_id}
-      />
+      {!["COMPLETED", "CANCELLED"].includes(order.status) && (
+        <CancelOrderDialog
+          conversation_id={order.conversation_id}
+          order_id={order.id}
+          payment_method={order.payment_method}
+          user_id={order.customer_id}
+          order_status={order.status}
+        />
+      )}
 
       {/* {order.status !== "COMPLETED" && (
         <div>

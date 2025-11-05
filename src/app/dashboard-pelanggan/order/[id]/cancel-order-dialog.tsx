@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { IconLoader } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { PaymentMethod } from "@/app/generated/prisma";
+import { OrderStatus, PaymentMethod } from "@/app/generated/prisma";
 import { Textarea } from "@/components/ui/textarea";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,11 +29,13 @@ export default function CancelOrderDialog({
   order_id,
   user_id,
   payment_method,
+  order_status,
 }: {
   order_id: string;
   payment_method: PaymentMethod;
   user_id: string;
   conversation_id: string;
+  order_status: OrderStatus;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -47,6 +49,7 @@ export default function CancelOrderDialog({
         order_id,
         cancelled_by_id: user_id,
         cancelled_reason: reason,
+        order_status,
       });
     },
   });
@@ -81,16 +84,19 @@ export default function CancelOrderDialog({
             <Textarea
               disabled={isPending}
               placeholder="Contoh : Lewat estimasi"
+              className="h-40"
             />
 
-            <Label className="mt-2 flex items-center gap-2">
-              <Checkbox
-                onCheckedChange={(checked) => setCreateRefund(checked)}
-              />
-              <p className="text-sm leading-none font-medium">
-                Bikin pengajuan refund
-              </p>
-            </Label>
+            {order_status !== "PENDING_CONFIRMATION" && (
+              <Label className="mt-2 flex items-center gap-2">
+                <Checkbox
+                  onCheckedChange={(checked) => setCreateRefund(checked)}
+                />
+                <p className="text-sm leading-none font-medium">
+                  Bikin pengajuan refund
+                </p>
+              </Label>
+            )}
           </AlertDialogHeader>
           <AlertDialogFooter className="grid grid-cols-2 gap-4">
             <AlertDialogCancel asChild>

@@ -23,6 +23,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { chooseCustomerTable } from "@/app/admin/kantin/[canteen_id]/qrcode-meja/[map_id]/actions";
 import { toast } from "sonner";
+import { IconQrcodeOff, IconShoppingCart } from "@tabler/icons-react";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { NavigationButton } from "@/app/_components/navigation-button";
+import Link from "next/link";
 
 interface SelectedTable {
   floor: number;
@@ -33,24 +37,23 @@ export default function ChooseTableClient({
   canteen,
   user_id,
   canteen_id,
+  defaultSelectedTable,
 }: {
   canteen: NonNullable<Awaited<ReturnType<typeof getCanteenWithMapsAndTables>>>;
   user_id: string;
   canteen_id: number;
+  defaultSelectedTable: SelectedTable | null;
 }) {
   const [selectedTable, setSelectedTable] = useState<SelectedTable | null>(
-    null
+    defaultSelectedTable
   );
 
   const defaultTab = canteen.maps[0]?.floor.toString() || "1";
 
-  const [activeTab, setActiveTab] = useState(defaultTab);
-
   const [isLoading, setIsLoading] = useState(false);
 
-  // Todo: handle ketika lantai dipilih dan meja dipilih tidak ada di lantai tersebut
   const handleTableChange = (floor: number, table_number: number) => {
-    setSelectedTable({ floor, table_number: 1 });
+    setSelectedTable({ floor, table_number });
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -68,9 +71,36 @@ export default function ChooseTableClient({
       });
 
       if (result.success) {
-        toast.success(result.message);
+        notificationDialog.success({
+          title: "Berhasil pilih meja",
+          message: "Silakan belanja sepuasmu",
+          actionButtons: (
+            <div>
+              <Button size="lg" asChild>
+                <Link
+                  onClick={notificationDialog.hide}
+                  href={"/dashboard-pelanggan/kantin/" + canteen_id}
+                >
+                  <IconShoppingCart />
+                  Mulai Belanja
+                </Link>
+              </Button>
+            </div>
+          ),
+        });
       } else {
-        toast.error(result.error.message);
+        notificationDialog.error({
+          title: "Gagal Pilih Meja",
+          message: "Terjadi kesalahan tidak terduga",
+          actionButtons: (
+            <div>
+              <NavigationButton url={"/customer-service"}>
+                Hubungi CS
+              </NavigationButton>
+              <Button variant={"default"}>Pilih Ulang</Button>
+            </div>
+          ),
+        });
       }
     } else {
       console.log("Belum ada meja yang dipilih.");
@@ -84,7 +114,7 @@ export default function ChooseTableClient({
   return (
     <form onSubmit={handleSave} className="mt-4 max-w-lg mx-auto">
       <div className="flex flex-col">
-        <Tabs defaultValue={defaultTab} onValueChange={setActiveTab}>
+        <Tabs defaultValue={defaultTab}>
           <TabsList className="w-full py-6">
             {canteen.maps.map((map, i) => (
               <TabsTrigger
@@ -113,9 +143,11 @@ export default function ChooseTableClient({
                       <Item
                         key={tableId}
                         variant={"outline"}
-                        onClick={() =>
-                          handleTableChange(map.floor, table.table_number)
-                        }
+                        onClick={() => {
+                          console.log(map.floor, table.table_number);
+
+                          handleTableChange(map.floor, table.table_number);
+                        }}
                         className={`${
                           isChecked ? "bg-primary text-primary-foreground" : ""
                         }`}
@@ -153,8 +185,7 @@ export default function ChooseTableClient({
                   <Empty>
                     <EmptyHeader>
                       <EmptyMedia>
-                        {/* Mengganti IconQrcodeOff dengan XCircle dari Lucide */}
-                        <XCircle size={60} className="text-gray-400" />
+                        <IconQrcodeOff size={60} className="text-gray-400" />
                       </EmptyMedia>
                       <EmptyTitle>Meja Belum Ditambahkan</EmptyTitle>
                       <EmptyDescription>

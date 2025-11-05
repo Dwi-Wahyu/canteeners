@@ -10,15 +10,11 @@ import {
 } from "@/components/ui/card";
 import { IconDownload } from "@tabler/icons-react";
 
-import { ChevronLeftIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -63,14 +59,14 @@ export default function DenahCard({
         <CardTitle>Lantai {floor}</CardTitle>
         <CardDescription>Jumlah Meja {table_count}</CardDescription>
       </CardHeader>
-      <CardFooter className="gap-3 max-sm:flex-col max-sm:items-stretch">
+      {/* <CardFooter className="gap-3 max-sm:flex-col max-sm:items-stretch">
         <Button>Lihat Daftar Kedai</Button>
 
         <Button variant={"outline"}>
           <IconDownload />
           Download Denah
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }

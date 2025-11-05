@@ -2,6 +2,25 @@
 
 import { prisma } from "@/lib/prisma";
 
+export async function getCustomerOrders(customer_id: string) {
+  return await prisma.order.findMany({
+    where: {
+      customer_id,
+    },
+    select: {
+      id: true,
+      shop: {
+        select: {
+          name: true,
+        },
+      },
+      total_price: true,
+      status: true,
+      created_at: true,
+    },
+  });
+}
+
 export async function getCustomerOrderDetail(id: string) {
   return prisma.order.findFirst({
     where: {

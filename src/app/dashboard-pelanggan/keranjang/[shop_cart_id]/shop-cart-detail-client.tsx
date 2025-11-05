@@ -102,8 +102,6 @@ export default function ShopCartDetailClient({
         </CustomBadge>
       </div>
 
-      <Separator />
-
       <div className="">
         <h1 className="font-semibold mb-2">Daftar Pesanan</h1>
 

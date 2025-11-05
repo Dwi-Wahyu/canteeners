@@ -30,7 +30,7 @@ export default async function ShopOrderDetailPage({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <TopbarWithBackButton title="Detail Order" />
 
       <CustomerOrderDetailClient order={order} />

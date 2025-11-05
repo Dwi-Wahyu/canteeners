@@ -74,30 +74,24 @@ export default function OrderReviewSection({
     <Card>
       <CardContent className="flex flex-col">
         {testimony && (
-          <>
-            <div className="flex gap-3 mb-2 items-center">
-              <Avatar className="size-12">
-                <AvatarImage src={"/uploads/avatar/" + customer.avatar} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-1">
-                <h1 className="font-semibold">{customer.name}</h1>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((rate) => (
-                    <button key={rate} className="">
-                      {testimony.rating >= rate ? (
-                        <IconStarFilled className="w-5 h-5" />
-                      ) : (
-                        <IconStar className="w-5 h-5" />
-                      )}
-                    </button>
-                  ))}
-                </div>
+          <div>
+            <div className="flex flex-col gap-1">
+              <h1 className="font-semibold">Ulasan Pelanggan</h1>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((rate) => (
+                  <button key={rate} className="">
+                    {testimony.rating >= rate ? (
+                      <IconStarFilled className="w-5 h-5" />
+                    ) : (
+                      <IconStar className="w-5 h-5" />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
 
             <h1 className="mt-2">{testimony.message}</h1>
-          </>
+          </div>
         )}
 
         {!testimony && !isUserCustomer && (

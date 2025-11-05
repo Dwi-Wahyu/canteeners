@@ -1,7 +1,6 @@
 "use client";
 
 import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
-import { Button } from "@/components/ui/button";
 
 import {
   Empty,
@@ -10,15 +9,17 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { IconUserCheck } from "@tabler/icons-react";
 
 export default function CustomerViolationsPage() {
   return (
     <div>
-      <TopbarWithBackButton title="Pelanggaran" />
+      <TopbarWithBackButton
+        title="Pelanggaran"
+        backUrl="/dashboard-pelanggan/pengaturan"
+      />
 
-      <Empty className="border">
+      <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <IconUserCheck />
@@ -30,18 +31,6 @@ export default function CustomerViolationsPage() {
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
-
-      <Button
-        className="mt-4"
-        onClick={() => {
-          notificationDialog.success({
-            title: "Sukses",
-            message: "sukses bos",
-          });
-        }}
-      >
-        Tampilkan
-      </Button>
     </div>
   );
 }

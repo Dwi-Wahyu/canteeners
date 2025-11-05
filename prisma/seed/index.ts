@@ -7,9 +7,9 @@ import { seedCustomers } from "./seed-customer";
 
 async function main() {
   // await seedCategories();
-  await seedUsers();
-  await seedAppTestimony();
-  await seedCanteens();
+  // await seedUsers();
+  // await seedAppTestimony();
+  // await seedCanteens();
   await seedCustomers();
 }
 

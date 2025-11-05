@@ -1,5 +1,6 @@
 "use server";
 
+import { OrderStatus } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
@@ -68,18 +69,24 @@ export async function CancelOrder({
   order_id,
   cancelled_by_id,
   cancelled_reason,
+  order_status,
 }: {
   order_id: string;
   cancelled_by_id: string;
   cancelled_reason: string;
+  order_status: OrderStatus;
 }): Promise<ServerActionReturn<void>> {
   try {
-    await prisma.order.update({
+    const updated = await prisma.order.update({
       where: {
         id: order_id,
       },
       data: { cancelled_by_id, status: "CANCELLED", cancelled_reason },
     });
+
+    // catat sebagai pelanggaran
+    if (order_status === "WAITING_PAYMENT") {
+    }
 
     revalidatePath("/dashboard-kedai/order/" + order_id);
     revalidatePath("/dashboard-pelanggan/order/" + order_id);

@@ -12,7 +12,6 @@ type NotificationDialog = {
   info: (opts: NotificationOptions) => void;
 };
 
-// Gunakan di client component atau di server via callback
 export const notificationDialog = {
   success: (opts: NotificationOptions) =>
     useNotificationDialogStore.getState().show({ ...opts, type: "success" }),
@@ -20,4 +19,6 @@ export const notificationDialog = {
     useNotificationDialogStore.getState().show({ ...opts, type: "error" }),
   info: (opts: NotificationOptions) =>
     useNotificationDialogStore.getState().show({ ...opts, type: "info" }),
-} satisfies NotificationDialog;
+
+  hide: () => useNotificationDialogStore.getState().hide(),
+} satisfies NotificationDialog & { hide: () => void };

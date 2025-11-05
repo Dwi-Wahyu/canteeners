@@ -35,3 +35,25 @@ export async function getCanteenById(id: number) {
     },
   });
 }
+
+export async function getCustomerSelectedTable(user_id: string) {
+  return await prisma.customerProfile.findFirst({
+    where: {
+      user_id,
+      canteen_id: {
+        not: null,
+      },
+      floor: {
+        not: null,
+      },
+      table_number: {
+        not: null,
+      },
+    },
+    select: {
+      canteen_id: true,
+      floor: true,
+      table_number: true,
+    },
+  });
+}

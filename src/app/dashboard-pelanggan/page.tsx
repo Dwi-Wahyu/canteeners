@@ -3,6 +3,7 @@ import UnauthorizedPage from "../_components/unauthorized-page";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import CustomerTopbar from "./customer-topbar";
+import { NavigationButton } from "../_components/navigation-button";
 
 export default async function DashboardPelanggan() {
   const session = await auth();
@@ -17,7 +18,12 @@ export default async function DashboardPelanggan() {
     <div className="">
       <CustomerTopbar subscribed={false} connected={false} />
 
-      <h1 className="text-xl font-semibold">
+      <NavigationButton
+        url="/notification-dialog-demo"
+        label="Demo Notifikasi"
+      />
+
+      <h1 className="text-xl mt-4 font-semibold">
         Selamat Datang,{" "}
         <span className="text-primary">{session.user.name}</span>
       </h1>

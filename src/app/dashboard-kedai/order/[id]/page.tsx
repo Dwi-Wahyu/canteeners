@@ -30,17 +30,22 @@ export default async function ShopOrderDetailPage({
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-5">
       <TopbarWithBackButton title="Detail Order" />
 
       <ShopOrderDetailClient order={order} />
 
-      <OrderReviewSection
-        customer={{ avatar: order.customer.avatar, name: order.customer.name }}
-        isUserCustomer={false}
-        order_id={order.id}
-        prevTestimony={order.testimony}
-      />
+      {order.status === "COMPLETED" && (
+        <OrderReviewSection
+          customer={{
+            avatar: order.customer.avatar,
+            name: order.customer.name,
+          }}
+          isUserCustomer={false}
+          order_id={order.id}
+          prevTestimony={order.testimony}
+        />
+      )}
     </div>
   );
 }

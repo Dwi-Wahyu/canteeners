@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getShopOrders } from "./server-queries";
+import { getCustomerOrders } from "./queries";
 
 import {
   Empty,
@@ -25,11 +25,15 @@ import { formatDateWithoutYear } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
+export default function CustomerOrderClient({
+  customer_id,
+}: {
+  customer_id: string;
+}) {
   const { data, isLoading } = useQuery({
-    queryKey: ["shop-order-fetch", owner_id],
+    queryKey: ["customer-order-fetch", customer_id],
     queryFn: async () => {
-      return await getShopOrders(owner_id);
+      return await getCustomerOrders(customer_id);
     },
   });
 
@@ -51,7 +55,7 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
               <IconReceiptOff />
             </EmptyMedia>
             <EmptyTitle>Belum Ada Order</EmptyTitle>
-            <EmptyDescription>Silakan Tambahkan Produk</EmptyDescription>
+            <EmptyDescription>Yuk Belanja Sekarang</EmptyDescription>
           </EmptyHeader>
         </Empty>
       )}
@@ -70,15 +74,14 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
               </ItemHeader>
 
               <ItemContent>
-                <ItemTitle>{order.customer.name}</ItemTitle>
+                <ItemTitle>{order.shop.name}</ItemTitle>
                 <ItemDescription>
                   {orderStatusMapping[order.status]}
                 </ItemDescription>
               </ItemContent>
               <ItemActions>
                 <NavigationButton
-                  url={"/dashboard-kedai/order/" + order.id}
-                  size="icon"
+                  url={"/dashboard-pelanggan/order/" + order.id}
                 >
                   <IconEye />
                 </NavigationButton>

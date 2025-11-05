@@ -51,7 +51,7 @@ export default async function CustomerSettingsPage() {
       <LogoutButtonDialog />
 
       <Item variant="outline" size="sm" className="mt-4" asChild>
-        <Link href="/dashboard-pelanggan/riwayat-transaksi">
+        <Link href="/dashboard-pelanggan/order">
           <ItemMedia>
             <IconReceipt className="size-5" />
           </ItemMedia>

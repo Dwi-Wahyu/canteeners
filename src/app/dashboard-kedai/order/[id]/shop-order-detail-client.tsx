@@ -18,7 +18,13 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { IconLoader, IconMap, IconNote, IconPencil } from "@tabler/icons-react";
+import {
+  IconLoader,
+  IconMap,
+  IconNote,
+  IconPencil,
+  IconUserDollar,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { paymentMethodMapping } from "@/constant/payment-method";
@@ -26,38 +32,63 @@ import { postOrderTypeMapping } from "@/constant/post-order-type-mapping";
 import CustomerPositionBreadcrumb from "@/app/dashboard-pelanggan/keranjang/[shop_cart_id]/customer-position-breadcrumb";
 import { NavigationButton } from "@/app/_components/navigation-button";
 import ConfirmOrderDialog from "./confirm-order-dialog";
-import { Pencil } from "lucide-react";
 import ConfirmPaymentDialog from "./confirm-payment-dialog";
 import RejectPaymentDialog from "./reject-payment-dialog";
 import OrderEstimationSection from "./order-estimation-section";
-import { useMutation } from "@tanstack/react-query";
-import { CompleteOrder } from "../actions";
+import { CompleteOrder, ConfirmPayment } from "../actions";
 import { toast } from "sonner";
-import OrderReviewSection from "@/app/order/[id]/order-review-section";
+import { useTransition } from "react";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function ShopOrderDetailClient({
   order,
 }: {
   order: NonNullable<Awaited<ReturnType<typeof getShopOrderDetail>>>;
 }) {
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: async () => {
-      return await CompleteOrder({
+  const [isPending, startTransition] = useTransition();
+
+  async function handleCompleteOrder() {
+    startTransition(async () => {
+      const result = await CompleteOrder({
         conversation_id: order.conversation_id,
         order_id: order.id,
         owner_id: order.shop.owner_id,
       });
-    },
-  });
 
-  async function HandleComplete() {
-    const result = await mutateAsync();
+      if (result.success) {
+        notificationDialog.success({
+          title: "Order Telah Selesai !",
+          message: "Terima kasih sudah bekerja sama dengan canteeners 😊🙏",
+        });
+      } else {
+        notificationDialog.error({
+          title: "Gagal Mengubah Status",
+          message: "Silakan hubungi CS",
+        });
+      }
+    });
+  }
 
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      toast.error(result.error.message);
-    }
+  async function handleConfirmPayment() {
+    startTransition(async () => {
+      const result = await ConfirmPayment({
+        conversation_id: order.conversation_id,
+        order_id: order.id,
+        owner_id: order.shop.owner_id,
+      });
+
+      if (result.success) {
+        notificationDialog.success({
+          title: "Pembayaran Berhasil Dikonfirmasi",
+          message: "Mohon kerjakan pesanan sekarang juga",
+        });
+      } else {
+        notificationDialog.error({
+          title: "Pembayaran Gagal Dikonfirmasi",
+          message: "Silakan hubungi CS",
+        });
+      }
+    });
   }
 
   return (
@@ -115,13 +146,15 @@ export default function ShopOrderDetailClient({
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{item.product.name}</ItemTitle>
-                <ItemDescription>{item.price}</ItemDescription>
+                <ItemDescription>
+                  {item.price} + {item.quantity * 1000}
+                </ItemDescription>
               </ItemContent>
               <ItemActions>
                 <h1 className="text-lg font-semibold mr-1">{item.quantity}x</h1>
               </ItemActions>
               {item.note && (
-                <ItemFooter>
+                <ItemFooter className="flex gap-2 justify-start">
                   <IconNote className="w-4 h-4" />
                   <h1>{item.note}</h1>
                 </ItemFooter>
@@ -232,13 +265,40 @@ export default function ShopOrderDetailClient({
         </div>
       )}
 
-      {order.status !== "COMPLETED" && (
+      {order.status === "WAITING_SHOP_CONFIRMATION" && (
+        <div className="mt-2 flex flex-col gap-4">
+          <Button
+            size={"lg"}
+            onClick={handleConfirmPayment}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <IconLoader className="animate-spin" />
+            ) : (
+              <>
+                <IconUserDollar />
+                Konfirmasi Pembayaran
+              </>
+            )}
+          </Button>
+
+          <Button variant={"destructive"} size={"lg"}>
+            Batalkan Order
+          </Button>
+        </div>
+      )}
+
+      {order.status === "PROCESSING" && (
         <div className="mt-2 grid grid-cols-2 gap-4">
           <Button variant={"destructive"} size={"lg"}>
             Batalkan Order
           </Button>
 
-          <Button size={"lg"} onClick={HandleComplete} disabled={isPending}>
+          <Button
+            size={"lg"}
+            onClick={handleCompleteOrder}
+            disabled={isPending}
+          >
             {isPending ? (
               <IconLoader className="animate-spin" />
             ) : (
