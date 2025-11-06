@@ -12,6 +12,7 @@ export async function getCustomerCart(user_id: string) {
         select: {
           id: true,
           status: true,
+          created_at: true,
           shop: {
             select: {
               id: true,
@@ -79,6 +80,29 @@ export async function getCustomerShopCart(shop_cart_id: string) {
           notes: true,
           price_at_add: true,
           quantity: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getExistingPendingCustomerShopCart({
+  cart_id,
+  shop_id,
+}: {
+  cart_id: string;
+  shop_id: string;
+}) {
+  return await prisma.shopCart.findMany({
+    where: {
+      cart_id,
+      shop_id,
+    },
+    select: {
+      created_at: true,
+      _count: {
+        select: {
+          items: true,
         },
       },
     },

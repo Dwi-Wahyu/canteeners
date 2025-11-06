@@ -13,7 +13,6 @@ import {
   IconThumbUpFilled,
   IconTrash,
 } from "@tabler/icons-react";
-import { ProductsType } from "./type";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -54,16 +53,16 @@ export default function ShopProductList({
   }
 
   return (
-    <div>
-      <Card>
-        <CardContent className="relative">
-          <Link
-            href={"/dashboard-pelanggan/keranjang/"}
-            className="p-4 bg-primary w-fit fixed bottom-10 right-10 text-primary-foreground rounded-full hover:scale-105 transition-all ease-in-out shadow"
-          >
-            <IconShoppingCart />
-          </Link>
+    <div className="relative">
+      <Link
+        href={"/dashboard-pelanggan/keranjang/"}
+        className="p-4 bg-primary w-fit fixed bottom-5 right-7 text-primary-foreground rounded-full hover:scale-105 transition-all ease-in-out shadow"
+      >
+        <IconShoppingCart />
+      </Link>
 
+      <Card>
+        <CardContent>
           <div className="flex gap-4">
             <Image
               className="w-40 rounded-lg"
@@ -95,16 +94,17 @@ export default function ShopProductList({
             </div>
             <div className="flex gap-1 items-center">
               <IconThumbUpFilled className="w-5 h-5" />
-              <h1 className="">{shop.total_ratings} Rating</h1>
+              <h1 className="">{shop.total_ratings}</h1>
             </div>
-            <div className="flex gap-1 items-center">
-              <IconCoin className="w-5 h-5" />
-              <h1 className="">
-                {shop.minimum_price?.toLocaleString()}rb -{" "}
-                {shop.maximum_price?.toLocaleString()}
-                rb
-              </h1>
-            </div>
+
+            {shop.minimum_price && shop.maximum_price && (
+              <div className="flex gap-1 items-center">
+                <IconCoin className="w-5 h-5" />
+                <h1 className="">
+                  Rp {shop.minimum_price} - Rp {shop.maximum_price}
+                </h1>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

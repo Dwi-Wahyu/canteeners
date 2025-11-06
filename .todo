@@ -54,3 +54,7 @@
 - handle ki kenapa kalo confirm order bisa jadi nda ada estimasi
 
 - add created_at attribute to shop cart model
+
+- fix ketika add cart item dan baru 1 harga tambahan tidak terhitung [[[[penting]]]]
+
+- fix edit produk

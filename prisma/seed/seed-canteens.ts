@@ -21,14 +21,6 @@ export async function seedCanteens() {
         },
       ],
     });
-    // await prisma.canteen.createMany({
-    //   data: [
-    //     {
-    //       name: "Kantin Sosiologi",
-    //       image_url: "kansos.webp",
-    //     },
-    //   ],
-    // });
   } catch (error) {
     console.error("Gagal melakukan seeding kantin:", error);
   }

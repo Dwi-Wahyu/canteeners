@@ -26,12 +26,45 @@ import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import CancelOrderDialog from "./cancel-order-dialog";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { ConfirmEstimation } from "../actions";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { formatToHour } from "@/helper/hour-helper";
 
 export default function CustomerOrderDetailClient({
   order,
 }: {
   order: NonNullable<Awaited<ReturnType<typeof getCustomerOrderDetail>>>;
 }) {
+  const confirmEstimationMutation = useMutation({
+    mutationFn: async () => {
+      return await ConfirmEstimation({
+        order_id: order.id,
+        paymentMethod: order.payment_method,
+      });
+    },
+    onSuccess(data) {
+      if (data.success) {
+        notificationDialog.success({
+          title: "Berhasil ubah status",
+          message: data.message,
+          actionButtons: (
+            <Button onClick={notificationDialog.hide} size={"lg"}>
+              Tutup
+            </Button>
+          ),
+        });
+      } else {
+        notificationDialog.success({
+          title: "Terjadi Kesalahan",
+          message: data.error.message,
+        });
+      }
+    },
+  });
+
   return (
     <div className="flex flex-col gap-2">
       <div>
@@ -55,10 +88,7 @@ export default function CustomerOrderDetailClient({
         order.payment_method === "CASH" && (
           <Alert variant="default">
             <IconCash />
-            <AlertTitle>Order Diterima</AlertTitle>
-            <AlertDescription>
-              Silakan lakukan pembayaran di kedai
-            </AlertDescription>
+            <AlertTitle>Silakan lakukan pembayaran di kedai</AlertTitle>
           </Alert>
         )}
 
@@ -111,10 +141,18 @@ export default function CustomerOrderDetailClient({
             <h1>{order.estimation} Menit</h1>
           </div>
 
-          <OrderEstimationCountDown
-            estimation={order.estimation}
-            processed_at={order.processed_at}
-          />
+          <div>
+            <h1 className="font-semibold">Diproses Pada</h1>
+            <h1>{formatToHour(order.processed_at)}</h1>
+          </div>
+
+          <div>
+            <h1 className="font-semibold">Sisa Waktu</h1>
+            <OrderEstimationCountDown
+              estimation={order.estimation}
+              processed_at={order.processed_at}
+            />
+          </div>
         </div>
       )}
 
@@ -143,31 +181,71 @@ export default function CustomerOrderDetailClient({
         <h1 className="font-semibold">Jenis Order</h1>
         <div className="p-4 flex flex-col gap-1 rounded-lg border mt-1">
           <h1>{postOrderTypeMapping[order.post_order_type]}</h1>
+
           {order.post_order_type === "DELIVERY_TO_TABLE" &&
-            order.customer.customer_profile &&
-            order.customer.customer_profile.floor &&
-            order.customer.customer_profile.table_number && (
-              <>
-                <CustomerPositionBreadcrumb
-                  canteen_name={order.shop.canteen.name}
-                  floor={order.customer.customer_profile.floor}
-                  table_number={order.customer.customer_profile.table_number}
-                />
-                <div className="mt-1">
-                  <NavigationButton
-                    url={`/dashboard-pelanggan/kantin/${order.shop.canteen.id}/pilih-meja`}
-                    size="sm"
-                  >
-                    <IconEdit />
-                    Pilih Ulang
-                  </NavigationButton>
-                </div>
-              </>
-            )}
+          order.customer.customer_profile &&
+          order.customer.customer_profile.floor &&
+          order.customer.customer_profile.table_number ? (
+            <div>
+              <CustomerPositionBreadcrumb
+                canteen_name={order.shop.canteen.name}
+                floor={order.customer.customer_profile.floor}
+                table_number={order.customer.customer_profile.table_number}
+              />
+              <div className="mt-1">
+                <NavigationButton
+                  url={`/dashboard-pelanggan/kantin/${order.shop.canteen.id}/pilih-meja`}
+                  size="sm"
+                >
+                  <IconEdit />
+                  Pilih Ulang
+                </NavigationButton>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h1 className="text-sm text-muted-foreground">
+                Belum memilih nomor meja, scan QR Code di meja anda atau{" "}
+                <Link
+                  href={`/dashboard-pelanggan/kantin/${order.shop.canteen.id}/pilih-meja`}
+                  className="underline text-blue-600"
+                >
+                  Klik disini untuk pilih meja
+                </Link>
+              </h1>
+            </div>
+          )}
         </div>
       </div>
 
-      {!["COMPLETED", "CANCELLED"].includes(order.status) && (
+      {order.status === "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION" && (
+        <div className="mt-2">
+          <h1 className="font-semibold">Konfirmasi Estimasi</h1>
+          <h1 className="text-muted-foreground">
+            Pemilik kedai telah menerima pesanan anda
+          </h1>
+
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <Button size={"lg"} variant={"destructive"}>
+              Tolak dan Batalkan
+            </Button>
+
+            <Button
+              size={"lg"}
+              onClick={() => confirmEstimationMutation.mutateAsync()}
+              disabled={confirmEstimationMutation.isPending}
+            >
+              Konfirmasi
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {![
+        "COMPLETED",
+        "CANCELLED",
+        "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION",
+      ].includes(order.status) && (
         <CancelOrderDialog
           conversation_id={order.conversation_id}
           order_id={order.id}

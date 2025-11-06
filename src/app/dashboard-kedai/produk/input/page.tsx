@@ -6,6 +6,7 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import BackButton from "@/app/_components/back-button";
 import { getCategories } from "@/app/admin/kategori/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 
 export default async function InputProductPage() {
   const session = await auth();
@@ -28,18 +29,12 @@ export default async function InputProductPage() {
 
   return (
     <div>
-      <BackButton url="/dashboard-kedai/produk" />
+      <TopbarWithBackButton
+        title="Input Produk"
+        backUrl="/dashboard-pelanggan/produk"
+      />
 
-      <div className="mt-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Input Produk</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <InputProductForm shop_id={shop_owned.id} categories={categories} />
-          </CardContent>
-        </Card>
-      </div>
+      <InputProductForm shop_id={shop_owned.id} categories={categories} />
     </div>
   );
 }

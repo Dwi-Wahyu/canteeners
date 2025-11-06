@@ -69,6 +69,7 @@ model OrderItem {
 enum OrderStatus {
     PENDING_CONFIRMATION // customer buat order, tunggu shop konfirmasi
     WAITING_PAYMENT // shop setuju, customer harus bayar
+    WAITING_CUSTOMER_ESTIMATION_CONFIRMATION // tunggu customer setuju dengan estimasi order
     WAITING_SHOP_CONFIRMATION // customer sudah upload bukti
     PROCESSING // shop terima pembayaran, pesanan diproses
     COMPLETED // order selesai

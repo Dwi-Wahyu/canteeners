@@ -131,6 +131,10 @@ export default function ChooseTableClient({
             const floorKey = map.floor.toString();
             return (
               <TabsContent key={i} value={floorKey} className="mt-2">
+                <img
+                  src={"/uploads/map/" + map.image_url}
+                  className="mb-4 shadow rounded-lg"
+                />
                 <div className="grid grid-cols-2 gap-4">
                   {map.qrcodes.map((table) => {
                     const tableId = `radio-table-${map.floor}-${table.table_number}`;

@@ -28,7 +28,8 @@ export async function ConfirmOrder({
           id: order_id,
         },
         data: {
-          status: "WAITING_SHOP_CONFIRMATION",
+          status: "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION",
+          estimation,
         },
       });
 
@@ -40,7 +41,8 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          text: `Pesanan diterima, estimasi ${estimation} menit, silakan lakukan pembayaran di kedai`,
+          // text: `Pesanan diterima, estimasi ${estimation} menit, silakan lakukan pembayaran di kedai`,
+          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
         },
       });
 
@@ -52,7 +54,7 @@ export async function ConfirmOrder({
         id: order_id,
       },
       data: {
-        status: "WAITING_PAYMENT",
+        status: "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION",
         estimation,
       },
     });
@@ -83,7 +85,8 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          text: `Pesanan diterima, estimasi ${estimation} menit, silakan kirim bukti pembayaran`,
+          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
+          // text: `Pesanan diterima, estimasi ${estimation} menit, silakan kirim bukti pembayaran`,
           media: {
             create: {
               url: shopPaymentExcludeCash.qr_url,
@@ -110,7 +113,8 @@ export async function ConfirmOrder({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          text: `Pesanan diterima, silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
+          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
+          // text: `Pesanan diterima, silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
         },
       });
 
@@ -152,7 +156,7 @@ export async function ConfirmPayment({
         sender_id: owner_id,
         order_id: order_id,
         type: "SYSTEM",
-        text: `Pembayaran telah dikonfirmasi, pesanan anda sedang diproses`,
+        text: `Pesanan anda sedang diproses`,
       },
     });
 

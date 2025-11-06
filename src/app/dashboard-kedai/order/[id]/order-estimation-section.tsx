@@ -129,10 +129,18 @@ export default function OrderEstimationSection({
         </AlertDialog>
       </div>
 
-      <OrderEstimationCountDown
-        estimation={estimation}
-        processed_at={processed_at}
-      />
+      <div>
+        <h1 className="font-semibold">Diproses Pada</h1>
+        <h1>{formatToHour(processed_at)}</h1>
+      </div>
+
+      <div>
+        <h1 className="font-semibold">Sisa Waktu</h1>
+        <OrderEstimationCountDown
+          estimation={estimation}
+          processed_at={processed_at}
+        />
+      </div>
     </div>
   );
 }

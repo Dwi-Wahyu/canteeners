@@ -3,13 +3,13 @@ import { Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  IconCheck,
   IconLoader,
   IconShoppingCart,
   IconShoppingCartCheck,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -20,10 +20,12 @@ export default function ProductCard({
   product: Product;
   cart_id: string;
 }) {
+  const searchParams = useSearchParams();
+  const shop_cart_id = searchParams.get("shop_cart_id");
+
   const mutations = useMutation({
-    mutationKey: ["add-product-to-cart"],
     mutationFn: async () => {
-      return await addCartItem({ product, cart_id });
+      return await addCartItem({ product, cart_id, shop_cart_id });
     },
   });
 

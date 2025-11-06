@@ -36,6 +36,7 @@ import Image from "next/image";
 import { shopCartStatusMapping } from "@/constant/cart-status-mapping";
 import CustomBadge from "@/components/custom-badge";
 import PostOrderTypeTab from "./post-order-type-tab";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function ShopCartDetailClient({
   shopCart,
@@ -76,7 +77,25 @@ export default function ShopCartDetailClient({
       if (data.success) {
         setShowSnk(false);
         toast.success("Sukses checkout keranjang");
-        router.push("/dashboard-pelanggan/chat/" + data.data); // mengarahkan ke conversation id
+        notificationDialog.success({
+          title: "Sukses checkout keranjang",
+          message: "Mengarahkan anda ke percakapan dengan pemilik kedai",
+          actionButtons: (
+            <div>
+              <NavigationButton
+                url={"/dashboard-pelanggan/order/" + data.data?.order_id}
+              >
+                Lihat Detail Order
+              </NavigationButton>
+              <NavigationButton
+                url={"/dashboard-pelanggan/chat/" + data.data?.conversation_id}
+                variant="default"
+              >
+                Hubungi Pemilik Kedai
+              </NavigationButton>
+            </div>
+          ),
+        });
       } else {
         toast.error(data.error.message);
       }
@@ -125,7 +144,7 @@ export default function ShopCartDetailClient({
         </div>
 
         <NavigationButton
-          url={`/dashboard-pelanggan/kantin/${shopCart.shop.canteen_id}/${shopCart.shop.id}`}
+          url={`/dashboard-pelanggan/kantin/${shopCart.shop.canteen_id}/${shopCart.shop.id}?shop_cart_id=${shopCart.id}`}
           variant={"outline"}
         >
           Tambah

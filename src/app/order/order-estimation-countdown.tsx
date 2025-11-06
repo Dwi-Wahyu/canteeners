@@ -64,22 +64,5 @@ export default function OrderEstimationCountDown({
     ? formatToHour(new Date(targetTimeMs)) // Gunakan waktu selesai target
     : "N/A";
 
-  return (
-    <>
-      <div>
-        <h1 className="font-semibold">Diproses Pada</h1>
-        <h1>{formatToHour(processed_at)}</h1>
-      </div>
-
-      <div>
-        <h1 className="font-semibold">Estimasi Selesai Pada</h1>
-        <h1>{finishTime}</h1>
-      </div>
-
-      <div>
-        <h1 className="font-semibold">Sisa Waktu</h1>
-        <h1>{countdown}</h1>
-      </div>
-    </>
-  );
+  return <>{countdown}</>;
 }

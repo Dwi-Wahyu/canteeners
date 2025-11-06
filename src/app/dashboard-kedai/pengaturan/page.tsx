@@ -95,7 +95,7 @@ export default async function OwnerSettingsPage() {
 
       <h1 className="mt-4 mb-2 font-semibold">Pembayaran</h1>
       <Item variant="outline" size="sm" className="mb-4" asChild>
-        <Link href="/dashboard-kedai/pengaturan/pesan-singkat">
+        <Link href="/dashboard-kedai/metode-pembayaran">
           <ItemMedia>
             <IconCreditCard className="size-5" />
           </ItemMedia>

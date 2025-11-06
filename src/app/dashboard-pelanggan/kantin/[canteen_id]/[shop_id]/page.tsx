@@ -7,8 +7,6 @@ import { getCategories } from "@/app/admin/kategori/queries";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getOrCreateCustomerCart } from "@/app/dashboard-pelanggan/keranjang/actions";
 import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
-import { NavigationButton } from "@/app/_components/navigation-button";
-import { IconMessageCircleUser } from "@tabler/icons-react";
 
 export default async function ShopDetailsPage({
   params,

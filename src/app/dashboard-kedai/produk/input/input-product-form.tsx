@@ -27,6 +27,7 @@ import { Category } from "@/app/generated/prisma";
 import { InputProduct, uploadProductImage } from "../actions";
 import { toast } from "sonner";
 import MultipleSelector from "@/components/multiple-select";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function InputProductForm({
   shop_id,
@@ -71,17 +72,22 @@ export default function InputProductForm({
     const result = await InputProduct(payload);
 
     if (result.success) {
-      toast.success(result.message);
       form.reset();
       setFiles([]);
+
+      notificationDialog.success({
+        title: "Sukses input produk",
+        message: "Produk akan tersedia di tampilan kedai anda",
+      });
 
       setTimeout(() => {
         router.push("/dashboard-kedai/produk");
       }, 1000);
     } else {
-      console.log(result.error);
-
-      toast.error(result.error.message);
+      notificationDialog.success({
+        title: result.error.message,
+        message: "Silakan hubungi CS",
+      });
     }
   };
 
@@ -184,7 +190,12 @@ export default function InputProductForm({
         </div>
 
         <div className="flex justify-center gap-3">
-          <Button disabled={form.formState.isSubmitting} type="submit">
+          <Button
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+            size={"lg"}
+            type="submit"
+          >
             {form.formState.isSubmitting && !form.formState.errors ? (
               <>
                 <Loader className="animate-spin" /> Loading

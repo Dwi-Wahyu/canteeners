@@ -14,6 +14,8 @@ export async function getShopOrders(owner_id: string) {
       status: true,
       created_at: true,
       total_price: true,
+      estimation: true,
+      processed_at: true,
       order_items: {
         select: {
           id: true,

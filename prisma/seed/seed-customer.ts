@@ -16,7 +16,7 @@ export async function seedCustomers() {
 
   if (!customerPassword) {
     console.error(
-      "Variabel lingkungan tidak ditemukan. Seeding admin dibatalkan."
+      "Variabel lingkungan tidak ditemukan. Seeding customer dibatalkan."
     );
     await prisma.$disconnect();
     return;
@@ -49,28 +49,15 @@ export async function seedCustomers() {
           password: userData.password,
           role: userData.role,
           avatar: userData.avatar,
+          customer_cart: {
+            create: {
+              status: "ACTIVE",
+            },
+          },
+          customer_profile: {
+            create: {},
+          },
         },
-      });
-
-      await prisma.cart.upsert({
-        where: {
-          user_id: user.id,
-        },
-        create: {
-          status: "ACTIVE",
-          user_id: user.id,
-        },
-        update: {},
-      });
-
-      await prisma.customerProfile.upsert({
-        where: {
-          user_id: user.id,
-        },
-        create: {
-          user_id: user.id,
-        },
-        update: {},
       });
 
       console.log(`Customer '${userData.username}' berhasil di-seed.`);

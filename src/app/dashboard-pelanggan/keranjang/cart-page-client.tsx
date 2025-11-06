@@ -10,6 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { shopCartStatusMapping } from "@/constant/cart-status-mapping";
+import { formatDateToYYYYMMDD } from "@/helper/date-helper";
+import { formatToHour } from "@/helper/hour-helper";
 
 export default function CartPageClient({ userId }: { userId: string }) {
   const { data, isFetching, isError } = useQuery({
@@ -34,7 +36,7 @@ export default function CartPageClient({ userId }: { userId: string }) {
           {data.shopCarts.length === 0 ? (
             <EmptyCart />
           ) : (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-7">
               {data.shopCarts.map((shopCart, idx) => (
                 <Link
                   href={"/dashboard-pelanggan/keranjang/" + shopCart.id}
@@ -59,7 +61,8 @@ export default function CartPageClient({ userId }: { userId: string }) {
                           {shopCart._count.items} Produk
                         </h1>
                         <h1 className="text-sm text-muted-foreground ">
-                          ini nanti waktu natambahkan
+                          {formatDateToYYYYMMDD(shopCart.created_at)}{" "}
+                          {formatToHour(shopCart.created_at)}
                         </h1>
                       </div>
                     </CardContent>

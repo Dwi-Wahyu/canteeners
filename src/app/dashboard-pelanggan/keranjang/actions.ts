@@ -1,60 +1,107 @@
 "use server";
 
-import { PaymentMethod, PostOrderType, Product } from "@/app/generated/prisma";
+import {
+  PaymentMethod,
+  PostOrderType,
+  Prisma,
+  Product,
+} from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { KedaiState } from "@/store/use-cart-store";
 import { ServerActionReturn } from "@/types/server-action";
 import { revalidatePath } from "next/cache";
 
+//  Definisikan argumen yang Anda gunakan pada klausa `include`
+const ShopCartWithItemsArgs = Prisma.validator<Prisma.ShopCartDefaultArgs>()({
+  include: {
+    items: {
+      where: {
+        product_id: "string", // Type harus match dengan product.id
+      },
+    },
+  },
+});
+
+//  Gunakan Prisma.ShopCartGetPayload untuk mendapatkan type return
+export type UpsertedShopCartType = Prisma.ShopCartGetPayload<
+  typeof ShopCartWithItemsArgs
+>;
+
 export async function addCartItem({
   product,
   cart_id,
+  shop_cart_id,
 }: {
-  product: Product;
+  product: Pick<Product, "id" | "shop_id" | "price">;
   cart_id: string;
+  shop_cart_id: string | null;
 }): Promise<ServerActionReturn<void>> {
   try {
     await prisma.$transaction(async (tx) => {
-      const upsertShopCart = await tx.shopCart.upsert({
-        where: {
-          cart_id_shop_id: {
+      // Gunakan findUniqueOrThrow/create (jika ID ada) atau create (jika ID tidak ada)
+      let currentShopCart: UpsertedShopCartType;
+
+      // Jika shop_cart_id tidak disediakan, kita perlu mencari ShopCart
+      if (!shop_cart_id) {
+        // Cari ShopCart berdasarkan cart_id, shop_id, dan status PENDING
+        const existingShopCart = await tx.shopCart.findFirst({
+          where: {
             cart_id,
             shop_id: product.shop_id,
+            status: "PENDING",
           },
-          status: "PENDING",
-        },
-        create: {
-          cart_id,
-          shop_id: product.shop_id,
-        },
-        update: {},
-        include: {
-          items: {
-            where: {
-              product_id: product.id,
-            },
-          },
-        },
-      });
+          ...ShopCartWithItemsArgs, // Gunakan args untuk mendapatkan items
+        });
 
-      const existingCartItem = upsertShopCart.items[0];
-      const newQuantity = 1; // Default quantity
+        if (existingShopCart) {
+          currentShopCart = existingShopCart;
+        } else {
+          // Jika tidak ada, buat ShopCart baru
+          currentShopCart = await tx.shopCart.create({
+            data: {
+              cart_id,
+              shop_id: product.shop_id,
+              status: "PENDING",
+            },
+            ...ShopCartWithItemsArgs, // Gunakan args untuk mendapatkan items
+          });
+        }
+      } else {
+        // Jika shop_cart_id disediakan, kita cari ShopCart yang sudah ada
+        // Menggunakan findUniqueOrThrow untuk memastikan ShopCart ada
+        const existingShopCart = await tx.shopCart.findUniqueOrThrow({
+          where: {
+            id: shop_cart_id,
+          },
+          ...ShopCartWithItemsArgs, // Gunakan args untuk mendapatkan items
+        });
+        currentShopCart = existingShopCart;
+      }
+
+      // Ambil CartItem yang sudah ada (jika ada, array akan berisi 1 item)
+      // Karena Anda menggunakan where: { product_id: product.id } di `include`,
+      // array `items` hanya berisi item untuk produk yang sedang ditambahkan.
+      const existingCartItem = currentShopCart.items[0];
+      const newQuantity = 1; // Quantity default yang ditambahkan
 
       if (existingCartItem) {
+        // Item sudah ada: Lakukan UPDATE
         await tx.cartItem.update({
           where: {
             id: existingCartItem.id,
           },
           data: {
             quantity: existingCartItem.quantity + newQuantity,
+            // Perbarui harga agar mencerminkan harga saat ini saat penambahan
             price_at_add: product.price,
           },
         });
       } else {
+        // Item belum ada: Lakukan CREATE
         await tx.cartItem.create({
           data: {
-            shop_cart_id: upsertShopCart.id,
+            shop_cart_id: currentShopCart.id, // Gunakan ID dari ShopCart yang baru didapat
             product_id: product.id,
             quantity: newQuantity,
             price_at_add: product.price,
@@ -62,14 +109,24 @@ export async function addCartItem({
         });
       }
 
-      await recalculateShopCartTotal(tx, upsertShopCart.id);
+      await recalculateShopCartTotal(tx, currentShopCart.id);
     });
 
     return successResponse(undefined, "Sukses menambahkan ke keranjang");
   } catch (error) {
-    console.log(error);
+    // Tangani error, terutama jika findUniqueOrThrow gagal
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      console.error(`ShopCart dengan ID ${shop_cart_id} tidak ditemukan.`);
+      return errorResponse("Keranjang belanja (ShopCart) tidak ditemukan.");
+    }
 
-    return errorResponse("Terjadi kesalahan");
+    console.error("Kesalahan saat menambahkan item keranjang:", error);
+    return errorResponse(
+      "Terjadi kesalahan saat menambahkan produk ke keranjang."
+    );
   }
 }
 
@@ -258,8 +315,11 @@ export async function processShopCart({
   postOrderType: PostOrderType;
   floor: number | null;
   table_number: number | null;
-}): Promise<ServerActionReturn<string>> {
+}): Promise<
+  ServerActionReturn<{ conversation_id?: string; order_id?: string }>
+> {
   let conversation_id;
+  let order_id;
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -372,6 +432,8 @@ export async function processShopCart({
         },
       });
 
+      order_id = order.id;
+
       await tx.shopCart.update({
         where: {
           id: shopCart.id,
@@ -393,7 +455,10 @@ export async function processShopCart({
       });
     });
 
-    return successResponse(conversation_id, "Berhasil memproses pesanan");
+    return successResponse(
+      { conversation_id, order_id },
+      "Berhasil memproses pesanan"
+    );
   } catch (error) {
     console.log(error);
 

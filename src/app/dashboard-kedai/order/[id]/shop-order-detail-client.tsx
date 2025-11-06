@@ -288,10 +288,7 @@ export default function ShopOrderDetailClient({
             {isPending ? (
               <IconLoader className="animate-spin" />
             ) : (
-              <>
-                <IconUserDollar />
-                Konfirmasi Pembayaran
-              </>
+              "Konfirmasi Pembayaran"
             )}
           </Button>
 

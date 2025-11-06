@@ -1,6 +1,6 @@
 "use server";
 
-import { OrderStatus } from "@/app/generated/prisma";
+import { OrderStatus, PaymentMethod } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
@@ -96,5 +96,46 @@ export async function CancelOrder({
     console.log(error);
 
     return errorResponse("Terjadi kesalahan");
+  }
+}
+
+export async function ConfirmEstimation({
+  order_id,
+  paymentMethod,
+}: {
+  order_id: string;
+  paymentMethod: PaymentMethod;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    if (paymentMethod === "CASH") {
+      await prisma.order.update({
+        where: {
+          id: order_id,
+        },
+        data: {
+          status: "WAITING_SHOP_CONFIRMATION",
+        },
+      });
+
+      return successResponse(undefined, "Silakan lakukan pembayaran di kedai");
+    }
+
+    await prisma.order.update({
+      where: {
+        id: order_id,
+      },
+      data: {
+        status: "WAITING_PAYMENT",
+      },
+    });
+
+    revalidatePath("/dashboard-kedai/order/" + order_id);
+    revalidatePath("/dashboard-pelanggan/order/" + order_id);
+
+    return successResponse(undefined, "Silakan kirim bukti pembayaran");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Silakan hubungi CS");
   }
 }

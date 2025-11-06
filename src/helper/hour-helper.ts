@@ -2,7 +2,7 @@ import { format, formatISO, parse } from "date-fns";
 
 export function formatToHour(date: Date | null) {
   if (!date) {
-    return "-"; // atau string lain yang sesuai, misalnya "--:--"
+    return "N/A"; // atau string lain yang sesuai, misalnya "--:--"
   }
   return format(date, "HH:mm");
 }
