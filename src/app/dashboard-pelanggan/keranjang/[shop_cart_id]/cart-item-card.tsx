@@ -14,7 +14,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Ellipsis, NotebookPen } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { IconTrash } from "@tabler/icons-react";
+import { IconNote, IconTrash } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { changeCartItemDetails } from "../actions";
 import { toast } from "sonner";
@@ -108,7 +108,7 @@ export default function CartItemCard({
             <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <NotebookPen className="w-3 h-3 text-muted-foreground" />
+                  <IconNote className="w-3 h-3 text-muted-foreground" />
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -165,7 +165,7 @@ export default function CartItemCard({
                 type="number"
                 value={qty}
                 onChange={(e) => changeQuantity(Number(e.target.value))}
-                className="w-16 text-center"
+                className="w-16 text-center "
                 min={1}
               />
               <Button

@@ -1,10 +1,12 @@
 import { create } from "zustand";
-import { SocketState } from "./types";
+import { MessageData, SocketState } from "./types";
 
 export const socketStore = create<SocketState>((set, get) => ({
   socket: null,
   connected: false,
   messages: [],
+  readTriggers: {},
+  refreshTriggers: {},
 
   connect: (user_id) => {
     // hindari koneksi ulang
@@ -20,7 +22,47 @@ export const socketStore = create<SocketState>((set, get) => ({
     };
 
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+      let data: MessageData;
+      try {
+        data = JSON.parse(event.data);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      if (data.type === "UPDATE_ORDER") {
+        const { order_id } = data;
+
+        if (!order_id) {
+          return;
+        }
+
+        set((state) => ({
+          refreshTriggers: { ...state.refreshTriggers, [order_id]: Date.now() },
+        }));
+
+        console.log(`Received refresh signal for order ${order_id}`);
+
+        return;
+      }
+
+      if (data.type === "ACK_READ") {
+        const { conversation_id } = data;
+
+        if (!conversation_id) {
+          return;
+        }
+
+        set((state) => ({
+          readTriggers: {
+            ...state.readTriggers,
+            [conversation_id]: Date.now(),
+          },
+        }));
+
+        console.log(`ACK Messages in ${conversation_id} marked as read`);
+      }
+
       set((state) => ({ messages: [...state.messages, data] }));
     };
 
@@ -100,6 +142,18 @@ export const socketStore = create<SocketState>((set, get) => ({
         })
       );
       console.log(`Unsubscribe ${order_id}`);
+    }
+  },
+
+  sendReadAck: (conversation_id: string) => {
+    const ws = get().socket;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "ACK_READ",
+          conversation_id,
+        })
+      );
     }
   },
 }));

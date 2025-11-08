@@ -16,9 +16,11 @@ import { toast } from "sonner";
 export default function ProductCard({
   product,
   cart_id,
+  add_to_cart_disabled,
 }: {
   product: Product;
   cart_id: string;
+  add_to_cart_disabled: boolean;
 }) {
   const searchParams = useSearchParams();
   const shop_cart_id = searchParams.get("shop_cart_id");
@@ -66,7 +68,12 @@ export default function ProductCard({
           </div>
 
           <Button
-            disabled={mutations.isPending || added || !product.is_available}
+            disabled={
+              mutations.isPending ||
+              added ||
+              !product.is_available ||
+              add_to_cart_disabled
+            }
             onClick={handleAddToCart}
             variant={added ? "default" : "outline"}
           >

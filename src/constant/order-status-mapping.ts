@@ -5,7 +5,7 @@ export const orderStatusMapping = {
   WAITING_SHOP_CONFIRMATION: "Menunggu Verifikasi Pembayaran",
   PROCESSING: "Sedang Diproses",
   COMPLETED: "Selesai",
-  REJECTED: "Dibatalkan Toko",
+  REJECTED: "Ditolak Kedai",
   PAYMENT_REJECTED: "Pembayaran Ditolak",
   CANCELLED: "Order Dibatalkan",
 };

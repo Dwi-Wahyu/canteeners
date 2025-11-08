@@ -11,7 +11,7 @@ import {
   IconShoppingCart,
   IconStarFilled,
   IconThumbUpFilled,
-  IconTrash,
+  IconUserExclamation,
 } from "@tabler/icons-react";
 import { getShopDataWithPayment } from "@/app/admin/kedai/queries";
 
@@ -25,17 +25,21 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import NoProductFound from "./no-product-found";
 import ProductCard from "./product-card";
-import { NavigationButton } from "@/app/_components/navigation-button";
 import Link from "next/link";
+import { CustomerProfile } from "@/app/generated/prisma";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function ShopProductList({
   shop,
   categories,
   cart_id,
+  customer_profile,
 }: {
   shop: NonNullable<Awaited<ReturnType<typeof getShopDataWithPayment>>>;
   categories: Awaited<ReturnType<typeof getCategories>>;
   cart_id: string;
+  customer_profile: CustomerProfile;
 }) {
   const [productName, setProductName] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -60,6 +64,21 @@ export default function ShopProductList({
       >
         <IconShoppingCart />
       </Link>
+
+      {customer_profile.suspend_until !== null && (
+        <Alert variant="destructive" className="mb-4">
+          <IconUserExclamation />
+          <AlertTitle>Anda Sedang Disuspend</AlertTitle>
+          <AlertDescription>
+            <Link
+              href={"/dashboard-pelanggan/pelanggaran"}
+              className="underline"
+            >
+              lihat pelanggaran
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Card>
         <CardContent>
@@ -113,7 +132,7 @@ export default function ShopProductList({
         <div className="relative">
           <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
             <IconSearch className="size-4" />
-            <span className="sr-only">User</span>
+            <span className="sr-only">Product</span>
           </div>
           <Input
             placeholder="Cari nama produk"
@@ -167,7 +186,12 @@ export default function ShopProductList({
       {!isLoading && data && data.length > 0 && (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           {data.map((product) => (
-            <ProductCard key={product.id} product={product} cart_id={cart_id} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              cart_id={cart_id}
+              add_to_cart_disabled={customer_profile.suspend_until !== null}
+            />
           ))}
         </div>
       )}

@@ -136,3 +136,31 @@ export async function CompleteOrder({
     return errorResponse("Terjadi kesalahan saat mengubah status");
   }
 }
+
+export async function RejectOrder({
+  order_id,
+  rejected_reason,
+}: {
+  order_id: string;
+  rejected_reason: string;
+}) {
+  try {
+    await prisma.order.update({
+      where: {
+        id: order_id,
+      },
+      data: {
+        status: "REJECTED",
+        rejected_reason,
+      },
+    });
+
+    revalidatePath(`/dashboard-kedai/order/${order_id}`);
+    revalidatePath(`/dashboard-pelanggan/order/${order_id}`);
+
+    return successResponse(undefined, "Berhasil menolak order");
+  } catch (error) {
+    console.error("rejectOrder Error:", error);
+    return errorResponse("Terjadi kesalahan saat menolak order");
+  }
+}

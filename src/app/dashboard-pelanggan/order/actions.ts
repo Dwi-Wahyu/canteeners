@@ -75,8 +75,10 @@ export async function CancelOrder({
   cancelled_by_id: string;
   cancelled_reason: string;
   order_status: OrderStatus;
-}): Promise<ServerActionReturn<void>> {
+}): Promise<ServerActionReturn<{ suspended: boolean }>> {
   try {
+    let suspended = false;
+
     const updated = await prisma.order.update({
       where: {
         id: order_id,
@@ -84,14 +86,52 @@ export async function CancelOrder({
       data: { cancelled_by_id, status: "CANCELLED", cancelled_reason },
     });
 
-    // catat sebagai pelanggaran
-    if (order_status === "WAITING_PAYMENT") {
+    if (
+      order_status === "WAITING_SHOP_CONFIRMATION" ||
+      order_status === "WAITING_PAYMENT"
+    ) {
+      await prisma.customerViolation.create({
+        data: {
+          customer_id: updated.customer_id,
+          type: "ORDER_CANCEL_WITHOUT_PAY",
+          order_id: updated.id,
+          timestamp: new Date(),
+        },
+      });
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const todayCancellingViolation = await prisma.customerViolation.count({
+        where: {
+          type: "ORDER_CANCEL_WITHOUT_PAY",
+          customer_id: updated.customer_id,
+          timestamp: {
+            gte: today,
+            lt: tomorrow,
+          },
+        },
+      });
+
+      if (todayCancellingViolation > 1) {
+        await prisma.customerProfile.update({
+          where: { user_id: updated.customer_id },
+          data: {
+            suspend_reason: "Pembatalan Order Beruntun",
+            suspend_until: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          },
+        });
+
+        suspended = true;
+      }
     }
 
     revalidatePath("/dashboard-kedai/order/" + order_id);
     revalidatePath("/dashboard-pelanggan/order/" + order_id);
 
-    return successResponse(undefined, "Sukses membatalkan order");
+    return successResponse({ suspended }, "Sukses membatalkan order");
   } catch (error) {
     console.log(error);
 
@@ -123,6 +163,9 @@ export async function ConfirmEstimation({
         },
       });
 
+      revalidatePath("/dashboard-kedai/order/" + order_id);
+      revalidatePath("/dashboard-pelanggan/order/" + order_id);
+
       return successResponse(undefined, "Silakan lakukan pembayaran di kedai");
     }
 
@@ -135,22 +178,17 @@ export async function ConfirmEstimation({
       },
     });
 
-    const shopPaymentExcludeCash = await prisma.payment.findFirst({
-      where: {
-        shop_id,
-        method: {
-          not: "CASH",
-        },
-      },
-    });
-
-    if (!shopPaymentExcludeCash) {
-      console.error("kedai belum menerima pembayaran non tunai");
-      return errorResponse("kedai belum menerima pembayaran non tunai");
-    }
-
     if (payment_method === "QRIS") {
-      if (!shopPaymentExcludeCash.qr_url) {
+      const shopQRISPayments = await prisma.payment.findFirst({
+        where: {
+          shop_id,
+          method: {
+            not: "QRIS",
+          },
+        },
+      });
+
+      if (!shopQRISPayments) {
         console.error("kedai belum menerima pembayaran qris");
         return errorResponse("kedai belum menerima pembayaran qris");
       }
@@ -164,20 +202,30 @@ export async function ConfirmEstimation({
           text: `Silakan kirim bukti pembayaran`,
           media: {
             create: {
-              url: shopPaymentExcludeCash.qr_url,
+              url: shopQRISPayments.qr_url!,
               mime_type: "IMAGE",
             },
           },
         },
       });
 
-      revalidatePath(`/order/${order_id}`);
+      revalidatePath("/dashboard-kedai/order/" + order_id);
+      revalidatePath("/dashboard-pelanggan/order/" + order_id);
 
       return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
     }
 
     if (payment_method === "BANK_TRANSFER") {
-      if (!shopPaymentExcludeCash.account_number) {
+      const shopBankTransferPayments = await prisma.payment.findFirst({
+        where: {
+          shop_id,
+          method: {
+            not: "BANK_TRANSFER",
+          },
+        },
+      });
+
+      if (!shopBankTransferPayments) {
         console.error("kedai belum menerima pembayaran transfer bank");
         return errorResponse("kedai belum menerima pembayaran transfer bank");
       }
@@ -188,21 +236,17 @@ export async function ConfirmEstimation({
           sender_id: owner_id,
           order_id: order_id,
           type: "SYSTEM",
-          text: `Silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
+          text: `Silakan transfer pada nomor rekening ${shopBankTransferPayments.account_number} ${shopBankTransferPayments.note}`,
         },
       });
 
-      revalidatePath(`/order/${order_id}`);
+      revalidatePath("/dashboard-kedai/order/" + order_id);
+      revalidatePath("/dashboard-pelanggan/order/" + order_id);
 
       return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
     }
 
     return errorResponse("Metode pembayaran tidak valid");
-
-    revalidatePath("/dashboard-kedai/order/" + order_id);
-    revalidatePath("/dashboard-pelanggan/order/" + order_id);
-
-    return successResponse(undefined, "Silakan kirim bukti pembayaran");
   } catch (error) {
     console.log(error);
 

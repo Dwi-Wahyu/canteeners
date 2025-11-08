@@ -1,6 +1,6 @@
 import { format, formatISO, parse } from "date-fns";
 
-export function formatToHour(date: Date | null) {
+export function formatToHour(date: Date | null | undefined) {
   if (!date) {
     return "N/A"; // atau string lain yang sesuai, misalnya "--:--"
   }

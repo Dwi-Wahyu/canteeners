@@ -7,6 +7,7 @@ import { getCategories } from "@/app/admin/kategori/queries";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getOrCreateCustomerCart } from "@/app/dashboard-pelanggan/keranjang/actions";
 import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
+import { prisma } from "@/lib/prisma";
 
 export default async function ShopDetailsPage({
   params,
@@ -37,6 +38,17 @@ export default async function ShopDetailsPage({
     return <UnauthorizedPage />;
   }
 
+  const customer_profile = await prisma.customerProfile.findFirst({
+    where: {
+      user_id: session.user.id,
+    },
+  });
+
+  // Handle ki semisal belum ada customer profile
+  if (!customer_profile) {
+    return <UnauthorizedPage />;
+  }
+
   const customerCartId = await getOrCreateCustomerCart(session.user.id);
 
   return (
@@ -50,6 +62,7 @@ export default async function ShopDetailsPage({
         shop={shop}
         categories={categories}
         cart_id={customerCartId}
+        customer_profile={customer_profile}
       />
     </div>
   );

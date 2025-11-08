@@ -18,13 +18,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import {
-  IconLoader,
-  IconMap,
-  IconNote,
-  IconPencil,
-  IconUserDollar,
-} from "@tabler/icons-react";
+import { IconLoader, IconMap, IconNote } from "@tabler/icons-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { paymentMethodMapping } from "@/constant/payment-method";
@@ -42,6 +36,8 @@ import {
   useSocketSubscribeOrder,
   useSocketUnsubscribeOrder,
 } from "@/hooks/use-socket";
+import RejectOrderDialog from "./reject-order-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function ShopOrderDetailClient({
   order,
@@ -135,9 +131,10 @@ export default function ShopOrderDetailClient({
             OrderStatus.WAITING_SHOP_CONFIRMATION,
             OrderStatus.WAITING_PAYMENT,
             OrderStatus.PENDING_CONFIRMATION,
+            OrderStatus.WAITING_CUSTOMER_ESTIMATION_CONFIRMATION,
           ]}
           successValues={[OrderStatus.COMPLETED]}
-          destructiveValues={[OrderStatus.CANCELLED]}
+          destructiveValues={[OrderStatus.CANCELLED, OrderStatus.REJECTED]}
         >
           {orderStatusMapping[order.status]}
         </CustomBadge>
@@ -231,28 +228,41 @@ export default function ShopOrderDetailClient({
       <div>
         <h1 className="font-semibold">Jenis Order</h1>
         <div className="p-4 flex flex-col gap-1 rounded-lg border mt-1">
-          <h1>{postOrderTypeMapping[order.post_order_type]}</h1>
           {order.post_order_type === "DELIVERY_TO_TABLE" &&
-            order.customer.customer_profile &&
-            order.customer.customer_profile.floor &&
-            order.customer.customer_profile.table_number && (
-              <>
-                <CustomerPositionBreadcrumb
-                  canteen_name={order.shop.canteen.name}
-                  floor={order.customer.customer_profile.floor}
-                  table_number={order.customer.customer_profile.table_number}
-                />
-                <div className="mt-1">
-                  <NavigationButton
-                    url={`/kantin/${order.shop.canteen.id}/denah`}
-                    size="sm"
-                  >
-                    <IconMap />
-                    Lihat Denah
-                  </NavigationButton>
-                </div>
-              </>
-            )}
+          order.customer.customer_profile &&
+          order.customer.customer_profile.floor &&
+          order.customer.customer_profile.table_number ? (
+            <div>
+              <h1 className="font-medium">
+                {postOrderTypeMapping[order.post_order_type]}
+              </h1>
+
+              <CustomerPositionBreadcrumb
+                canteen_name={order.shop.canteen.name}
+                floor={order.customer.customer_profile.floor}
+                table_number={order.customer.customer_profile.table_number}
+              />
+              <div className="mt-1">
+                <NavigationButton
+                  url={`/kantin/${order.shop.canteen.id}/denah`}
+                  size="sm"
+                >
+                  <IconMap />
+                  Lihat Denah
+                </NavigationButton>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h1 className="font-medium">
+                {postOrderTypeMapping[order.post_order_type]}
+              </h1>
+
+              <h1 className="text-sm text-muted-foreground">
+                Pesanan diambil di kedai
+              </h1>
+            </div>
+          )}
         </div>
       </div>
 
@@ -265,9 +275,7 @@ export default function ShopOrderDetailClient({
           </h1>
 
           <div className="grid grid-cols-2 mt-2 gap-4">
-            <Button size={"lg"} variant={"destructive"}>
-              Tolak
-            </Button>
+            <RejectOrderDialog order_id={order.id} />
             <ConfirmOrderDialog
               conversation_id={order.conversation_id}
               order_id={order.id}

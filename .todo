@@ -64,3 +64,9 @@
 - fix edit produk [done]
 
 - fix jumlah pesan yang belum dibaca di list percakapan
+
+- fix ack read
+
+- fix ketika confirm estimasi dan metode pembayaran non tunai tidak ditemukan
+
+- fix munculkan nomor rekening jika transfer bank setelah konfirmasi estimasi

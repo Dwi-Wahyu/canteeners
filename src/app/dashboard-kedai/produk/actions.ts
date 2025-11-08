@@ -153,16 +153,28 @@ export async function UpdateProduct(
 }
 
 export async function ToggleProductAvailable(
-  id: string,
-  is_available: boolean
+  id: string
 ): Promise<ServerActionReturn<boolean>> {
   try {
+    const current = await prisma.product.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        is_available: true,
+      },
+    });
+
+    if (!current) {
+      return errorResponse("Produk tidak ditemukan");
+    }
+
     const updated = await prisma.product.update({
       where: {
         id,
       },
       data: {
-        is_available: !is_available,
+        is_available: !current.is_available,
       },
       select: {
         is_available: true,

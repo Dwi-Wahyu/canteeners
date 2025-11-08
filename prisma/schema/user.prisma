@@ -22,9 +22,9 @@ model User {
     conversations ConversationParticipant[]
 
     customer_violations CustomerViolation[]
-    customer_orders Order[]
-    customer_cart Cart?
-    customer_profile CustomerProfile?
+    customer_orders     Order[]
+    customer_cart       Cart?
+    customer_profile    CustomerProfile?
 
     @@index([role])
     @@index([last_login])
@@ -41,15 +41,18 @@ enum Role {
 }
 
 model CustomerProfile {
-    id         String   @id @default(uuid())
+    id String @id @default(uuid())
 
-    user User @relation(fields: [user_id], references: [id])
-    user_id String @unique
-    canteen_id        Int?
-    floor          Int?
-    table_number   Int?
+    user         User   @relation(fields: [user_id], references: [id])
+    user_id      String @unique
+    canteen_id   Int?
+    floor        Int?
+    table_number Int?
 
-    last_visit_at       DateTime?
+    suspend_until  DateTime?
+    suspend_reason String?
+
+    last_visit_at DateTime?
 
     @@map("customer_profiles")
 }

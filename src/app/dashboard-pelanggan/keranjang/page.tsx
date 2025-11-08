@@ -1,8 +1,6 @@
 import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import CartPageClient from "./cart-page-client";
-import BackButton from "@/app/_components/back-button";
-import CustomerTopbar from "../customer-topbar";
 
 export default async function CartPage() {
   const session = await auth();

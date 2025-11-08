@@ -205,6 +205,7 @@ export default function ShopCartDetailClient({
           className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary flex justify-between py-6 items-center"
           size={"lg"}
           onClick={handleClickCheckout}
+          disabled={customerProfile.suspend_until !== null}
         >
           <h1>{shopCart.items.length} Item</h1>
 

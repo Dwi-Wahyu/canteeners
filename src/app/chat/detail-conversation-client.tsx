@@ -6,13 +6,15 @@ import { formatToHour } from "@/helper/hour-helper";
 import { getConversationMessages } from "@/app/chat/queries";
 import { getOrderWaitingPayment } from "../order/queries";
 
-import { IconChecks } from "@tabler/icons-react";
+import { IconCheck, IconChecks } from "@tabler/icons-react";
 import { useChatRoom } from "@/hooks/use-chat-room";
 import ChatInput from "./chat-input";
 import OrderChatBubble from "./order-chat-bubble";
 import DetailConversationTopbar from "./detail-conversation-topbar";
 import { useQuery } from "@tanstack/react-query";
 import { getUserQuickChats } from "./server-queries";
+// import { useReadAck } from "@/hooks/use-ack-read";
+// import { useEffect, useRef } from "react";
 
 export default function DetailConversationClient({
   conversation,
@@ -32,6 +34,17 @@ export default function DetailConversationClient({
     senderId: sender_id,
     initialMessages: conversation.messages,
   });
+
+  // const readTrigger = useReadAck(conversation.id);
+  // const prevTrigger = useRef(0);
+
+  // useEffect(() => {
+  //   if (readTrigger > prevTrigger.current && prevTrigger.current !== 0) {
+  //     console.log("Pesan sudah dibaca!");
+  //     // Bisa trigger animation, update last seen, dll.
+  //   }
+  //   prevTrigger.current = readTrigger;
+  // }, [readTrigger]);
 
   const { data, isPending } = useQuery({
     queryKey: ["user-quick-chats", sender_id],
@@ -177,11 +190,11 @@ export default function DetailConversationClient({
                     isSender ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
-                  <IconChecks
-                    className={`w-4 h-4 ${
-                      msg.is_read ? "text-blue-500" : "text-muted-foreground"
-                    }`}
-                  />
+                  {msg.is_read ? (
+                    <IconChecks className={`w-4 h-4 text-blue-500`} />
+                  ) : (
+                    <IconCheck className={`w-4 h-4 text-muted-foreground`} />
+                  )}
                   <span>
                     {formatDateToYYYYMMDD(msg.created_at)}{" "}
                     {formatToHour(msg.created_at)}

@@ -23,6 +23,8 @@ import { CancelOrder } from "../actions";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { toast } from "sonner";
 import { useRouter } from "nextjs-toploader/app";
+import Link from "next/link";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function CancelOrderDialog({
   conversation_id,
@@ -58,14 +60,59 @@ export default function CancelOrderDialog({
     const result = await mutateAsync();
 
     if (result.success) {
-      toast.success(result.message);
+      if (result.data?.suspended) {
+        notificationDialog.error({
+          title: "Anda telah disuspend",
+          message:
+            "Pembatalan order beruntun dalam sehari menyebabkan anda tidak dapat membuat pesanan sampai masa hukuman selesai",
+          actionButtons: (
+            <Button
+              onClick={() => {
+                notificationDialog.hide();
+                router.push("/syarat-dan-ketentuan");
+              }}
+              variant={"outline"}
+              size={"lg"}
+            >
+              Pelajari Selengkapnya
+            </Button>
+          ),
+        });
+      } else {
+        notificationDialog.success({
+          title: "Aksi Berhasil",
+          message: result.message,
+        });
+      }
 
       if (createRefund) {
         router.push(`/dashboard-pelanggan/order/${order_id}/refund`);
       }
     } else {
-      toast.error(result.error.message);
+      notificationDialog.error({
+        title: "Terjadi Kesalahan",
+        message: result.error.message,
+      });
     }
+  }
+
+  const ORDER_CANCEL_WITHOUT_PAY =
+    order_status === "WAITING_SHOP_CONFIRMATION" ||
+    order_status === "WAITING_PAYMENT";
+
+  function CancelOrderDialogTitle() {
+    if (ORDER_CANCEL_WITHOUT_PAY) {
+      return "Peringatan !";
+    }
+    return "Yakin Membatalkan Order?";
+  }
+
+  function CancelOrderDialogDescription() {
+    if (ORDER_CANCEL_WITHOUT_PAY) {
+      return "Pemilik kedai sedang menunggu pembayaran, pembatalan order akan dihitung sebagai pelanggaran.";
+    }
+
+    return "Berikan alasan pembatalan";
   }
 
   return (
@@ -77,26 +124,44 @@ export default function CancelOrderDialog({
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
-          <AlertDialogHeader className="text-start">
-            <AlertDialogTitle>Yakin Batalin Order?</AlertDialogTitle>
-            <AlertDialogDescription>Beri alasan jelas</AlertDialogDescription>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{CancelOrderDialogTitle()}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {CancelOrderDialogDescription()}
+            </AlertDialogDescription>
 
-            <Textarea
-              disabled={isPending}
-              placeholder="Contoh : Lewat estimasi"
-              className="h-40"
-            />
-
-            {order_status !== "PENDING_CONFIRMATION" && (
-              <Label className="mt-2 flex items-center gap-2">
-                <Checkbox
-                  onCheckedChange={(checked) => setCreateRefund(checked)}
+            {ORDER_CANCEL_WITHOUT_PAY ? (
+              <div>
+                <Link
+                  className="text-blue-500 underline underline-offset-2"
+                  href={"/syarat-dan-ketentuan"}
+                >
+                  Baca syarat dan ketentuan
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <Textarea
+                  disabled={isPending}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder="Contoh : Lewat estimasi"
+                  className="h-40"
                 />
-                <p className="text-sm leading-none font-medium">
-                  Bikin pengajuan refund
-                </p>
-              </Label>
+              </div>
             )}
+
+            {order_status !== "PENDING_CONFIRMATION" &&
+              !ORDER_CANCEL_WITHOUT_PAY && (
+                <Label className="mt-2 flex items-center gap-2">
+                  <Checkbox
+                    onCheckedChange={(checked) => setCreateRefund(checked)}
+                  />
+                  <p className="text-sm leading-none font-medium">
+                    Bikin pengajuan refund
+                  </p>
+                </Label>
+              )}
           </AlertDialogHeader>
           <AlertDialogFooter className="grid grid-cols-2 gap-4">
             <AlertDialogCancel asChild>

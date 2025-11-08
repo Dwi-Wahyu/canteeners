@@ -14,7 +14,12 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { IconCash, IconEdit, IconNote, IconPencil } from "@tabler/icons-react";
+import {
+  IconCash,
+  IconEdit,
+  IconNote,
+  IconShoppingCartExclamation,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import { paymentMethodMapping } from "@/constant/payment-method";
 import { postOrderTypeMapping } from "@/constant/post-order-type-mapping";
@@ -79,13 +84,22 @@ export default function CustomerOrderDetailClient({
             OrderStatus.WAITING_SHOP_CONFIRMATION,
             OrderStatus.WAITING_PAYMENT,
             OrderStatus.PENDING_CONFIRMATION,
+            OrderStatus.WAITING_CUSTOMER_ESTIMATION_CONFIRMATION,
           ]}
           successValues={[OrderStatus.COMPLETED]}
-          destructiveValues={[OrderStatus.CANCELLED]}
+          destructiveValues={[OrderStatus.CANCELLED, OrderStatus.REJECTED]}
         >
           {orderStatusMapping[order.status]}
         </CustomBadge>
       </div>
+
+      {order.status === "REJECTED" && (
+        <Alert variant={"destructive"}>
+          <IconShoppingCartExclamation />
+          <AlertTitle>Pesanan Ditolak</AlertTitle>
+          <AlertDescription>{order.rejected_reason}</AlertDescription>
+        </Alert>
+      )}
 
       {order.status === "WAITING_SHOP_CONFIRMATION" &&
         order.payment_method === "CASH" && (
@@ -190,13 +204,15 @@ export default function CustomerOrderDetailClient({
       <div>
         <h1 className="font-semibold">Jenis Order</h1>
         <div className="p-4 flex flex-col gap-1 rounded-lg border mt-1">
-          <h1>{postOrderTypeMapping[order.post_order_type]}</h1>
-
           {order.post_order_type === "DELIVERY_TO_TABLE" &&
           order.customer.customer_profile &&
           order.customer.customer_profile.floor &&
           order.customer.customer_profile.table_number ? (
             <div>
+              <h1 className="font-medium">
+                {postOrderTypeMapping[order.post_order_type]}
+              </h1>
+
               <CustomerPositionBreadcrumb
                 canteen_name={order.shop.canteen.name}
                 floor={order.customer.customer_profile.floor}
@@ -214,14 +230,12 @@ export default function CustomerOrderDetailClient({
             </div>
           ) : (
             <div>
+              <h1 className="font-medium">
+                {postOrderTypeMapping[order.post_order_type]}
+              </h1>
+
               <h1 className="text-sm text-muted-foreground">
-                Belum memilih nomor meja, scan QR Code di meja anda atau{" "}
-                <Link
-                  href={`/dashboard-pelanggan/kantin/${order.shop.canteen.id}/pilih-meja`}
-                  className="underline text-blue-600"
-                >
-                  Klik disini untuk pilih meja
-                </Link>
+                Pesanan diambil di kedai
               </h1>
             </div>
           )}
@@ -232,7 +246,8 @@ export default function CustomerOrderDetailClient({
         <div className="mt-2">
           <h1 className="font-semibold">Konfirmasi Estimasi</h1>
           <h1 className="text-muted-foreground">
-            Pemilik kedai telah menerima pesanan anda
+            Pemilik kedai telah menerima pesanan anda, cek estimasi yang
+            diberikan
           </h1>
 
           <div className="grid grid-cols-2 gap-4 mt-2">
@@ -254,6 +269,7 @@ export default function CustomerOrderDetailClient({
       {![
         "COMPLETED",
         "CANCELLED",
+        "REJECTED",
         "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION",
       ].includes(order.status) && (
         <CancelOrderDialog

@@ -12,6 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { shopCartStatusMapping } from "@/constant/cart-status-mapping";
 import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
+import CustomBadge from "@/components/custom-badge";
+import { ShopCartStatus } from "@/app/generated/prisma";
 
 export default function CartPageClient({ userId }: { userId: string }) {
   const { data, isFetching, isError } = useQuery({
@@ -43,9 +45,18 @@ export default function CartPageClient({ userId }: { userId: string }) {
                   key={idx}
                 >
                   <Card className="relative">
-                    <Badge className="absolute -top-3 -right-2">
-                      {shopCartStatusMapping[shopCart.status]}
-                    </Badge>
+                    <div className="absolute -top-3 -right-2">
+                      <CustomBadge
+                        value={shopCart.status}
+                        successValues={[
+                          ShopCartStatus.ORDERED,
+                          ShopCartStatus.PENDING,
+                        ]}
+                        destructiveValues={[ShopCartStatus.REMOVED]}
+                      >
+                        {shopCartStatusMapping[shopCart.status]}
+                      </CustomBadge>
+                    </div>
                     <CardContent className="flex gap-4">
                       <Image
                         src={"/uploads/shop/" + shopCart.shop.image_url}

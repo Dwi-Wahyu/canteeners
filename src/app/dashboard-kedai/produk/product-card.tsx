@@ -2,10 +2,8 @@ import { Product } from "@/app/generated/prisma";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ToggleProductAvailable } from "./actions";
@@ -19,23 +17,23 @@ export default function ProductCard({ product }: { product: Product }) {
   const [isAvailable, setIsAvailable] = useState(product.is_available);
 
   const mutation = useMutation({
-    mutationFn: async (newStatus: boolean) => {
-      return await ToggleProductAvailable(product.id, newStatus);
+    mutationFn: async () => {
+      return await ToggleProductAvailable(product.id);
     },
     onSuccess: (data) => {
-      setIsAvailable((prev) => !prev);
-      toast.success("Status produk berhasil diperbarui!");
+      if (data.success) {
+        setIsAvailable((prev) => !prev);
+        toast.success("Status produk berhasil diperbarui!");
+      } else {
+        console.log(data.error.message);
+        toast.error(data.error.message);
+      }
     },
     onError: (error) => {
       console.error(error);
       toast.error("Gagal memperbarui status produk");
     },
   });
-
-  const handleToggle = () => {
-    const newStatus = !isAvailable;
-    mutation.mutate(newStatus);
-  };
 
   return (
     <Card className="max-w-xl">
@@ -60,7 +58,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <CardFooter className="gap-3 flex justify-end items-center border-t pt-3">
         <Button
-          onClick={handleToggle}
+          onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
           variant={isAvailable ? "default" : "destructive"}
         >

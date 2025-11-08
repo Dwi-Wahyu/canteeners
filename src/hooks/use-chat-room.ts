@@ -42,9 +42,9 @@ export function useChatRoom({
   }, [initialMessages]);
 
   // cek kenapa ini bekerja kalo di watch pi
-  useEffect(() => {
-    console.log(messages.length);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log(messages.length);
+  // }, [messages]);
 
   useEffect(() => {
     if (!connected) return;
@@ -107,7 +107,7 @@ export function useChatRoom({
     setText,
     media,
     setMedia,
-    messages, // ← dari store
+    messages,
     handleSend,
     isLoading,
     messagesEndRef,

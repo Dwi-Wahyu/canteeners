@@ -19,8 +19,6 @@ import ProductCard from "./product-card";
 import { IconTrash } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductsType = Awaited<ReturnType<typeof getProductsByOwnerId>>;
-
 export default function ProductClientPage({ owner_id }: { owner_id: string }) {
   const [productName, setProductName] = useState("");
 
