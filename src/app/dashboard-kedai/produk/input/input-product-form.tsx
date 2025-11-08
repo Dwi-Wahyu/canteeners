@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,7 @@ import { InputProduct, uploadProductImage } from "../actions";
 import { toast } from "sonner";
 import MultipleSelector from "@/components/multiple-select";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 export default function InputProductForm({
   shop_id,
@@ -45,6 +47,7 @@ export default function InputProductForm({
       description: "",
       image_url: "",
       price: "",
+      cost: "",
       shop_id,
       categories: [],
     },
@@ -66,6 +69,11 @@ export default function InputProductForm({
 
     if (isNaN(parsedPrice)) {
       form.setError("price", { message: "Harga tidak valid" });
+      return;
+    }
+
+    if (payload.cost && isNaN(parseInt(payload.cost))) {
+      form.setError("cost", { message: "Harga modal tidak valid" });
       return;
     }
 
@@ -149,6 +157,31 @@ export default function InputProductForm({
                   />
                 </div>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="cost"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Harga Modal</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
+                    Rp
+                  </div>
+                  <Input
+                    type="number"
+                    className="peer pl-9"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </div>
+              </FormControl>
+              <FormDescription>Untuk menghitung keuntungan</FormDescription>
               <FormMessage />
             </FormItem>
           )}

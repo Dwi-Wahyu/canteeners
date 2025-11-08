@@ -22,15 +22,18 @@ import { ChangeOrderEstimation } from "../actions";
 import { toast } from "sonner";
 import { IconLoader } from "@tabler/icons-react";
 import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
+import { OrderStatus } from "@/app/generated/prisma";
 
 export default function OrderEstimationSection({
   prev_estimation,
   processed_at,
   order_id,
+  status,
 }: {
   processed_at: Date | null;
   prev_estimation: number;
   order_id: string;
+  status: OrderStatus;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -129,18 +132,22 @@ export default function OrderEstimationSection({
         </AlertDialog>
       </div>
 
-      <div>
-        <h1 className="font-semibold">Diproses Pada</h1>
-        <h1>{formatToHour(processed_at)}</h1>
-      </div>
+      {status === "PROCESSING" && (
+        <>
+          <div>
+            <h1 className="font-semibold">Diproses Pada</h1>
+            <h1>{formatToHour(processed_at)}</h1>
+          </div>
 
-      <div>
-        <h1 className="font-semibold">Sisa Waktu</h1>
-        <OrderEstimationCountDown
-          estimation={estimation}
-          processed_at={processed_at}
-        />
-      </div>
+          <div>
+            <h1 className="font-semibold">Sisa Waktu</h1>
+            <OrderEstimationCountDown
+              estimation={estimation}
+              processed_at={processed_at}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

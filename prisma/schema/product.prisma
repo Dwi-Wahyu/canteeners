@@ -8,11 +8,12 @@ model Product {
     description String?
     image_url   String
     price       Float
-    shop        Shop        @relation(fields: [shop_id], references: [id])
+    cost        Float?
+    shop        Shop    @relation(fields: [shop_id], references: [id])
     shop_id     String
 
     order_items OrderItem[]
-    cart_items CartItem[]
+    cart_items  CartItem[]
 
     is_available Boolean @default(true)
 

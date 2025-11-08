@@ -48,6 +48,7 @@ export async function getCustomerOrderDetail(id: string) {
               name: true,
             },
           },
+          owner_id: true,
         },
       },
       testimony: true,

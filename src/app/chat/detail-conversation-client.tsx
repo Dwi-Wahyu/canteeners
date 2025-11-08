@@ -11,7 +11,6 @@ import { useChatRoom } from "@/hooks/use-chat-room";
 import ChatInput from "./chat-input";
 import OrderChatBubble from "./order-chat-bubble";
 import DetailConversationTopbar from "./detail-conversation-topbar";
-import { QuickChat } from "../generated/prisma";
 import { useQuery } from "@tanstack/react-query";
 import { getUserQuickChats } from "./server-queries";
 
@@ -28,7 +27,7 @@ export default function DetailConversationClient({
   role: string;
   order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
 }) {
-  const { messages, handleSend, isLoading, messagesEndRef } = useChatRoom({
+  const { messages, messagesEndRef } = useChatRoom({
     conversationId: conversation.id,
     senderId: sender_id,
     initialMessages: conversation.messages,
@@ -99,15 +98,17 @@ export default function DetailConversationClient({
                       </div>
                     )}
 
-                    <div
-                      className={`px-4 py-3 mt-1 rounded-xl shadow max-w-[80%] ${
-                        isSender
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-secondary-foreground"
-                      }`}
-                    >
-                      <p className="text-sm break-words">{msg.text}</p>
-                    </div>
+                    {msg.text && (
+                      <div
+                        className={`px-4 py-3 mt-1 rounded-xl shadow max-w-[80%] ${
+                          isSender
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-secondary-foreground"
+                        }`}
+                      >
+                        <p className="text-sm break-words">{msg.text}</p>
+                      </div>
+                    )}
                   </>
                 );
               }

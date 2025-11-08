@@ -101,7 +101,9 @@ export default function CartItemCard({
         />
         <div className="w-full">
           <div className="flex justify-between items-center w-full">
-            <h1 className="font-semibold">{cartItem.product.name}</h1>
+            <h1 className="font-semibold text-start">
+              {cartItem.product.name}
+            </h1>
 
             <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
               <DialogTrigger asChild>
@@ -117,7 +119,7 @@ export default function CartItemCard({
                   </DialogDescription>
 
                   <div className="text-start flex flex-col gap-2">
-                    <h1 className="text-center font-semibold">
+                    <h1 className="text-start font-semibold">
                       {cartItem.product.name}
                     </h1>
                     <div>
@@ -128,13 +130,13 @@ export default function CartItemCard({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Tambahkan catatan untuk produk ini..."
-                        disabled={disabled}
                       />
                     </div>
                     <Button
                       onClick={handleSave}
                       className="mt-4"
-                      disabled={mutation.isPending || disabled}
+                      size={"lg"}
+                      disabled={mutation.isPending}
                     >
                       {mutation.isPending ? "Menyimpan..." : "Simpan"}
                     </Button>

@@ -1,25 +1,8 @@
 "use client";
 
+import { calculateTimeRemaining } from "@/helper/calculate-time-remaining";
 import { formatToHour } from "@/helper/hour-helper";
 import { useEffect, useState } from "react";
-
-const calculateTimeRemaining = (targetTimeMs: number) => {
-  const nowMs = new Date().getTime();
-  const differenceMs = targetTimeMs - nowMs;
-
-  if (differenceMs <= 0) {
-    return "Selesai";
-  }
-
-  const totalSeconds = Math.floor(differenceMs / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-
-  const formattedMinutes = String(minutes).padStart(2, "0");
-  const formattedSeconds = String(seconds).padStart(2, "0");
-
-  return `${formattedMinutes}:${formattedSeconds}`;
-};
 
 export default function OrderEstimationCountDown({
   estimation,

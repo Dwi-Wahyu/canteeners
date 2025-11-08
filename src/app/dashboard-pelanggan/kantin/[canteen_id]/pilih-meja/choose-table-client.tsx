@@ -27,6 +27,7 @@ import { IconQrcodeOff, IconShoppingCart } from "@tabler/icons-react";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { NavigationButton } from "@/app/_components/navigation-button";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface SelectedTable {
   floor: number;
@@ -44,8 +45,20 @@ export default function ChooseTableClient({
   canteen_id: number;
   defaultSelectedTable: SelectedTable | null;
 }) {
+  const params = useSearchParams();
+  const floorSearchParams = params.get("floor");
+  const tableNumberSearchParams = params.get("table_number");
+
   const [selectedTable, setSelectedTable] = useState<SelectedTable | null>(
-    defaultSelectedTable
+    floorSearchParams &&
+      tableNumberSearchParams &&
+      !isNaN(parseInt(floorSearchParams)) &&
+      !isNaN(parseInt(tableNumberSearchParams))
+      ? {
+          floor: parseInt(floorSearchParams),
+          table_number: parseInt(tableNumberSearchParams),
+        }
+      : defaultSelectedTable
   );
 
   const defaultTab = canteen.maps[0]?.floor.toString() || "1";

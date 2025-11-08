@@ -8,6 +8,9 @@ export async function getShopOrders(owner_id: string) {
       shop: {
         owner_id,
       },
+      status: {
+        notIn: ["COMPLETED", "CANCELLED"],
+      },
     },
     select: {
       id: true,

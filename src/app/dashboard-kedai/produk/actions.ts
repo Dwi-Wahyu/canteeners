@@ -43,13 +43,14 @@ async function updateMinimumShopPrice(shop_id: string, minimum_price: number) {
 export async function InputProduct(
   payload: InputProductSchemaType
 ): Promise<ServerActionReturn<void>> {
-  const { price, categories, ...data } = payload;
+  const { price, cost, categories, ...data } = payload;
 
   try {
     const created = await prisma.product.create({
       data: {
         ...data,
         price: parseFloat(price),
+        ...(cost ? { cost: parseInt(cost) } : {}),
         ...(categories.length > 0
           ? {
               categories: {
@@ -98,7 +99,7 @@ export async function InputProduct(
 export async function UpdateProduct(
   payload: EditProductSchemaType
 ): Promise<ServerActionReturn<void>> {
-  const { price, categories, id, ...data } = payload;
+  const { price, cost, categories, id, ...data } = payload;
   const productPrice = parseFloat(price);
 
   try {
@@ -107,6 +108,7 @@ export async function UpdateProduct(
       data: {
         ...data,
         price: productPrice,
+        ...(cost ? { cost: parseInt(cost) } : {}),
         ...(categories.length > 0
           ? {
               categories: {

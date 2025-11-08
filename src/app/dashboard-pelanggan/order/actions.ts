@@ -101,13 +101,19 @@ export async function CancelOrder({
 
 export async function ConfirmEstimation({
   order_id,
-  paymentMethod,
+  shop_id,
+  conversation_id,
+  owner_id,
+  payment_method,
 }: {
   order_id: string;
-  paymentMethod: PaymentMethod;
+  shop_id: string;
+  conversation_id: string;
+  owner_id: string;
+  payment_method: PaymentMethod;
 }): Promise<ServerActionReturn<void>> {
   try {
-    if (paymentMethod === "CASH") {
+    if (payment_method === "CASH") {
       await prisma.order.update({
         where: {
           id: order_id,
@@ -128,6 +134,70 @@ export async function ConfirmEstimation({
         status: "WAITING_PAYMENT",
       },
     });
+
+    const shopPaymentExcludeCash = await prisma.payment.findFirst({
+      where: {
+        shop_id,
+        method: {
+          not: "CASH",
+        },
+      },
+    });
+
+    if (!shopPaymentExcludeCash) {
+      console.error("kedai belum menerima pembayaran non tunai");
+      return errorResponse("kedai belum menerima pembayaran non tunai");
+    }
+
+    if (payment_method === "QRIS") {
+      if (!shopPaymentExcludeCash.qr_url) {
+        console.error("kedai belum menerima pembayaran qris");
+        return errorResponse("kedai belum menerima pembayaran qris");
+      }
+
+      await prisma.message.create({
+        data: {
+          conversation_id,
+          sender_id: owner_id,
+          order_id: order_id,
+          type: "SYSTEM",
+          text: `Silakan kirim bukti pembayaran`,
+          media: {
+            create: {
+              url: shopPaymentExcludeCash.qr_url,
+              mime_type: "IMAGE",
+            },
+          },
+        },
+      });
+
+      revalidatePath(`/order/${order_id}`);
+
+      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
+    }
+
+    if (payment_method === "BANK_TRANSFER") {
+      if (!shopPaymentExcludeCash.account_number) {
+        console.error("kedai belum menerima pembayaran transfer bank");
+        return errorResponse("kedai belum menerima pembayaran transfer bank");
+      }
+
+      await prisma.message.create({
+        data: {
+          conversation_id,
+          sender_id: owner_id,
+          order_id: order_id,
+          type: "SYSTEM",
+          text: `Silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
+        },
+      });
+
+      revalidatePath(`/order/${order_id}`);
+
+      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
+    }
+
+    return errorResponse("Metode pembayaran tidak valid");
 
     revalidatePath("/dashboard-kedai/order/" + order_id);
     revalidatePath("/dashboard-pelanggan/order/" + order_id);

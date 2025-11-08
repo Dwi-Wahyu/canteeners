@@ -42,7 +42,10 @@ export default function CustomerOrderDetailClient({
     mutationFn: async () => {
       return await ConfirmEstimation({
         order_id: order.id,
-        paymentMethod: order.payment_method,
+        payment_method: order.payment_method,
+        conversation_id: order.conversation_id,
+        owner_id: order.shop.owner_id,
+        shop_id: order.shop_id,
       });
     },
     onSuccess(data) {
@@ -57,7 +60,7 @@ export default function CustomerOrderDetailClient({
           ),
         });
       } else {
-        notificationDialog.success({
+        notificationDialog.error({
           title: "Terjadi Kesalahan",
           message: data.error.message,
         });
@@ -141,41 +144,48 @@ export default function CustomerOrderDetailClient({
             <h1>{order.estimation} Menit</h1>
           </div>
 
-          <div>
-            <h1 className="font-semibold">Diproses Pada</h1>
-            <h1>{formatToHour(order.processed_at)}</h1>
-          </div>
+          {order.status === "PROCESSING" && (
+            <>
+              <div>
+                <h1 className="font-semibold">Diproses Pada</h1>
+                <h1>{formatToHour(order.processed_at)}</h1>
+              </div>
 
-          <div>
-            <h1 className="font-semibold">Sisa Waktu</h1>
-            <OrderEstimationCountDown
-              estimation={order.estimation}
-              processed_at={order.processed_at}
-            />
-          </div>
-        </div>
-      )}
-
-      {order.payment_method !== "CASH" && (
-        <div>
-          <h1 className="font-semibold mb-1">Bukti Pembayaran</h1>
-
-          {!order.payment_proof_url ? (
-            <SendPaymentProofForm
-              order_id={order.id}
-              conversation_id={order.conversation_id}
-              customer_id={order.customer_id}
-            />
-          ) : (
-            <Image
-              src={"/uploads/payment-proof/" + order.payment_proof_url}
-              width={400}
-              height={300}
-              alt="payment proof"
-            />
+              <div>
+                <h1 className="font-semibold">Sisa Waktu</h1>
+                <OrderEstimationCountDown
+                  estimation={order.estimation}
+                  processed_at={order.processed_at}
+                />
+              </div>
+            </>
           )}
         </div>
       )}
+
+      {order.payment_method !== "CASH" &&
+        ["WAITING_PAYMENT", "WAITING_SHOP_CONFIRMATION"].includes(
+          order.status
+        ) && (
+          <div>
+            <h1 className="font-semibold mb-1">Bukti Pembayaran</h1>
+
+            {!order.payment_proof_url ? (
+              <SendPaymentProofForm
+                order_id={order.id}
+                conversation_id={order.conversation_id}
+                customer_id={order.customer_id}
+              />
+            ) : (
+              <Image
+                src={"/uploads/payment-proof/" + order.payment_proof_url}
+                width={400}
+                height={300}
+                alt="payment proof"
+              />
+            )}
+          </div>
+        )}
 
       <div>
         <h1 className="font-semibold">Jenis Order</h1>

@@ -43,13 +43,7 @@ export default function ConversationListClient({
   return (
     <div>
       <div className="mx-auto container">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl font-semibold">Pesan Masuk</h1>
-
-          <Button size={"icon"}>
-            <IconFilter />
-          </Button>
-        </div>
+        <h1 className="text-lg font-semibold mb-4">Pesan Masuk</h1>
 
         <Input className="w-full mb-4" placeholder="Cari Nama . . ." />
 
@@ -97,7 +91,9 @@ export default function ConversationListClient({
                         )}
                       </ItemContent>
                       <ItemActions>
-                        <IconChevronRight />
+                        <div className="px-2 py-1 bg-primary text-primary-foreground rounded">
+                          {conversation._count.messages}
+                        </div>
                       </ItemActions>
                     </Item>
                   </Link>

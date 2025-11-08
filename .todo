@@ -55,6 +55,12 @@
 
 - add created_at attribute to shop cart model
 
-- fix ketika add cart item dan baru 1 harga tambahan tidak terhitung [[[[penting]]]]
+- fix ketika add cart item dan baru 1 harga tambahan tidak terhitung [[[[penting]]]] [done]
 
-- fix edit produk
+- fix tampilan order terkini untuk pemilik kedai
+
+- buat fungsi hapus item keranjang
+
+- fix edit produk [done]
+
+- fix jumlah pesan yang belum dibaca di list percakapan

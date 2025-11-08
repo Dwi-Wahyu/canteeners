@@ -138,7 +138,7 @@ async function recalculateShopCartTotal(tx: any, shopCartId: string) {
   });
 
   const newTotalPrice = cartItems.reduce((total: number, item: any) => {
-    return total + item.quantity * item.price_at_add;
+    return total + (item.price_at_add + 1000) * item.quantity;
   }, 0);
 
   await tx.shopCart.update({

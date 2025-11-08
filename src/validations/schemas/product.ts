@@ -5,6 +5,7 @@ export const InputProductSchema = z.object({
   description: z.string().optional(),
   image_url: z.string(),
   price: z.string().min(1, { message: "Harga produk harus diisi." }),
+  cost: z.string().optional().nullable(),
   shop_id: z.string().min(1, { message: "ID kedai harus diisi." }),
   categories: z.array(
     z.object({
@@ -22,6 +23,7 @@ export const EditProductSchema = z.object({
   description: z.string().optional(),
   image_url: z.string(),
   price: z.string().min(1, { message: "Harga produk harus diisi." }),
+  cost: z.string().optional().nullable(),
   shop_id: z.string().min(1, { message: "ID kedai harus diisi." }),
   categories: z.array(
     z.object({

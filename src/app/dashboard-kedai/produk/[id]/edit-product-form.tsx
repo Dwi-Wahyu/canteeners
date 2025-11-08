@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,8 +18,7 @@ import {
   EditProductSchema,
   EditProductSchemaType,
 } from "@/validations/schemas/product";
-import { toast } from "sonner";
-import { InputProduct, uploadProductImage } from "../actions";
+import { UpdateProduct, uploadProductImage } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Loader, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,8 @@ import { Category } from "@/app/generated/prisma";
 
 import MultipleSelector from "@/components/multiple-select";
 import { getProductIncludeCategory } from "../queries";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 export default function EditProductForm({
   initialData,
@@ -49,6 +51,7 @@ export default function EditProductForm({
       image_url: initialData.image_url,
       shop_id: initialData.shop_id,
       price: initialData.price.toString(),
+      cost: initialData.cost ? initialData.cost.toString() : "",
       categories: initialData.categories.map((each) => ({
         label: each.category.name,
         value: each.category.id.toString(),
@@ -58,7 +61,7 @@ export default function EditProductForm({
 
   const onSubmit = async (payload: EditProductSchemaType) => {
     if (files.length > 0) {
-      payload.image_url = await uploadProductImage(files[0], payload.name);
+      payload.image_url = await uploadProductImage(files[0]);
     }
 
     if (payload.image_url === "") {
@@ -73,14 +76,21 @@ export default function EditProductForm({
       return;
     }
 
-    const result = await InputProduct(payload);
+    if (payload.cost && isNaN(parseInt(payload.cost))) {
+      form.setError("cost", { message: "Harga modal tidak valid" });
+      return;
+    }
+
+    const result = await UpdateProduct(payload);
 
     if (result.success) {
-      toast.success(result.message);
+      notificationDialog.success({
+        title: "Sukses Edit Produk",
+      });
     } else {
-      console.log(result.error);
-
-      toast.error(result.error.message);
+      notificationDialog.error({
+        title: "Terjadi Kesalahan Saat Memperbarui Produk",
+      });
     }
   };
 
@@ -147,6 +157,31 @@ export default function EditProductForm({
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="cost"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Harga Modal</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
+                    Rp
+                  </div>
+                  <Input
+                    type="number"
+                    className="peer pl-9"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </div>
+              </FormControl>
+              <FormDescription>Untuk menghitung keuntungan</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="w-full">
           <FormLabel className="mb-2">Gambar</FormLabel>
 
@@ -184,20 +219,22 @@ export default function EditProductForm({
           )}
         />
 
-        <div className="flex justify-end gap-3">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? (
-              <>
-                <Loader className="animate-spin" /> Loading
-              </>
-            ) : (
-              <>
-                <Save />
-                Simpan
-              </>
-            )}
-          </Button>
-        </div>
+        <Button
+          size={"lg"}
+          disabled={form.formState.isSubmitting}
+          type="submit"
+        >
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader className="animate-spin" /> Loading
+            </>
+          ) : (
+            <>
+              <Save />
+              Simpan
+            </>
+          )}
+        </Button>
       </form>
     </Form>
   );

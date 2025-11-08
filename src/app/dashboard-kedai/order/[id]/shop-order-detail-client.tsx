@@ -221,6 +221,7 @@ export default function ShopOrderDetailClient({
 
       {order.estimation && (
         <OrderEstimationSection
+          status={order.status}
           prev_estimation={order.estimation}
           processed_at={order.processed_at}
           order_id={order.id}
@@ -275,26 +276,6 @@ export default function ShopOrderDetailClient({
               shop_id={order.shop_id}
             />
           </div>
-        </div>
-      )}
-
-      {order.status === "WAITING_SHOP_CONFIRMATION" && (
-        <div className="mt-2 flex flex-col gap-4">
-          <Button
-            size={"lg"}
-            onClick={handleConfirmPayment}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <IconLoader className="animate-spin" />
-            ) : (
-              "Konfirmasi Pembayaran"
-            )}
-          </Button>
-
-          <Button variant={"destructive"} size={"lg"}>
-            Batalkan Order
-          </Button>
         </div>
       )}
 

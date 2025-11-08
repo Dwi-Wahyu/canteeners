@@ -26,7 +26,6 @@ export function useChatRoom({
   senderId,
   initialMessages,
 }: UseChatRoomProps) {
-  // Ambil dari store
   const messages = socketStore((s) => s.messages);
   const connected = useIsSocketConnected();
   const sendMessage = useSocketSendMessage();
@@ -38,7 +37,6 @@ export function useChatRoom({
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Sinkronkan initialMessages ke store (hanya sekali)
   useEffect(() => {
     socketStore.setState({ messages: initialMessages });
   }, [initialMessages]);
@@ -48,7 +46,6 @@ export function useChatRoom({
     console.log(messages.length);
   }, [messages]);
 
-  // Join room saat connected
   useEffect(() => {
     if (!connected) return;
 
@@ -59,7 +56,6 @@ export function useChatRoom({
     };
   }, [connected, joinRoom, leaveRoom, conversationId]);
 
-  // Scroll ke bawah saat messages berubah
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

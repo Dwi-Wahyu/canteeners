@@ -37,12 +37,8 @@ export default function ConfirmOrderDialog({
   const { isPending, mutateAsync } = useMutation({
     mutationFn: async () => {
       return await ConfirmOrder({
-        conversation_id,
         estimation,
         order_id,
-        owner_id,
-        payment_method,
-        shop_id,
       });
     },
   });

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerShopCart } from "../server-queries";
 import { Button } from "@/components/ui/button";
 import CartItemCard from "./cart-item-card";
@@ -27,12 +26,9 @@ import ShopCartPaymentMethod from "./shop-cart-payment-method";
 import { useMutation } from "@tanstack/react-query";
 import { processShopCart } from "../actions";
 import { toast } from "sonner";
-import { useRouter } from "nextjs-toploader/app";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { HandPlatter } from "lucide-react";
 import { getCustomerProfile } from "@/app/admin/users/queries";
-import Image from "next/image";
 import { shopCartStatusMapping } from "@/constant/cart-status-mapping";
 import CustomBadge from "@/components/custom-badge";
 import PostOrderTypeTab from "./post-order-type-tab";
@@ -51,8 +47,6 @@ export default function ShopCartDetailClient({
   );
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [checkouted, setCheckouted] = useState(false);
-
-  const router = useRouter();
 
   const [postOrderType, setPostOrderType] = useState<PostOrderType>(
     shopCart.post_order_type
@@ -79,9 +73,9 @@ export default function ShopCartDetailClient({
         toast.success("Sukses checkout keranjang");
         notificationDialog.success({
           title: "Sukses checkout keranjang",
-          message: "Mengarahkan anda ke percakapan dengan pemilik kedai",
+          message: "Order berhasil dicatat",
           actionButtons: (
-            <div>
+            <div className="flex gap-2">
               <NavigationButton
                 url={"/dashboard-pelanggan/order/" + data.data?.order_id}
               >
@@ -135,21 +129,23 @@ export default function ShopCartDetailClient({
         </div>
       </div>
 
-      <div className="flex justify-between ">
-        <div>
-          <h1 className="font-semibold">Ada lagi yang mau dibeli?</h1>
-          <h1 className="text-muted-foreground text-sm">
-            Masih bisa tambah menu lain
-          </h1>
-        </div>
+      {shopCart.status === "PENDING" && (
+        <div className="flex justify-between ">
+          <div>
+            <h1 className="font-semibold">Ada lagi yang mau dibeli?</h1>
+            <h1 className="text-muted-foreground text-sm">
+              Masih bisa tambah menu lain
+            </h1>
+          </div>
 
-        <NavigationButton
-          url={`/dashboard-pelanggan/kantin/${shopCart.shop.canteen_id}/${shopCart.shop.id}?shop_cart_id=${shopCart.id}`}
-          variant={"outline"}
-        >
-          Tambah
-        </NavigationButton>
-      </div>
+          <NavigationButton
+            url={`/dashboard-pelanggan/kantin/${shopCart.shop.canteen_id}/${shopCart.shop.id}?shop_cart_id=${shopCart.id}`}
+            variant={"outline"}
+          >
+            Tambah
+          </NavigationButton>
+        </div>
+      )}
 
       <ShopCartPaymentMethod
         shopPayments={shopCart.shop.payments}

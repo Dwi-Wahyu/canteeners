@@ -28,7 +28,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { QuickChat } from "../generated/prisma";
 import { IconMessage, IconMessages } from "@tabler/icons-react";
 
 export default function ChatInput({
@@ -43,7 +42,7 @@ export default function ChatInput({
   >;
   sender_id: string;
   order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
-  quick_chats: QuickChat[] | undefined;
+  quick_chats: { message: string }[] | undefined;
   is_pending_quick_chat: boolean;
 }) {
   const [isUploading, setIsUploading] = React.useState(false);

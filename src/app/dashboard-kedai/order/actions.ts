@@ -1,54 +1,18 @@
 "use server";
 
-import { PaymentMethod } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { ServerActionReturn } from "@/types/server-action";
 import { revalidatePath } from "next/cache";
 
 export async function ConfirmOrder({
-  conversation_id,
   order_id,
-  owner_id,
-  payment_method,
-  shop_id,
   estimation,
 }: {
   order_id: string;
-  payment_method: PaymentMethod;
-  owner_id: string;
-  conversation_id: string;
-  shop_id: string;
   estimation: number;
 }): Promise<ServerActionReturn<void>> {
   try {
-    if (payment_method === "CASH") {
-      await prisma.order.update({
-        where: {
-          id: order_id,
-        },
-        data: {
-          status: "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION",
-          estimation,
-        },
-      });
-
-      revalidatePath(`/order/${order_id}`);
-
-      await prisma.message.create({
-        data: {
-          conversation_id,
-          sender_id: owner_id,
-          order_id: order_id,
-          type: "SYSTEM",
-          // text: `Pesanan diterima, estimasi ${estimation} menit, silakan lakukan pembayaran di kedai`,
-          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
-        },
-      });
-
-      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
-    }
-
     await prisma.order.update({
       where: {
         id: order_id,
@@ -59,74 +23,12 @@ export async function ConfirmOrder({
       },
     });
 
-    const shopPaymentExcludeCash = await prisma.payment.findFirst({
-      where: {
-        shop_id,
-        method: {
-          not: "CASH",
-        },
-      },
-    });
+    revalidatePath(`/dashboard-kedai/order/${order_id}`);
 
-    if (!shopPaymentExcludeCash) {
-      console.error("kedai belum menerima pembayaran non tunai");
-      return errorResponse("kedai belum menerima pembayaran non tunai");
-    }
-
-    if (payment_method === "QRIS") {
-      if (!shopPaymentExcludeCash.qr_url) {
-        console.error("kedai belum menerima pembayaran qris");
-        return errorResponse("kedai belum menerima pembayaran qris");
-      }
-
-      await prisma.message.create({
-        data: {
-          conversation_id,
-          sender_id: owner_id,
-          order_id: order_id,
-          type: "SYSTEM",
-          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
-          // text: `Pesanan diterima, estimasi ${estimation} menit, silakan kirim bukti pembayaran`,
-          media: {
-            create: {
-              url: shopPaymentExcludeCash.qr_url,
-              mime_type: "IMAGE",
-            },
-          },
-        },
-      });
-
-      revalidatePath(`/order/${order_id}`);
-
-      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
-    }
-
-    if (payment_method === "BANK_TRANSFER") {
-      if (!shopPaymentExcludeCash.account_number) {
-        console.error("kedai belum menerima pembayaran transfer bank");
-        return errorResponse("kedai belum menerima pembayaran transfer bank");
-      }
-
-      await prisma.message.create({
-        data: {
-          conversation_id,
-          sender_id: owner_id,
-          order_id: order_id,
-          type: "SYSTEM",
-          text: `Pesanan diterima, estimasi pengerjaan sekitar ${estimation} menit`,
-          // text: `Pesanan diterima, silakan transfer pada nomor rekening ${shopPaymentExcludeCash.account_number} ${shopPaymentExcludeCash.note}`,
-        },
-      });
-
-      revalidatePath(`/order/${order_id}`);
-
-      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
-    }
-
-    return errorResponse("Metode pembayaran tidak valid");
+    return successResponse(undefined, "Berhasil mengonfirmasi order");
   } catch (error) {
     console.error("confirmOrder Error:", error);
-    return errorResponse("Terjadi kesalahan saat mengonfirmasi pesanan");
+    return errorResponse("Terjadi kesalahan saat mengonfirmasi order");
   }
 }
 

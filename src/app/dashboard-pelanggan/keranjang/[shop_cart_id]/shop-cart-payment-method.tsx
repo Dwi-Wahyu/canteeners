@@ -6,10 +6,11 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { getCustomerShopCart } from "../server-queries";
-import { IconCash, IconQrcode, IconTransferOut } from "@tabler/icons-react";
+import { IconCash, IconCreditCard, IconQrcode } from "@tabler/icons-react";
 import { PaymentMethod } from "@/app/generated/prisma";
 import { paymentMethodMapping } from "@/constant/payment-method";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 export default function ShopCartPaymentMethod({
   shopPayments,
@@ -29,7 +30,7 @@ export default function ShopCartPaymentMethod({
       case "CASH":
         return <IconCash />;
       case "BANK_TRANSFER":
-        return <IconTransferOut />;
+        return <IconCreditCard />;
       case "QRIS":
         return <IconQrcode />;
       default:
@@ -44,20 +45,31 @@ export default function ShopCartPaymentMethod({
       <div className="flex flex-col gap-3">
         {shopPayments.map((payment, idx) => (
           <Item
-            onClick={() => setPaymentMethod(payment.method)}
+            onClick={() => {
+              if (disabled) {
+                toast.info("Keranjang telah dicheckout");
+              } else {
+                setPaymentMethod(payment.method);
+              }
+            }}
             key={idx}
             variant={"outline"}
+            className={`${
+              payment.method === paymentMethod
+                ? "bg-primary text-primary-foreground"
+                : ""
+            }`}
           >
             <ItemMedia>{getPaymentMethodIcon(payment.method)}</ItemMedia>
             <ItemContent>
               <ItemTitle>{paymentMethodMapping[payment.method]}</ItemTitle>
             </ItemContent>
-            <ItemActions>
+            {/* <ItemActions>
               <Checkbox
                 checked={payment.method === paymentMethod}
                 disabled={disabled}
               />
-            </ItemActions>
+            </ItemActions> */}
           </Item>
         ))}
       </div>
