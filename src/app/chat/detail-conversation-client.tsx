@@ -46,7 +46,7 @@ export default function DetailConversationClient({
   //   prevTrigger.current = readTrigger;
   // }, [readTrigger]);
 
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["user-quick-chats", sender_id],
     queryFn: async () => {
       return await getUserQuickChats(sender_id);
@@ -213,7 +213,7 @@ export default function DetailConversationClient({
             conversation={conversation}
             sender_id={sender_id}
             order_waiting_payment={order_waiting_payment}
-            is_pending_quick_chat={isPending}
+            is_pending_quick_chat={isLoading}
             quick_chats={data}
           />
         </div>

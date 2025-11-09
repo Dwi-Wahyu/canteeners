@@ -80,3 +80,9 @@
 - munculkan billing setiap kedai
 
 - fix ux pendaftaran (munculkan loading mengirim kode otp)
+
+- kasi muncul media sama order chat bubble di shop-conversation-details.tsx
+
+- buat fungsi hitung keuntungan total dari kedai (jangan dulu pake filter)
+
+- buat fungsi kasi muncul riwayat order kedai

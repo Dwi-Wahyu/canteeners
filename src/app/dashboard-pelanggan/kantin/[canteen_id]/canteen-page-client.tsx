@@ -67,7 +67,7 @@ export default function CanteenPageClient({ id }: { id: number }) {
 
                   <div className="flex gap-1 items-center">
                     <IconStar className="w-[15px] h-[14px]" />
-                    <h1 className="font-semibold">4.4</h1>
+                    <h1 className="font-semibold">{shop.average_rating}</h1>
                   </div>
                 </div>
               </Link>

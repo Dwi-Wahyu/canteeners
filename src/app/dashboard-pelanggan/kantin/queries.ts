@@ -17,6 +17,7 @@ export async function getCanteenById(id: number) {
           image_url: true,
           description: true,
           status: true,
+          average_rating: true,
           open_time: true,
           close_time: true,
           owner: {

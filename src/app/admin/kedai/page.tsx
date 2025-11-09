@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { getShops } from "./queries-action";
+import { getShops } from "./server-queries";
 import {
   Card,
   CardContent,
@@ -8,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { IconEye, IconPencil } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { shopOrderModeMapping } from "@/constant/order-mode-mapping";
 import { shopStatusMapping } from "@/constant/shop-status-mapping";

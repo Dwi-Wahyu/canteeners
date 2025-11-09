@@ -51,7 +51,7 @@ export default function HomeOrderSection({
             <EmptyMedia variant="icon">
               <IconReceiptOff />
             </EmptyMedia>
-            <EmptyTitle>Belum Ada Order Hari Ini</EmptyTitle>
+            <EmptyTitle>Belum Ada Order Terkini</EmptyTitle>
           </EmptyHeader>
         </Empty>
       )}

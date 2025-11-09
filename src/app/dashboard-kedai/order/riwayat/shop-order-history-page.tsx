@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getShopOrders } from "./server-queries";
 
 import {
   Empty,
@@ -10,7 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconEye, IconReceiptOff } from "@tabler/icons-react";
+import { IconReceiptOff } from "@tabler/icons-react";
 import {
   Item,
   ItemActions,
@@ -25,45 +24,23 @@ import { formatToHour } from "@/helper/hour-helper";
 import { Skeleton } from "@/components/ui/skeleton";
 import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import Link from "next/link";
-import { OrderStatus } from "@/app/generated/prisma";
-import {
-  calculateOrderEstimationRemainining,
-  calculateTimeRemaining,
-} from "@/helper/calculate-time-remaining";
-import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 
-export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
+import { getShopOrderHistory } from "../server-queries";
+
+export default function ShopOrderHistoryClient({
+  owner_id,
+}: {
+  owner_id: string;
+}) {
   const { data, isLoading } = useQuery({
     queryKey: ["shop-order-fetch", owner_id],
     queryFn: async () => {
-      return await getShopOrders(owner_id);
+      return await getShopOrderHistory(owner_id);
     },
   });
 
-  function getStatusColor(status: OrderStatus, time_remaining?: string) {
-    switch (status) {
-      case "PROCESSING":
-        if (time_remaining === "Selesai") {
-          return "destructive";
-        }
-        return "green";
-      default:
-        return "card";
-    }
-  }
-
   return (
     <div>
-      <TopbarWithBackButton
-        title="Daftar Order"
-        backUrl="/dashboard-kedai"
-        actionButton={
-          <Link href={"/dashboard-kedai/order/riwayat"}>
-            <img src="/icons/clock-reverse.svg" className="w-5 h-5" alt="" />
-          </Link>
-        }
-      />
-
       {isLoading && (
         <div className="flex flex-col gap-4">
           <Skeleton className="w-full h-10" />
@@ -79,10 +56,8 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
             <EmptyMedia variant="icon">
               <IconReceiptOff />
             </EmptyMedia>
-            <EmptyTitle>Belum Ada Order Terkini</EmptyTitle>
-            <EmptyDescription>
-              Order yang belum selesai akan muncul disini
-            </EmptyDescription>
+            <EmptyTitle>Belum Ada Order</EmptyTitle>
+            <EmptyDescription>Silakan Tambahkan Produk</EmptyDescription>
           </EmptyHeader>
         </Empty>
       )}
@@ -93,10 +68,7 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
             if (!order.estimation) {
               return (
                 <Link key={idx} href={`/dashboard-kedai/order/${order.id}`}>
-                  <Item
-                    variant={"outline"}
-                    className={`border-${getStatusColor(order.status)}`}
-                  >
+                  <Item variant={"outline"}>
                     <ItemHeader>
                       <h1>{order.order_items.length} Produk</h1>
 
@@ -124,20 +96,9 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
               );
             }
 
-            const { processed_at, estimation } = order;
-            const targetTimeMs = processed_at
-              ? new Date(processed_at).getTime() + estimation * 60 * 1000
-              : 0;
-
             return (
               <Link key={idx} href={`/dashboard-kedai/order/${order.id}`}>
-                <Item
-                  variant={"outline"}
-                  className={`border-${getStatusColor(
-                    order.status,
-                    calculateTimeRemaining(targetTimeMs)
-                  )}`}
-                >
+                <Item variant={"outline"}>
                   <ItemHeader>
                     <h1>{order.order_items.length} Produk</h1>
 
@@ -146,32 +107,11 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
 
                   <ItemContent>
                     <ItemTitle>{order.customer.name}</ItemTitle>
-                    <ItemDescription>
+                    {/* <ItemDescription>
                       {orderStatusMapping[order.status]}
-                    </ItemDescription>
+                    </ItemDescription> */}
                   </ItemContent>
-                  <ItemActions>
-                    {order.estimation && (
-                      <h1>
-                        <OrderEstimationCountDown
-                          estimation={order.estimation}
-                          processed_at={order.processed_at}
-                        />
-                      </h1>
-                    )}
-
-                    {order.estimation &&
-                      order.processed_at &&
-                      order.status === "PROCESSING" &&
-                      calculateOrderEstimationRemainining({
-                        estimation: order.estimation,
-                        processed_at: order.processed_at,
-                      }) === "Selesai" && (
-                        <div>
-                          <h1>Order Sudah Harus Diterima Pelanggan</h1>
-                        </div>
-                      )}
-                  </ItemActions>
+                  <ItemActions></ItemActions>
                 </Item>
               </Link>
             );

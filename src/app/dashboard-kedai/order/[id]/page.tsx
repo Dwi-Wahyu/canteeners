@@ -41,10 +41,6 @@ export default async function ShopOrderDetailPage({
 
       {order.status === "COMPLETED" && (
         <OrderReviewSection
-          customer={{
-            avatar: order.customer.avatar,
-            name: order.customer.name,
-          }}
           isUserCustomer={false}
           order_id={order.id}
           prevTestimony={order.testimony}

@@ -13,6 +13,7 @@ import { getShopDataAndRecentOrder } from "./owner-dashboard-queries";
 
 import HomeRefundSection from "./home-refund-section";
 import HomeOrderSection from "./home-order-section";
+import HomeShopMetrics from "./home-shop-metrics";
 
 export default async function OwnerDashboard() {
   const session = await auth();
@@ -41,59 +42,11 @@ export default async function OwnerDashboard() {
         current_status={shop.status}
       />
 
-      <div className="my-4 grid md:grid-cols-4 grid-cols-1 gap-4">
-        <DashboardCard
-          icon={<DollarSign />}
-          title="Keuntungan"
-          value="24.000"
-        />
-
-        <DashboardCard
-          icon={<BanknoteArrowDown />}
-          title="Transaksi Belum Selesai"
-          value="3"
-        />
-
-        <DashboardCard
-          icon={<BanknoteArrowUp />}
-          title="Transaksi Selesai"
-          value="10"
-        />
-
-        <DashboardCard
-          icon={<MessageCircleDashed />}
-          title="Pesan Belum Dibaca"
-          value="23"
-        />
-      </div>
+      <HomeShopMetrics shop_id={shop.id} />
 
       <HomeOrderSection orders={shop.orders} />
 
       <HomeRefundSection shop_id={shop.id} />
     </div>
-  );
-}
-
-function DashboardCard({
-  title,
-  value,
-  icon,
-}: {
-  title: string;
-  value: string;
-  icon: ReactNode;
-}) {
-  return (
-    <Card className="bg-gradient-to-t from-card to-card/10">
-      <CardContent className="flex justify-between items-center">
-        <div>
-          <CardTitle>{title}</CardTitle>
-
-          <h1 className="mt-2 text-lg font-semibold">{value}</h1>
-        </div>
-
-        {icon}
-      </CardContent>
-    </Card>
   );
 }
