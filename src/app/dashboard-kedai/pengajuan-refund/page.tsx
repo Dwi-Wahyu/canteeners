@@ -20,7 +20,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconTrash } from "@tabler/icons-react";
+import { IconChecks, IconTrash } from "@tabler/icons-react";
 import { NavigationButton } from "@/app/_components/navigation-button";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,11 +45,11 @@ export default async function OwnerRefundPage() {
         <Empty className="border">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <IconTrash />
+              <IconChecks />
             </EmptyMedia>
             <EmptyTitle>Tidak Ada Refund</EmptyTitle>
             <EmptyDescription>
-              Customer Belum Membuat Pengajuan
+              Tidak ada pengajuan refund pada kedai Anda.
             </EmptyDescription>
           </EmptyHeader>
         </Empty>

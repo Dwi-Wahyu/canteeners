@@ -6,6 +6,7 @@ import {
   IconCreditCard,
   IconExclamationCircle,
   IconFileTextShield,
+  IconMessageCircleUser,
   IconMessageUser,
   IconUser,
 } from "@tabler/icons-react";
@@ -54,6 +55,20 @@ export default async function OwnerSettingsPage() {
           </ItemMedia>
           <ItemContent>
             <ItemTitle>Edit Data Kedai</ItemTitle>
+          </ItemContent>
+          <ItemActions>
+            <IconChevronRight className="size-4" />
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <Item variant="outline" size="sm" className="mb-4" asChild>
+        <Link href="/dashboard-kedai/ulasan-pelanggan">
+          <ItemMedia>
+            <IconMessageCircleUser className="size-5" />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Ulasan Pelanggan</ItemTitle>
           </ItemContent>
           <ItemActions>
             <IconChevronRight className="size-4" />

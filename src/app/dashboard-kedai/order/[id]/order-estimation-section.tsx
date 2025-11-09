@@ -23,6 +23,8 @@ import { toast } from "sonner";
 import { IconLoader } from "@tabler/icons-react";
 import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import { OrderStatus } from "@/app/generated/prisma";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { useSocketUpdateOrder } from "@/hooks/use-socket";
 
 export default function OrderEstimationSection({
   prev_estimation,
@@ -41,7 +43,7 @@ export default function OrderEstimationSection({
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: async () => {
-      return ChangeOrderEstimation({ estimation, order_id });
+      return ChangeOrderEstimation({ estimation, order_id, status });
     },
   });
 
@@ -51,12 +53,29 @@ export default function OrderEstimationSection({
 
   const estimationOptions = [5, 10, 30, 60];
 
+  const socketOrderUpdate = useSocketUpdateOrder();
+
   async function handleChange() {
     const result = await mutateAsync();
     if (result.success) {
-      toast.success(result.message);
+      setOpen(false);
+      socketOrderUpdate(order_id);
+      notificationDialog.success({
+        title: "Estimasi Berhasil Diubah",
+        message: result.message,
+        actionButtons: (
+          <Button onClick={notificationDialog.hide}>Mengerti</Button>
+        ),
+      });
     } else {
-      toast.error(result.error.message);
+      setOpen(false);
+      notificationDialog.error({
+        title: "Estimasi Berhasil Diubah",
+        message: result.error.message,
+        actionButtons: (
+          <Button onClick={notificationDialog.hide}>Mengerti</Button>
+        ),
+      });
     }
   }
 
@@ -68,68 +87,72 @@ export default function OrderEstimationSection({
           <h1>{estimation} Menit</h1>
         </div>
 
-        <AlertDialog open={open} onOpenChange={setOpen}>
-          <AlertDialogTrigger asChild>
-            <Button size={"icon"}>
-              <Pencil />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader className="text-start">
-              <AlertDialogTitle>Ubah Estimasi Pesanan</AlertDialogTitle>
-              <AlertDialogDescription>
-                Masukkan estimasi baru
-              </AlertDialogDescription>
-
-              <div className="relative mt-2">
-                <Input
-                  type="number"
-                  value={estimation}
-                  onChange={(e) => setEstimation(parseInt(e.target.value) || 0)}
-                  disabled={isPending}
-                  className="peer pr-13"
-                />
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-sm peer-disabled:opacity-50">
-                  Menit
-                </span>
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                {estimationOptions.map((value) => (
-                  <Button
-                    key={value}
-                    type="button"
-                    variant={estimation === value ? "default" : "outline"}
-                    onClick={() => handleEstimationClick(value)}
-                    disabled={isPending}
-                  >
-                    {value}
-                  </Button>
-                ))}
-              </div>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="grid grid-cols-2 gap-4">
-              <AlertDialogCancel asChild>
-                <Button size={"lg"} variant={"outline"}>
-                  Batal
-                </Button>
-              </AlertDialogCancel>
-              <Button
-                size={"lg"}
-                disabled={isPending || estimation <= 0}
-                onClick={handleChange}
-              >
-                {isPending ? (
-                  <>
-                    <IconLoader className="animate-spin" /> Mengubah
-                  </>
-                ) : (
-                  <>Ubah</>
-                )}
+        {!["COMPLETED", "CANCELLED"].includes(status) && (
+          <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+              <Button size={"icon"}>
+                <Pencil />
               </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader className="text-start">
+                <AlertDialogTitle>Ubah Estimasi Pesanan</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Masukkan estimasi baru
+                </AlertDialogDescription>
+
+                <div className="relative mt-2">
+                  <Input
+                    type="number"
+                    value={estimation}
+                    onChange={(e) =>
+                      setEstimation(parseInt(e.target.value) || 0)
+                    }
+                    disabled={isPending}
+                    className="peer pr-13"
+                  />
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-sm peer-disabled:opacity-50">
+                    Menit
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-4 gap-4">
+                  {estimationOptions.map((value) => (
+                    <Button
+                      key={value}
+                      type="button"
+                      variant={estimation === value ? "default" : "outline"}
+                      onClick={() => handleEstimationClick(value)}
+                      disabled={isPending}
+                    >
+                      {value}
+                    </Button>
+                  ))}
+                </div>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="grid grid-cols-2 gap-4">
+                <AlertDialogCancel asChild>
+                  <Button size={"lg"} variant={"outline"}>
+                    Batal
+                  </Button>
+                </AlertDialogCancel>
+                <Button
+                  size={"lg"}
+                  disabled={isPending || estimation <= 0}
+                  onClick={handleChange}
+                >
+                  {isPending ? (
+                    <>
+                      <IconLoader className="animate-spin" /> Mengubah
+                    </>
+                  ) : (
+                    <>Ubah</>
+                  )}
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
 
       {status === "PROCESSING" && (

@@ -17,6 +17,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { ConfirmOrder } from "../actions";
 import { PaymentMethod } from "@/app/generated/prisma";
+import { useSocketUpdateOrder } from "@/hooks/use-socket";
 
 export default function ConfirmOrderDialog({
   conversation_id,
@@ -43,11 +44,14 @@ export default function ConfirmOrderDialog({
     },
   });
 
+  const socketOrderUpdate = useSocketUpdateOrder();
+
   async function handleConfirm() {
     const result = await mutateAsync();
 
     if (result.success) {
       setOpen(false);
+      socketOrderUpdate(order_id);
     } else {
       console.log(result.error);
     }

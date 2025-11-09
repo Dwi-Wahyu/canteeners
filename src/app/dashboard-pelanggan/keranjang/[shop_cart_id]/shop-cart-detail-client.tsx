@@ -20,6 +20,7 @@ import {
   PaymentMethod,
   PostOrderType,
   ShopCartStatus,
+  ShopStatus,
 } from "@/app/generated/prisma";
 import SnkCheckoutDialog from "./snk-checkout-dialog";
 import ShopCartPaymentMethod from "./shop-cart-payment-method";
@@ -33,13 +34,23 @@ import { shopCartStatusMapping } from "@/constant/cart-status-mapping";
 import CustomBadge from "@/components/custom-badge";
 import PostOrderTypeTab from "./post-order-type-tab";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import { shopStatusMapping } from "@/constant/shop-status-mapping";
+import { formatToHour } from "@/helper/hour-helper";
+import { useSocketSendNewOrder } from "@/hooks/use-socket";
 
 export default function ShopCartDetailClient({
   shopCart,
   customerProfile,
+  ableToCheckout,
+  open_time,
+  close_time,
 }: {
   shopCart: NonNullable<Awaited<ReturnType<typeof getCustomerShopCart>>>;
   customerProfile: NonNullable<Awaited<ReturnType<typeof getCustomerProfile>>>;
+  ableToCheckout: boolean;
+  open_time: Date | null;
+  close_time: Date | null;
 }) {
   const [showSnk, setShowSnk] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
@@ -56,8 +67,9 @@ export default function ShopCartDetailClient({
     setShowSnk(true);
   }
 
+  const socketSendNewOrder = useSocketSendNewOrder();
+
   const mutations = useMutation({
-    mutationKey: ["process-shop-cart"],
     mutationFn: async () => {
       return await processShopCart({
         shopCartId: shopCart.id,
@@ -70,28 +82,46 @@ export default function ShopCartDetailClient({
     onSuccess(data) {
       if (data.success) {
         setShowSnk(false);
-        toast.success("Sukses checkout keranjang");
+
+        if (data.data) {
+          socketSendNewOrder({
+            order_id: data.data.order_id as string,
+            receiver_id: shopCart.shop.owner_id,
+          });
+        }
         notificationDialog.success({
           title: "Sukses checkout keranjang",
           message: "Order berhasil dicatat",
           actionButtons: (
             <div className="flex gap-2">
-              <NavigationButton
-                url={"/dashboard-pelanggan/order/" + data.data?.order_id}
-              >
-                Lihat Detail Order
-              </NavigationButton>
-              <NavigationButton
-                url={"/dashboard-pelanggan/chat/" + data.data?.conversation_id}
+              <Button onClick={notificationDialog.hide} asChild>
+                <Link
+                  href={"/dashboard-pelanggan/order/" + data.data?.order_id}
+                >
+                  Lihat Detail Order
+                </Link>
+              </Button>
+              <Button
                 variant="default"
+                onClick={notificationDialog.hide}
+                asChild
               >
-                Hubungi Pemilik Kedai
-              </NavigationButton>
+                <Link
+                  href={
+                    "/dashboard-pelanggan/chat/" + data.data?.conversation_id
+                  }
+                >
+                  Hubungi Pemilik Kedai
+                </Link>
+              </Button>
             </div>
           ),
         });
       } else {
-        toast.error(data.error.message);
+        notificationDialog.error({
+          title: "Gagal checkout keranjang",
+          message: data.error.message,
+        });
       }
     },
   });
@@ -104,16 +134,31 @@ export default function ShopCartDetailClient({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex  gap-1 items-center justify-between">
-        <h1 className="font-semibold text-lg">{shopCart.shop.name}</h1>
-        <CustomBadge
-          value={shopCart.status}
-          outlineValues={[ShopCartStatus.PENDING]}
-          successValues={[ShopCartStatus.ORDERED]}
-        >
-          {shopCartStatusMapping[shopCart.status]}
-        </CustomBadge>
-      </div>
+      <Card>
+        <CardContent>
+          <div className="flex  gap-1 items-center justify-between">
+            <h1 className="font-semibold text-lg">{shopCart.shop.name}</h1>
+
+            <CustomBadge
+              value={shopCart.shop.status}
+              destructiveValues={[ShopStatus.INACTIVE]}
+              successValues={[ShopStatus.ACTIVE]}
+            >
+              {shopStatusMapping[shopCart.shop.status]}
+            </CustomBadge>
+          </div>
+
+          {open_time && close_time && (
+            <div>
+              <h1 className="mt-2">Jam Operasional</h1>
+
+              <h1 className="text-muted-foreground">
+                {formatToHour(open_time)} - {formatToHour(close_time)}
+              </h1>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="">
         <h1 className="font-semibold mb-2">Daftar Pesanan</h1>
@@ -123,6 +168,7 @@ export default function ShopCartDetailClient({
             <CartItemCard
               cartItem={item}
               disabled={shopCart.status === "ORDERED"}
+              disabledDeleteButton={shopCart.items.length === 1}
               key={idx}
             />
           ))}
@@ -205,7 +251,7 @@ export default function ShopCartDetailClient({
           className="w-full bg-gradient-to-t from-primary to-primary/80 border border-primary flex justify-between py-6 items-center"
           size={"lg"}
           onClick={handleClickCheckout}
-          disabled={customerProfile.suspend_until !== null}
+          disabled={customerProfile.suspend_until !== null || !ableToCheckout}
         >
           <h1>{shopCart.items.length} Item</h1>
 

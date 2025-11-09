@@ -10,26 +10,59 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconMessageCircleUser, IconStar } from "@tabler/icons-react";
-import { getShopTestimonies } from "./queries";
+import {
+  IconMessageCircleUser,
+  IconStar,
+  IconThumbUp,
+} from "@tabler/icons-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default function ShopTestimonyDisplayClient({
-  shop_id,
+import { getShopRatings, getShopTestimonies } from "../server-queries";
+
+export default function ShopDashboardTestimonyClient({
+  shopRatings,
+  owner_id,
 }: {
-  shop_id: string;
+  shopRatings: NonNullable<Awaited<ReturnType<typeof getShopRatings>>>;
+  owner_id: string;
 }) {
   const { data, isLoading } = useQuery({
-    queryKey: ["shop-testimony-display", shop_id],
+    queryKey: ["shop-testimony-display", owner_id],
     queryFn: async () => {
-      return await getShopTestimonies(shop_id);
+      return await getShopTestimonies(owner_id);
     },
   });
 
   return (
     <div>
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        <Card>
+          <CardContent className="flex flex-col items-center gap-1">
+            <h1 className="font-semibold text-lg">Rating Toko</h1>
+            <div className="flex gap-1 items-center">
+              <IconStar className="w-5 h-5" />
+              <h1 className="font-semibold text-lg">
+                {shopRatings.average_rating.toFixed(1)}{" "}
+              </h1>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex flex-col items-center gap-1">
+            <h1 className="font-semibold text-lg">Jumlah Ulasan</h1>
+            <div className="flex gap-1 items-center">
+              <IconThumbUp className="w-5 h-5" />
+              <h1 className="font-semibold text-lg">
+                {shopRatings.total_ratings}{" "}
+              </h1>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {isLoading && (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           <Skeleton className="w-full h-52" />
@@ -83,10 +116,9 @@ function EmptyTestimony() {
         <EmptyMedia variant="icon">
           <IconMessageCircleUser />
         </EmptyMedia>
-        <EmptyTitle>Belum Ada Testimoni</EmptyTitle>
+        <EmptyTitle>Belum Ada Ulasan</EmptyTitle>
         <EmptyDescription>
-          Belum ada testimoni dari pelanggan. Jadilah yang pertama memberikan
-          pengalamanmu!
+          Berikan pelayanan terbaik agar pelanggan memberikan ulasan positif
         </EmptyDescription>
       </EmptyHeader>
     </Empty>

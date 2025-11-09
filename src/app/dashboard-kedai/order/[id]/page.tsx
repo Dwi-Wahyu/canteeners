@@ -5,6 +5,7 @@ import ShopOrderDetailClient from "./shop-order-detail-client";
 import { auth } from "@/config/auth";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import OrderReviewSection from "@/app/order/[id]/order-review-section";
+import OrderUiInfoDialog from "@/app/order/order-ui-info-dialog";
 
 export default async function ShopOrderDetailPage({
   params,
@@ -31,7 +32,10 @@ export default async function ShopOrderDetailPage({
 
   return (
     <div className="flex flex-col gap-5">
-      <TopbarWithBackButton title="Detail Order" />
+      <TopbarWithBackButton
+        title="Detail Order"
+        actionButton={<OrderUiInfoDialog />}
+      />
 
       <ShopOrderDetailClient order={order} />
 

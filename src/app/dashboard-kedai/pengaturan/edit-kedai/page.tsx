@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getShopById } from "../queries";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import EditShopForm from "./edit-shop-form";
-import BackButton from "@/app/_components/back-button";
 import { Card, CardContent } from "@/components/ui/card";
+import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 
 export default async function EditShopPage() {
   const session = await auth();
@@ -21,11 +21,10 @@ export default async function EditShopPage() {
 
   return (
     <div>
-      <BackButton />
+      <TopbarWithBackButton title="Edit Data Kedai" />
 
-      <Card className="mt-4">
+      <Card>
         <CardContent>
-          <h1 className="text-lg font-semibold mb-4">Edit Profil Kedai</h1>
           <EditShopForm initialData={shop} />
         </CardContent>
       </Card>

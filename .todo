@@ -71,4 +71,12 @@
 
 - fix munculkan nomor rekening jika transfer bank setelah konfirmasi estimasi
 
-- fix fetch ulang data order dari signal websocket
+- fix fetch ulang data order dari signal websocket [done]
+
+- buat watch notifikasi chat
+
+- disabled checkout keranjang ketika diluar jam operasional atau cek kalau status inactive [done]
+
+- munculkan billing setiap kedai
+
+- fix ux pendaftaran (munculkan loading mengirim kode otp)

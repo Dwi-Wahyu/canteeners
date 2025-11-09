@@ -1,5 +1,7 @@
 import { socketStore } from "@/store/socket";
 
+export const useSocket = () => socketStore((state) => state.socket);
+
 export const useIsSocketConnected = () =>
   socketStore((state) => state.connected);
 
@@ -20,3 +22,9 @@ export const useSocketSubscribeOrder = () =>
 
 export const useSocketUnsubscribeOrder = () =>
   socketStore((state) => state.unsubscribeOrder);
+
+export const useSocketUpdateOrder = () =>
+  socketStore((state) => state.updateOrder);
+
+export const useSocketSendNewOrder = () =>
+  socketStore((state) => state.sendNewOrder);

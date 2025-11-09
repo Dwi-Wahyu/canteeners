@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { getRefund } from "../queries";
 import {
+  refundDisbursementModeMapping,
   refundReasonMapping,
   refundStatusMapping,
 } from "@/constant/refund-mapping";
@@ -54,12 +55,11 @@ export default function RefundDetailClient({
           </div>
 
           <div className="flex gap-2">
-            <NavigationButton size="icon" url={"/order/" + refund.order.id}>
+            <NavigationButton url={"/order/" + refund.order.id}>
               <IconReceipt />
             </NavigationButton>
 
             <NavigationButton
-              size="icon"
               url={"/dashboard-kedai/chat/" + refund.order.conversation_id}
             >
               <IconMessageCircle />
@@ -99,6 +99,14 @@ export default function RefundDetailClient({
           >
             {refundStatusMapping[refund.status]}
           </CustomBadge>
+        </div>
+
+        <div>
+          <h1 className="font-semibold">Mode Pengembalian Dana</h1>
+
+          <h1 className="text-muted-foreground">
+            {refundDisbursementModeMapping[refund.disbursement_mode]}
+          </h1>
         </div>
 
         {refund.status === "REJECTED" && (

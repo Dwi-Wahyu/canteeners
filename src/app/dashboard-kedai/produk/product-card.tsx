@@ -52,7 +52,32 @@ export default function ProductCard({ product }: { product: Product }) {
             <CardDescription>{product.description}</CardDescription>{" "}
           </div>
           <div className="p-0">
-            <h1 className="font-semibold text-primary">Rp {product.price}</h1>
+            <div className="flex justify-between items-center">
+              <h1>Harga Jual</h1>
+
+              <h1 className="text-muted-foreground">Rp {product.price}</h1>
+            </div>
+            <div className="flex justify-between items-center">
+              <h1>Harga Modal</h1>
+
+              {!product.cost ? (
+                <h1 className="text-muted-foreground">N/A</h1>
+              ) : (
+                <h1 className="text-muted-foreground">Rp {product.cost}</h1>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center">
+              <h1>Margin</h1>
+
+              {!product.cost ? (
+                <h1 className="text-muted-foreground">N/A</h1>
+              ) : (
+                <h1 className="text-primary font-semibold">
+                  Rp {product.price - product.cost}
+                </h1>
+              )}
+            </div>
           </div>
         </div>
       </div>

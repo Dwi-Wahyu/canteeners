@@ -25,6 +25,7 @@ import { PasswordInput } from "@/components/password-input";
 import { useState } from "react";
 import OtpForm from "./otp-form";
 import ConfirmSNKPage from "./confirm-snk-page";
+import { checkUsernameUsed } from "./actions";
 
 export function SignupForm({
   className,
@@ -48,7 +49,15 @@ export function SignupForm({
   });
 
   const onSubmit = async (data: SignUpSchemaType) => {
-    console.log(data);
+    const usernameExists = await checkUsernameUsed(data.username);
+
+    if (usernameExists) {
+      form.setError("username", {
+        type: "manual",
+        message: "Username sudah digunakan, silakan pilih yang lain",
+      });
+      return;
+    }
 
     setCustomerData(data);
     setShowOTPForm(true);

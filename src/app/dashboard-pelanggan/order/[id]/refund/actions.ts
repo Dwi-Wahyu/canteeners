@@ -23,17 +23,37 @@ export async function InputRefund(
   const { amount, ...data } = payload;
 
   try {
+    const findOrder = await prisma.order.findFirst({
+      where: {
+        id: data.order_id,
+      },
+      select: {
+        shop: {
+          select: {
+            refund_disbursement_mode: true,
+          },
+        },
+      },
+    });
+
+    if (!findOrder) {
+      return errorResponse("Order tidak ditemukan");
+    }
+
     const created = await prisma.refund.create({
       data: {
         ...data,
+        disbursement_mode: findOrder.shop.refund_disbursement_mode,
         amount: parseFloat(amount),
       },
     });
 
     console.log(created);
 
-    return successResponse(undefined, "Sukses input pengajuan");
+    return successResponse(undefined, "Sukses input pengajuan refund");
   } catch (error) {
-    return errorResponse("Terjadi kesalahan");
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan saat mengajukan refund");
   }
 }

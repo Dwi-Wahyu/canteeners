@@ -18,7 +18,12 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { IconLoader, IconMap, IconNote } from "@tabler/icons-react";
+import {
+  IconLoader,
+  IconMap,
+  IconNote,
+  IconShoppingCartExclamation,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { paymentMethodMapping } from "@/constant/payment-method";
@@ -33,11 +38,15 @@ import { CompleteOrder, ConfirmPayment } from "../actions";
 import { useEffect, useTransition } from "react";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
 import {
+  useSocket,
   useSocketSubscribeOrder,
   useSocketUnsubscribeOrder,
+  useSocketUpdateOrder,
 } from "@/hooks/use-socket";
 import RejectOrderDialog from "./reject-order-dialog";
+import { useRouter } from "nextjs-toploader/app";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import CancelOrderDialog from "./cancel-order-dialog";
 
 export default function ShopOrderDetailClient({
   order,
@@ -47,6 +56,9 @@ export default function ShopOrderDetailClient({
   const [isPending, startTransition] = useTransition();
   const subscribeOrder = useSocketSubscribeOrder();
   const unsubscribeOrder = useSocketUnsubscribeOrder();
+  const socket = useSocket();
+  const router = useRouter();
+  const socketOrderUpdate = useSocketUpdateOrder();
 
   async function handleCompleteOrder() {
     startTransition(async () => {
@@ -57,6 +69,7 @@ export default function ShopOrderDetailClient({
       });
 
       if (result.success) {
+        socketOrderUpdate(order.id);
         notificationDialog.success({
           title: "Order Telah Selesai !",
           message: "Terima kasih sudah bekerja sama dengan canteeners 😊🙏",
@@ -73,33 +86,29 @@ export default function ShopOrderDetailClient({
   useEffect(() => {
     subscribeOrder(order.id);
 
+    if (socket) {
+      socket.onmessage = (event) => {
+        let data: any;
+        try {
+          data = JSON.parse(event.data);
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+        if (data.type === "UPDATE_ORDER") {
+          // toast.info("Status order diperbarui");
+          router.refresh();
+        }
+      };
+    }
+
     return () => {
       unsubscribeOrder(order.id);
     };
-  }, [order.id, subscribeOrder, unsubscribeOrder]);
+  }, [order.id, socket, subscribeOrder, unsubscribeOrder]);
 
   return (
     <div className="flex flex-col gap-2">
-      <div>
-        <h1 className="font-semibold mb-1">Pelanggan</h1>
-        <div className="flex gap-2 items-center">
-          <Avatar className="size-10">
-            <AvatarImage
-              src={`/uploads/avatar/` + order.customer.avatar}
-              alt="Hallie Richards"
-            />
-            <AvatarFallback className="text-xs">HR</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="font-semibold">{order.customer.name}</h1>
-            <h1 className="">
-              {formatDateWithoutYear(order.created_at)}{" "}
-              {formatToHour(order.created_at)}
-            </h1>
-          </div>
-        </div>
-      </div>
-
       <div>
         <h1 className="font-semibold">Status</h1>
 
@@ -117,6 +126,23 @@ export default function ShopOrderDetailClient({
           {orderStatusMapping[order.status]}
         </CustomBadge>
       </div>
+
+      {order.status === "CANCELLED" &&
+        order.cancelled_by_id === order.customer_id && (
+          <Alert variant={"destructive"}>
+            <IconShoppingCartExclamation />
+            <AlertTitle>Pesanan Dibatalkan Oleh Pelanggan</AlertTitle>
+            <AlertDescription>{order.rejected_reason}</AlertDescription>
+          </Alert>
+        )}
+
+      {order.status === "ESTIMATION_REJECTED" && (
+        <Alert variant={"destructive"}>
+          <IconShoppingCartExclamation />
+          <AlertTitle>Estimasi Ditolak</AlertTitle>
+          <AlertDescription>{order.rejected_reason}</AlertDescription>
+        </Alert>
+      )}
 
       <div>
         <h1 className="font-semibold mb-1">Pesanan</h1>
@@ -161,6 +187,27 @@ export default function ShopOrderDetailClient({
         <h1 className="font-semibold">Metode Pembayaran</h1>
         <h1>{paymentMethodMapping[order.payment_method]}</h1>
       </div>
+
+      {order.payment_method === "CASH" &&
+        order.status === "WAITING_SHOP_CONFIRMATION" && (
+          <div>
+            <h1 className="font-semibold mb-1">Konfirmasi Pembayaran Tunai</h1>
+
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              <CancelOrderDialog
+                order_id={order.id}
+                order_status={order.status}
+                user_id={order.shop.owner_id}
+              />
+
+              <ConfirmPaymentDialog
+                conversation_id={order.conversation_id}
+                order_id={order.id}
+                owner_id={order.shop.owner_id}
+              />
+            </div>
+          </div>
+        )}
 
       {order.payment_method !== "CASH" && (
         <div>
@@ -267,9 +314,11 @@ export default function ShopOrderDetailClient({
 
       {order.status === "PROCESSING" && (
         <div className="mt-2 grid grid-cols-2 gap-4">
-          <Button variant={"destructive"} size={"lg"}>
-            Batalkan Order
-          </Button>
+          <CancelOrderDialog
+            order_id={order.id}
+            order_status={order.status}
+            user_id={order.shop.owner_id}
+          />
 
           <Button
             size={"lg"}

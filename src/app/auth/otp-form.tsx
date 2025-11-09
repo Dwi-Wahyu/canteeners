@@ -52,7 +52,7 @@ export default function OtpForm({
 
     const otpGenerated = generateSecureOTP();
 
-    const result = await SendOTPCode(otpGenerated, customerData?.email);
+    const result = await SendOTPCode(otpGenerated, customerData.email);
 
     if (result.success) {
       toast.success(result.message);
@@ -103,13 +103,14 @@ export default function OtpForm({
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Kode OTP Berhasil Dikirim</CardTitle>
+        <CardTitle className="text-xl">Masukkan Kode OTP</CardTitle>
         <CardDescription>Cek Inbox Email Anda</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <InputOTP
           maxLength={4}
           value={otpInput}
+          disabled={isLoading}
           onChange={(value) => setOtpInput(value)}
         >
           <InputOTPGroup>

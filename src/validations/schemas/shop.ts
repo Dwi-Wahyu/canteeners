@@ -70,6 +70,7 @@ export const UpdateShopSchema = z.object({
   description: z.string().optional(),
   image_url: z.string(),
   order_mode: z.enum(["PREORDER_ONLY", "READY_ONLY", "BOTH"]),
+  refund_disbursement_mode: z.enum(["CASH", "TRANSFER"]),
   open_time: z
     .string()
     .regex(timeRegex, { message: "Format waktu harus HH:MM yang valid." }) // Tambahkan regex
@@ -80,7 +81,6 @@ export const UpdateShopSchema = z.object({
     .regex(timeRegex, { message: "Format waktu harus HH:MM yang valid." }) // Tambahkan regex
     .optional()
     .nullable(),
-  refund_disbursement_mode: z.enum(Object.values(RefundDisbursementMode)),
 });
 
 export type UpdateShopSchemaType = z.infer<typeof UpdateShopSchema>;

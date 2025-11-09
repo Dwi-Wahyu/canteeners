@@ -488,3 +488,58 @@ export async function getOrCreateCustomerCart(user_id: string) {
 
   return cart.id;
 }
+
+export async function deleteShopCart(
+  shop_cart_id: string
+): Promise<ServerActionReturn<void>> {
+  try {
+    await prisma.$transaction(async (tx) => {
+      // Hapus semua item dalam shop cart terlebih dahulu
+      await tx.cartItem.deleteMany({
+        where: {
+          shop_cart_id,
+        },
+      });
+      // Hapus shop cart
+      await tx.shopCart.delete({
+        where: {
+          id: shop_cart_id,
+        },
+      });
+    });
+    return successResponse(undefined, "Berhasil menghapus keranjang");
+  } catch (error) {
+    console.error("Error deleting shop cart:", error);
+    return errorResponse("Gagal menghapus keranjang");
+  }
+}
+
+export async function deleteCartItem(
+  cart_item_id: string
+): Promise<ServerActionReturn<void>> {
+  try {
+    await prisma.$transaction(async (tx) => {
+      const cartItem = await tx.cartItem.findFirst({
+        where: { id: cart_item_id },
+        select: { shop_cart_id: true },
+      });
+
+      if (!cartItem) {
+        throw new Error("Item keranjang tidak ditemukan");
+      }
+
+      await tx.cartItem.delete({
+        where: { id: cart_item_id },
+      });
+
+      revalidatePath("/dashboard-pelanggan/keranjang/" + cartItem.shop_cart_id);
+
+      await recalculateShopCartTotal(tx, cartItem.shop_cart_id);
+    });
+
+    return successResponse(undefined, "Berhasil menghapus item");
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    return errorResponse("Gagal menghapus item");
+  }
+}

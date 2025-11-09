@@ -15,7 +15,8 @@ import { IconCheck } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { ConfirmPayment } from "../actions";
-import { toast } from "sonner";
+import { useSocketUpdateOrder } from "@/hooks/use-socket";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function ConfirmPaymentDialog({
   conversation_id,
@@ -36,13 +37,31 @@ export default function ConfirmPaymentDialog({
     },
   });
   const [open, setOpen] = useState(false);
+  const socketOrderUpdate = useSocketUpdateOrder();
 
   async function handleConfirm() {
     const result = await mutateAsync();
     if (result.success) {
-      toast.success(result.message);
+      socketOrderUpdate(order_id);
+      notificationDialog.success({
+        title: "Berhasil Konfirmasi Pembayaran",
+        message: "Silakan mulai menyiapkan pesanan ini.",
+        actionButtons: (
+          <Button size={"lg"} onClick={notificationDialog.hide}>
+            Tutup
+          </Button>
+        ),
+      });
     } else {
-      toast.error(result.error.message);
+      notificationDialog.error({
+        title: "Gagal Konfirmasi Pembayaran",
+        message: result.error.message || "Silakan coba lagi",
+        actionButtons: (
+          <Button size={"lg"} onClick={notificationDialog.hide}>
+            Tutup
+          </Button>
+        ),
+      });
     }
   }
 

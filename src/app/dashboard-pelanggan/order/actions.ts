@@ -84,7 +84,7 @@ export async function SendPaymentProof({
   } catch (error) {
     console.log(error);
 
-    return errorResponse("Terjadi kesalahan");
+    return errorResponse("Silakan Hubungi CS, Atau coba lagi nanti");
   }
 }
 
@@ -162,6 +162,32 @@ export async function CancelOrder({
   }
 }
 
+export async function RejectEstimation({
+  order_id,
+  rejected_reason,
+}: {
+  order_id: string;
+  rejected_reason: string;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    const updated = await prisma.order.update({
+      where: {
+        id: order_id,
+      },
+      data: { status: "ESTIMATION_REJECTED", rejected_reason },
+    });
+
+    revalidatePath("/dashboard-kedai/order/" + order_id);
+    revalidatePath("/dashboard-pelanggan/order/" + order_id);
+
+    return successResponse(undefined, "Sukses menolak estimasi order");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan, silakan hubungi CS");
+  }
+}
+
 export async function ConfirmEstimation({
   order_id,
   shop_id,
@@ -233,7 +259,7 @@ export async function ConfirmEstimation({
       revalidatePath("/dashboard-kedai/order/" + order_id);
       revalidatePath("/dashboard-pelanggan/order/" + order_id);
 
-      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
+      return successResponse(undefined, "Silakan kirim bukti pembayaran");
     }
 
     if (payment_method === "BANK_TRANSFER") {
@@ -262,13 +288,13 @@ export async function ConfirmEstimation({
       revalidatePath("/dashboard-kedai/order/" + order_id);
       revalidatePath("/dashboard-pelanggan/order/" + order_id);
 
-      return successResponse(undefined, "Berhasil mengonfirmasi pesanan");
+      return successResponse(undefined, "Silakan kirim bukti pembayaran");
     }
 
     return errorResponse("Metode pembayaran tidak valid");
   } catch (error) {
     console.log(error);
 
-    return errorResponse("Silakan hubungi CS");
+    return errorResponse("Terjadi kesalahan, silakan hubungi CS");
   }
 }

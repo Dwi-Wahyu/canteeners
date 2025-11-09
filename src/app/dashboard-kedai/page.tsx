@@ -36,9 +36,9 @@ export default async function OwnerDashboard() {
 
       <ToggleShopStatus
         id={shop.id}
-        currentStatus={shop.status}
         open_time={shop.open_time}
         close_time={shop.close_time}
+        current_status={shop.status}
       />
 
       <div className="my-4 grid md:grid-cols-4 grid-cols-1 gap-4">

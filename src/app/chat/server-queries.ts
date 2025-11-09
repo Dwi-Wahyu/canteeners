@@ -16,16 +16,10 @@ export async function getUserAllConversations(user_id: string) {
         select: {
           messages: {
             where: {
-              is_read: false,
-              conversation: {
-                participants: {
-                  every: {
-                    user_id: {
-                      not: user_id,
-                    },
-                  },
-                },
+              sender_id: {
+                not: user_id,
               },
+              is_read: false,
             },
           },
         },

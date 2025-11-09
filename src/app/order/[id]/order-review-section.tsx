@@ -31,12 +31,10 @@ export default function OrderReviewSection({
   order_id,
   prevTestimony,
   isUserCustomer,
-  customer,
 }: {
   order_id: string;
   prevTestimony: ShopTestimony | null;
   isUserCustomer: boolean;
-  customer: Customer;
 }) {
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");

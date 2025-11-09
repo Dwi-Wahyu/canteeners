@@ -17,34 +17,23 @@ import { useState } from "react";
 import { OrderStatus, PaymentMethod } from "@/app/generated/prisma";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { CancelOrder } from "../actions";
-import { CheckedState } from "@radix-ui/react-checkbox";
-import { toast } from "sonner";
-import { useRouter } from "nextjs-toploader/app";
 import Link from "next/link";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { useSocketUpdateOrder } from "@/hooks/use-socket";
 
 export default function CancelOrderDialog({
-  conversation_id,
   order_id,
   user_id,
-  payment_method,
   order_status,
 }: {
   order_id: string;
-  payment_method: PaymentMethod;
   user_id: string;
-  conversation_id: string;
   order_status: OrderStatus;
 }) {
   const [open, setOpen] = useState(false);
 
   const [reason, setReason] = useState("");
-  const [createRefund, setCreateRefund] = useState<CheckedState>(false);
-  const router = useRouter();
 
   const socketOrderUpdate = useSocketUpdateOrder();
 
@@ -65,34 +54,10 @@ export default function CancelOrderDialog({
     if (result.success) {
       socketOrderUpdate(order_id);
 
-      if (result.data?.suspended) {
-        notificationDialog.error({
-          title: "Anda telah disuspend",
-          message:
-            "Pembatalan order beruntun dalam sehari menyebabkan anda tidak dapat membuat pesanan sampai masa hukuman selesai",
-          actionButtons: (
-            <Button
-              onClick={() => {
-                notificationDialog.hide();
-                router.push("/syarat-dan-ketentuan");
-              }}
-              variant={"outline"}
-              size={"lg"}
-            >
-              Pelajari Selengkapnya
-            </Button>
-          ),
-        });
-      } else {
-        notificationDialog.success({
-          title: "Aksi Berhasil",
-          message: result.message,
-        });
-      }
-
-      if (createRefund) {
-        router.push(`/dashboard-pelanggan/order/${order_id}/refund`);
-      }
+      notificationDialog.success({
+        title: "Aksi Berhasil",
+        message: result.message,
+      });
     } else {
       notificationDialog.error({
         title: "Terjadi Kesalahan",
@@ -101,20 +66,18 @@ export default function CancelOrderDialog({
     }
   }
 
-  const ORDER_CANCEL_WITHOUT_PAY =
-    order_status === "WAITING_SHOP_CONFIRMATION" ||
-    order_status === "WAITING_PAYMENT";
+  const CUSTOMER_ALREADY_PAY = order_status === "PROCESSING";
 
   function CancelOrderDialogTitle() {
-    if (ORDER_CANCEL_WITHOUT_PAY) {
-      return "Peringatan !";
+    if (CUSTOMER_ALREADY_PAY) {
+      return "Peringatan!";
     }
     return "Yakin Membatalkan Order?";
   }
 
   function CancelOrderDialogDescription() {
-    if (ORDER_CANCEL_WITHOUT_PAY) {
-      return "Pemilik kedai sedang menunggu pembayaran, pembatalan order akan dihitung sebagai pelanggaran.";
+    if (CUSTOMER_ALREADY_PAY) {
+      return "Anda wajib untuk melakukan pengembalian dana. Berikan alasan pembatalan";
     }
 
     return "Berikan alasan pembatalan";
@@ -134,7 +97,15 @@ export default function CancelOrderDialog({
             {CancelOrderDialogDescription()}
           </AlertDialogDescription>
 
-          {ORDER_CANCEL_WITHOUT_PAY ? (
+          <Textarea
+            disabled={isPending}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder=""
+            className="h-40"
+          />
+
+          {CUSTOMER_ALREADY_PAY && (
             <div>
               <Link
                 className="text-blue-500 underline underline-offset-2"
@@ -143,30 +114,7 @@ export default function CancelOrderDialog({
                 Baca syarat dan ketentuan
               </Link>
             </div>
-          ) : (
-            <div>
-              <Textarea
-                disabled={isPending}
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder=""
-                className="h-40"
-              />
-            </div>
           )}
-
-          {order_status !== "PENDING_CONFIRMATION" &&
-            order_status !== "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION" &&
-            !ORDER_CANCEL_WITHOUT_PAY && (
-              <Label className="mt-2 flex items-center gap-2">
-                <Checkbox
-                  onCheckedChange={(checked) => setCreateRefund(checked)}
-                />
-                <p className="text-sm leading-none font-medium">
-                  Bikin pengajuan refund
-                </p>
-              </Label>
-            )}
         </AlertDialogHeader>
         <AlertDialogFooter className="grid grid-cols-2 gap-4">
           <AlertDialogCancel asChild>

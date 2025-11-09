@@ -143,7 +143,7 @@ export default function ConfirmSNKPage({
               Hak Refund Pelanggan: Pengguna berhak mendapatkan pengembalian
               dana (refund) jika Kedai membatalkan pesanan setelah pembayaran
               dilakukan (misalnya, karena stok ternyata habis) atau jika Kedai
-              terlambat mengantar pesanan melebihi estimasi waktu. 26]
+              terlambat mengantar pesanan melebihi estimasi waktu.
             </li>
             <li>
               Mekanisme Refund: Pihak Kedai memiliki fitur untuk mengajukan
@@ -173,7 +173,7 @@ export default function ConfirmSNKPage({
             <li>
               Proses Manual: Dalam proses manual tersebut, Pengguna wajib
               menunjukkan bukti pembayaran (yang mungkin sudah dilakukan saat
-              aplikasi error) kepada Kedai untuk verifikasi. [cite: 32]
+              aplikasi error) kepada Kedai untuk verifikasi.
             </li>
             <li>
               Peran CS saat Error: Meskipun aplikasi error, layanan CS kami
@@ -203,7 +203,7 @@ export default function ConfirmSNKPage({
               Sanksi Ulasan: Pengguna yang melanggar aturan konten ulasan akan
               mendapatkan peringatan dari tim kami. Jika pelanggaran berlanjut,
               tim Kantiners berhak untuk mencabut fitur review dari akun atau
-              banned Pengguna tersebut. [cite: 38]
+              banned Pengguna tersebut.
             </li>
           </ul>
         </section>

@@ -83,3 +83,11 @@ export async function SendOTPCode(
     return errorResponse("Terjadi kesalahan saat mengirim kode otp");
   }
 }
+
+export async function checkUsernameUsed(username: string) {
+  return await prisma.user.findFirst({
+    where: {
+      username,
+    },
+  });
+}

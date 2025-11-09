@@ -7,6 +7,8 @@ import { useState } from "react";
 import { SendPaymentProof, UploadPaymentProofImage } from "../actions";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useSocketUpdateOrder } from "@/hooks/use-socket";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 
 export default function SendPaymentProofForm({
   order_id,
@@ -29,6 +31,7 @@ export default function SendPaymentProofForm({
   });
 
   const [files, setFiles] = useState<File[]>([]);
+  const socketOrderUpdate = useSocketUpdateOrder();
 
   async function handleSend() {
     if (files.length === 0) {
@@ -41,9 +44,18 @@ export default function SendPaymentProofForm({
     const result = await mutateAsync(proofUrl);
 
     if (result.success) {
-      toast.success(result.message);
+      socketOrderUpdate(order_id);
+      notificationDialog.success({
+        title: "Berhasil mengirim bukti pembayaran",
+        message: "Silahkan tunggu konfirmasi dari kedai",
+        actionButtons: <Button onClick={notificationDialog.hide}>Tutup</Button>,
+      });
     } else {
-      toast.error(result.error.message);
+      notificationDialog.error({
+        title: "Gagal mengirim bukti pembayaran",
+        message: result.error.message,
+        actionButtons: <Button onClick={notificationDialog.hide}>Tutup</Button>,
+      });
     }
   }
 

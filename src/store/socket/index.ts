@@ -125,7 +125,7 @@ export const socketStore = create<SocketState>((set, get) => ({
       ws.send(
         JSON.stringify({
           type: "SUBSCRIBE_ORDER",
-          id: order_id,
+          order_id: order_id,
         })
       );
       console.log(`Subscribe ${order_id}`);
@@ -138,10 +138,23 @@ export const socketStore = create<SocketState>((set, get) => ({
       ws.send(
         JSON.stringify({
           type: "UNSUBSCRIBE_ORDER",
-          id: order_id,
+          order_id: order_id,
         })
       );
       console.log(`Unsubscribe ${order_id}`);
+    }
+  },
+
+  updateOrder: (order_id) => {
+    const ws = get().socket;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "UPDATE_ORDER",
+          order_id: order_id,
+        })
+      );
+      console.log(`Update order ${order_id}`);
     }
   },
 
@@ -152,6 +165,25 @@ export const socketStore = create<SocketState>((set, get) => ({
         JSON.stringify({
           type: "ACK_READ",
           conversation_id,
+        })
+      );
+    }
+  },
+
+  sendNewOrder: ({
+    order_id,
+    receiver_id,
+  }: {
+    order_id: string;
+    receiver_id: string;
+  }) => {
+    const ws = get().socket;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "NEW_ORDER",
+          order_id,
+          receiver_id,
         })
       );
     }

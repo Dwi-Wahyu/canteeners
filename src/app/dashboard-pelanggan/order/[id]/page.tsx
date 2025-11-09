@@ -6,6 +6,7 @@ import { getCustomerOrderDetail } from "../queries";
 import CustomerOrderDetailClient from "./customer-order-detail-client";
 import OrderReviewSection from "@/app/order/[id]/order-review-section";
 import OrderComplaintClient from "@/app/order/[id]/order-complaint-client";
+import OrderUiInfoDialog from "@/app/order/order-ui-info-dialog";
 
 export default async function ShopOrderDetailPage({
   params,
@@ -32,16 +33,15 @@ export default async function ShopOrderDetailPage({
 
   return (
     <div className="flex flex-col gap-5">
-      <TopbarWithBackButton title="Detail Order" />
+      <TopbarWithBackButton
+        title="Detail Order"
+        actionButton={<OrderUiInfoDialog />}
+      />
 
       <CustomerOrderDetailClient order={order} />
 
       {order.status === "COMPLETED" && (
         <OrderReviewSection
-          customer={{
-            avatar: order.customer.avatar,
-            name: order.customer.name,
-          }}
           isUserCustomer={true}
           order_id={order.id}
           prevTestimony={order.testimony}

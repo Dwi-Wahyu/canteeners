@@ -13,3 +13,8 @@ export const refundStatusMapping = {
   PROCESSED: "Selesai Diproses",
   CANCELLED: "Dibatalkan Pengguna",
 };
+
+export const refundDisbursementModeMapping = {
+  CASH: "Tunai",
+  TRANSFER: "Transfer",
+};

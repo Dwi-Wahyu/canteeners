@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getCustomerProfile } from "@/app/admin/users/queries";
 import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
+import DeleteShopCartDialog from "./delete-shop-cart-dialog";
 
 export default async function ShopCartDetailPage({
   params,
@@ -38,13 +39,31 @@ export default async function ShopCartDetailPage({
     return <UnauthorizedPage />;
   }
 
+  const now = new Date();
+
+  const open_time = shopCart.shop.open_time;
+  const close_time = shopCart.shop.close_time;
+
+  const ableToCheckout =
+    shopCart.shop.status === "ACTIVE" ||
+    (open_time !== null &&
+      close_time !== null &&
+      now >= open_time &&
+      now <= close_time);
+
   return (
     <div>
-      <TopbarWithBackButton title="Detail Keranjang" />
+      <TopbarWithBackButton
+        title="Detail Keranjang"
+        actionButton={<DeleteShopCartDialog shop_cart_id={shopCart.id} />}
+      />
 
       <ShopCartDetailClient
         shopCart={shopCart}
         customerProfile={customerProfile}
+        ableToCheckout={ableToCheckout}
+        open_time={open_time}
+        close_time={close_time}
       />
     </div>
   );

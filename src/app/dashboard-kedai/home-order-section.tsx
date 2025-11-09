@@ -52,13 +52,7 @@ export default function HomeOrderSection({
               <IconReceiptOff />
             </EmptyMedia>
             <EmptyTitle>Belum Ada Order Hari Ini</EmptyTitle>
-            <EmptyDescription>
-              Klik tombol dibawah untuk riwayat order kedai anda
-            </EmptyDescription>
           </EmptyHeader>
-          <EmptyContent>
-            <Button size={"sm"}>Lihat Riwayat</Button>
-          </EmptyContent>
         </Empty>
       )}
 

@@ -17,7 +17,7 @@ export default async function DashboardPelanggan() {
     <div className="">
       <CustomerTopbar subscribed={false} connected={false} />
 
-      <h1 className="text-xl mt-4 font-semibold">
+      <h1 className="text-xl font-semibold">
         Selamat Datang,{" "}
         <span className="text-primary">{session.user.name}</span>
       </h1>

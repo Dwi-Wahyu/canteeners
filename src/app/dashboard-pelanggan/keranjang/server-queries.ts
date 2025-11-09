@@ -9,6 +9,9 @@ export async function getCustomerCart(user_id: string) {
     },
     include: {
       shopCarts: {
+        orderBy: {
+          created_at: "desc",
+        },
         select: {
           id: true,
           status: true,
@@ -53,6 +56,9 @@ export async function getCustomerShopCart(shop_cart_id: string) {
         select: {
           id: true,
           name: true,
+          status: true,
+          open_time: true,
+          close_time: true,
           canteen_id: true,
           canteen: {
             select: {

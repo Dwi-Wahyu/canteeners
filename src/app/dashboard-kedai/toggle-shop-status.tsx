@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toggleShopStatus } from "./pengaturan/actions";
 import { ShopStatus } from "../generated/prisma";
 import { useState } from "react";
@@ -13,25 +13,25 @@ import { formatToHour } from "@/helper/hour-helper";
 
 export default function ToggleShopStatus({
   id,
-  currentStatus,
   open_time,
   close_time,
+  current_status,
 }: {
   id: string;
-  currentStatus: ShopStatus;
   open_time: Date | null;
   close_time: Date | null;
+  current_status: ShopStatus;
 }) {
-  const [status, setStatus] = useState<ShopStatus>(currentStatus);
+  const [status, setStatus] = useState<ShopStatus>(current_status);
 
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (status: ShopStatus) => {
       return await toggleShopStatus(id, status);
     },
   });
 
   async function handleToggle() {
-    const result = await mutation.mutateAsync();
+    const result = await mutation.mutateAsync(status);
 
     if (result.success) {
       toast.success(result.message);
@@ -49,7 +49,7 @@ export default function ToggleShopStatus({
         {status === "ACTIVE" && (
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
-              <div className="w-4 h-4 rounded-full bg-green-500"></div>
+              <div className="w-4 h-4 rounded-full bg-green-700"></div>
               <h1 className="font-semibold">Buka</h1>
             </div>
 
@@ -66,7 +66,7 @@ export default function ToggleShopStatus({
         {status === "INACTIVE" && (
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
-              <div className="w-4 h-4 rounded-full bg-red-500"></div>
+              <div className="w-4 h-4 rounded-full bg-red-700"></div>
               <h1 className="font-semibold">Tutup</h1>
             </div>
 
@@ -93,13 +93,13 @@ export default function ToggleShopStatus({
         )}
 
         {open_time && close_time && (
-          <>
+          <div>
             <h1 className="mt-2">Jam Operasional</h1>
 
             <h1 className="text-muted-foreground">
               {formatToHour(open_time)} - {formatToHour(close_time)}
             </h1>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>

@@ -10,7 +10,7 @@ export default async function ShopTestimonyDisplayPage({
 
   return (
     <div>
-      <TopbarWithBackButton title="Testimoni Kedai" />
+      <TopbarWithBackButton title="Ulasan Kedai" />
 
       <ShopTestimonyDisplayClient shop_id={shop_id} />
     </div>

@@ -45,7 +45,7 @@ export default function RootLayout({
           showSpinner={false}
         />
 
-        <Toaster richColors position="bottom-right" />
+        <Toaster richColors position="top-right" />
         <NotificationDialog />
         <Providers>{children}</Providers>
       </body>

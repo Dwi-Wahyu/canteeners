@@ -36,7 +36,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { shopOrderModeMapping } from "@/constant/order-mode-mapping";
-import { ShopOrderMode } from "@/app/generated/prisma";
+import { RefundDisbursementMode, ShopOrderMode } from "@/app/generated/prisma";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { refundDisbursementModeMapping } from "@/constant/refund-mapping";
 
 export default function EditShopForm({
   initialData,
@@ -73,15 +75,22 @@ export default function EditShopForm({
     console.log(result);
 
     if (result.success) {
-      toast.success(result.message);
+      notificationDialog.success({
+        title: "Berhasil",
+        message: "Data kedai berhasil diperbarui.",
+        actionButtons: <Button onClick={notificationDialog.hide}>Tutup</Button>,
+      });
 
       router.push("/dashboard-kedai/pengaturan");
     } else {
       console.log(result.error);
 
-      toast.error(
-        result.error.message || "Terjadi kesalahan saat menyimpan data."
-      );
+      notificationDialog.error({
+        title: "Gagal",
+        message:
+          result.error.message || "Terjadi kesalahan saat menyimpan data.",
+        actionButtons: <Button onClick={notificationDialog.hide}>Tutup</Button>,
+      });
     }
   };
 
@@ -139,35 +148,6 @@ export default function EditShopForm({
 
         <FormField
           control={form.control}
-          name="order_mode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mode Pemesanan</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue="READY_ONLY"
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Pemilik Warung" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(ShopOrderMode).map((mode, idx) => (
-                      <SelectItem key={idx} value={mode}>
-                        {shopOrderModeMapping[mode]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="open_time"
           render={({ field }) => (
             <div className="flex flex-col gap-3">
@@ -207,6 +187,64 @@ export default function EditShopForm({
                 <FormMessage />
               </FormItem>
             </div>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="order_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mode Pemesanan</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue="READY_ONLY"
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Pemilik Warung" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(ShopOrderMode).map((mode, idx) => (
+                      <SelectItem key={idx} value={mode}>
+                        {shopOrderModeMapping[mode]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="refund_disbursement_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mode Pengembalian Dana Refund</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue="READY_ONLY"
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Pemilik Warung" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(RefundDisbursementMode).map((mode, idx) => (
+                      <SelectItem key={idx} value={mode}>
+                        {refundDisbursementModeMapping[mode]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
 

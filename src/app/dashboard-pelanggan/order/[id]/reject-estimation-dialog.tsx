@@ -11,55 +11,50 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { IconX } from "@tabler/icons-react";
+import { IconLoader } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { RejectPayment } from "../actions";
-import { notificationDialog } from "@/hooks/use-notification-dialog";
+import { OrderStatus } from "@/app/generated/prisma";
 import { Textarea } from "@/components/ui/textarea";
+
+import { RejectEstimation } from "../actions";
+import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { useSocketUpdateOrder } from "@/hooks/use-socket";
 
-export default function RejectPaymentDialog({
+export default function RejectEstimationDialog({
   order_id,
 }: {
   order_id: string;
 }) {
-  const [rejectPaymentReason, setRejectPaymentReason] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [reason, setReason] = useState("");
+
   const socketOrderUpdate = useSocketUpdateOrder();
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: async () => {
-      return await RejectPayment({ order_id, reason: rejectPaymentReason });
+      return await RejectEstimation({
+        order_id,
+        rejected_reason: reason,
+      });
     },
   });
 
-  async function handleReject() {
+  async function handleConfirm() {
     const result = await mutateAsync();
 
     if (result.success) {
-      setOpen(false);
       socketOrderUpdate(order_id);
+
       notificationDialog.success({
-        title: "Berhasil Menolak Pembayaran",
-        message:
-          "Pelanggan akan diminta untuk mengirimkan kembali bukti pembayaran",
-        actionButtons: (
-          <Button size={"lg"} onClick={notificationDialog.hide}>
-            Tutup
-          </Button>
-        ),
+        title: "Aksi Berhasil",
+        message: result.message,
       });
     } else {
-      setOpen(false);
       notificationDialog.error({
-        title: "Gagal Menolak Pembayaran",
-        message: result.error.message || "Silakan coba lagi",
-        actionButtons: (
-          <Button size={"lg"} onClick={notificationDialog.hide}>
-            Tutup
-          </Button>
-        ),
+        title: "Terjadi Kesalahan",
+        message: result.error.message,
       });
     }
   }
@@ -67,43 +62,39 @@ export default function RejectPaymentDialog({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          className="w-full"
-          variant={"destructive"}
-          disabled={false}
-          size={"lg"}
-        >
-          <IconX />
-          Tolak
+        <Button size={"lg"} variant={"destructive"} className="w-full ">
+          Tolak Estimasi
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Yakin Menolak Pembayaran Ini?</AlertDialogTitle>
+          <AlertDialogTitle>Yakin Menolak Estimasi ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Pelanggan akan diminta untuk mengirimkan kembali bukti pembayaran
+            Berikan alasan penolakan agar pemilik kedai akan menyesuaikan
+            estimasi.
           </AlertDialogDescription>
+
           <Textarea
-            value={rejectPaymentReason}
-            onChange={(e) => setRejectPaymentReason(e.target.value)}
-            placeholder="Alasan"
-            className="mt-1"
             disabled={isPending}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder=""
+            className="h-40"
           />
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="grid grid-cols-2 gap-4">
           <AlertDialogCancel asChild>
-            <Button variant={"outline"} size={"lg"}>
+            <Button size={"lg"} variant={"outline"}>
               Batal
             </Button>
           </AlertDialogCancel>
           <Button
             size={"lg"}
             variant={"destructive"}
-            onClick={handleReject}
+            onClick={handleConfirm}
             disabled={isPending}
           >
-            Tolak
+            {isPending ? <IconLoader className="animate-spin" /> : "Tolak"}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

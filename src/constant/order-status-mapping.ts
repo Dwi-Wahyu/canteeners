@@ -6,6 +6,7 @@ export const orderStatusMapping = {
   PROCESSING: "Sedang Diproses",
   COMPLETED: "Selesai",
   REJECTED: "Ditolak Kedai",
+  ESTIMATION_REJECTED: "Estimasi Ditolak",
   PAYMENT_REJECTED: "Pembayaran Ditolak",
   CANCELLED: "Order Dibatalkan",
 };

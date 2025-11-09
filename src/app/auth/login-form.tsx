@@ -51,8 +51,6 @@ export default function LoginForm() {
         message: "Username atau Password salah",
       });
     } else {
-      toast.success("Login Sukses");
-
       const role = await getUserRoleByUsernameAction(data.username);
 
       switch (role) {

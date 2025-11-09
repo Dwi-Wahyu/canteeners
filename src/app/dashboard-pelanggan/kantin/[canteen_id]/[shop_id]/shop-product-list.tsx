@@ -29,6 +29,7 @@ import Link from "next/link";
 import { CustomerProfile } from "@/app/generated/prisma";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useSearchParams } from "next/navigation";
 
 export default function ShopProductList({
   shop,
@@ -43,6 +44,9 @@ export default function ShopProductList({
 }) {
   const [productName, setProductName] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const searchParams = useSearchParams();
+
+  const shop_cart_id = searchParams.get("shop_cart_id");
 
   const { data, isLoading } = useQuery({
     queryKey: ["shop-product-list", shop.id, productName, categoryId],
@@ -59,7 +63,11 @@ export default function ShopProductList({
   return (
     <div className="relative">
       <Link
-        href={"/dashboard-pelanggan/keranjang/"}
+        href={
+          shop_cart_id
+            ? "/dashboard-pelanggan/keranjang/" + shop_cart_id
+            : "/dashboard-pelanggan/keranjang/"
+        }
         className="p-4 bg-primary w-fit fixed bottom-5 right-7 text-primary-foreground rounded-full hover:scale-105 transition-all ease-in-out shadow"
       >
         <IconShoppingCart />
@@ -100,7 +108,7 @@ export default function ShopProductList({
                   href={`/dashboard-pelanggan/kantin/${shop.canteen_id}/${shop.id}/testimoni`}
                 >
                   <IconMessageCircleUser />
-                  Lihat testimoni
+                  Lihat ulasan
                 </Link>
               </Button>
             </div>

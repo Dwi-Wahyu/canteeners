@@ -45,5 +45,13 @@ export type SocketState = {
   leaveRoom: (conversation_id: string) => void;
   subscribeOrder: (order_id: string) => void;
   unsubscribeOrder: (order_id: string) => void;
+  updateOrder: (order_id: string) => void;
+  sendNewOrder: ({
+    order_id,
+    receiver_id,
+  }: {
+    order_id: string;
+    receiver_id: string;
+  }) => void;
   sendReadAck: (conversation_id: string) => void;
 };

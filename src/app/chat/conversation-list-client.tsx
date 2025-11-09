@@ -4,8 +4,6 @@ import { getUserAllConversations } from "./server-queries";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { IconChevronRight, IconFilter } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -91,9 +89,11 @@ export default function ConversationListClient({
                         )}
                       </ItemContent>
                       <ItemActions>
-                        <div className="px-2 py-1 bg-primary text-primary-foreground rounded">
-                          {conversation._count.messages}
-                        </div>
+                        {conversation._count.messages > 0 && (
+                          <div className="px-2 py-1 bg-primary text-primary-foreground rounded">
+                            {conversation._count.messages}
+                          </div>
+                        )}
                       </ItemActions>
                     </Item>
                   </Link>

@@ -16,7 +16,7 @@ import { Ellipsis, NotebookPen } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { IconNote, IconTrash } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { changeCartItemDetails } from "../actions";
+import { changeCartItemDetails, deleteCartItem } from "../actions";
 import { toast } from "sonner";
 
 type CartItemType = NonNullable<
@@ -26,9 +26,11 @@ type CartItemType = NonNullable<
 export default function CartItemCard({
   cartItem,
   disabled,
+  disabledDeleteButton,
 }: {
   cartItem: CartItemType;
   disabled: boolean;
+  disabledDeleteButton: boolean;
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [qty, setQty] = useState(cartItem.quantity);
@@ -52,7 +54,19 @@ export default function CartItemCard({
       toast.success("Perubahan keranjang berhasil disimpan.");
     },
     onError: (error) => {
-      toast.success("Gagal menyimpan perubahan. Silakan coba lagi.");
+      toast.error("Gagal menyimpan perubahan. Silakan coba lagi.");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      return await deleteCartItem(cartItem.id);
+    },
+    onSuccess: () => {
+      toast.success("Berhasil menghapus item.");
+    },
+    onError: (error) => {
+      toast.error("Gagal menghapus item. Silakan coba lagi.");
     },
   });
 
@@ -180,7 +194,10 @@ export default function CartItemCard({
             <Button
               variant="destructive"
               size="icon"
-              disabled={mutation.isPending || disabled}
+              disabled={
+                deleteMutation.isPending || disabled || disabledDeleteButton
+              }
+              onClick={() => deleteMutation.mutate()}
             >
               <IconTrash />
             </Button>

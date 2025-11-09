@@ -9,7 +9,6 @@ import { getCustomerShopCart } from "../server-queries";
 import { IconCash, IconCreditCard, IconQrcode } from "@tabler/icons-react";
 import { PaymentMethod } from "@/app/generated/prisma";
 import { paymentMethodMapping } from "@/constant/payment-method";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 export default function ShopCartPaymentMethod({
@@ -54,7 +53,7 @@ export default function ShopCartPaymentMethod({
             }}
             key={idx}
             variant={"outline"}
-            className={`${
+            className={`cursor-pointer ${
               payment.method === paymentMethod
                 ? "bg-primary text-primary-foreground"
                 : ""
@@ -64,12 +63,6 @@ export default function ShopCartPaymentMethod({
             <ItemContent>
               <ItemTitle>{paymentMethodMapping[payment.method]}</ItemTitle>
             </ItemContent>
-            {/* <ItemActions>
-              <Checkbox
-                checked={payment.method === paymentMethod}
-                disabled={disabled}
-              />
-            </ItemActions> */}
           </Item>
         ))}
       </div>

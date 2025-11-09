@@ -37,12 +37,28 @@ import { useMutation } from "@tanstack/react-query";
 import { ConfirmEstimation } from "../actions";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { formatToHour } from "@/helper/hour-helper";
+import { useRouter } from "nextjs-toploader/app";
+import { useEffect } from "react";
+import {
+  useSocket,
+  useSocketSubscribeOrder,
+  useSocketUnsubscribeOrder,
+  useSocketUpdateOrder,
+} from "@/hooks/use-socket";
+import RejectEstimationDialog from "./reject-estimation-dialog";
 
 export default function CustomerOrderDetailClient({
   order,
 }: {
   order: NonNullable<Awaited<ReturnType<typeof getCustomerOrderDetail>>>;
 }) {
+  const router = useRouter();
+  const socket = useSocket();
+
+  const subscribeOrder = useSocketSubscribeOrder();
+  const unsubscribeOrder = useSocketUnsubscribeOrder();
+  const socketOrderUpdate = useSocketUpdateOrder();
+
   const confirmEstimationMutation = useMutation({
     mutationFn: async () => {
       return await ConfirmEstimation({
@@ -55,8 +71,9 @@ export default function CustomerOrderDetailClient({
     },
     onSuccess(data) {
       if (data.success) {
+        socketOrderUpdate(order.id);
         notificationDialog.success({
-          title: "Berhasil ubah status",
+          title: "Berhasil konfirmasi estimasi",
           message: data.message,
           actionButtons: (
             <Button onClick={notificationDialog.hide} size={"lg"}>
@@ -72,6 +89,30 @@ export default function CustomerOrderDetailClient({
       }
     },
   });
+
+  useEffect(() => {
+    subscribeOrder(order.id);
+
+    if (socket) {
+      socket.onmessage = (event) => {
+        let data: any;
+        try {
+          data = JSON.parse(event.data);
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+        if (data.type === "UPDATE_ORDER") {
+          // toast.info("Status order diperbarui");
+          router.refresh();
+        }
+      };
+    }
+
+    return () => {
+      unsubscribeOrder(order.id);
+    };
+  }, [order.id, socket, subscribeOrder, unsubscribeOrder]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -101,10 +142,19 @@ export default function CustomerOrderDetailClient({
         </Alert>
       )}
 
+      {order.status === "CANCELLED" &&
+        order.cancelled_by_id === order.shop.owner_id && (
+          <Alert variant={"destructive"}>
+            <IconShoppingCartExclamation />
+            <AlertTitle>Pesanan Dibatalkan Oleh Pemilik Kedai</AlertTitle>
+            <AlertDescription>{order.cancelled_reason}</AlertDescription>
+          </Alert>
+        )}
+
       {order.status === "PAYMENT_REJECTED" && (
         <Alert variant={"destructive"}>
           <IconCashOff />
-          <AlertTitle>Bukti Ditolak</AlertTitle>
+          <AlertTitle>Bukti Pembayaran Ditolak</AlertTitle>
           <AlertDescription>{order.rejected_reason}</AlertDescription>
         </Alert>
       )}
@@ -282,15 +332,10 @@ export default function CustomerOrderDetailClient({
       {order.status === "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION" && (
         <div className="mt-2">
           <h1 className="font-semibold">Konfirmasi Estimasi</h1>
-          <h1 className="text-muted-foreground">
-            Pemilik kedai telah menerima pesanan anda, cek estimasi yang
-            diberikan
-          </h1>
+          <h1 className="text-muted-foreground">Cek estimasi yang diberikan</h1>
 
           <div className="grid grid-cols-2 gap-4 mt-2">
-            <Button size={"lg"} variant={"destructive"}>
-              Tolak dan Batalkan
-            </Button>
+            <RejectEstimationDialog order_id={order.id} />
 
             <Button
               size={"lg"}

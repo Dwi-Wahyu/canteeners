@@ -1,5 +1,6 @@
 "use server";
 
+import { OrderStatus } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { ServerActionReturn } from "@/types/server-action";
@@ -75,9 +76,11 @@ export async function ConfirmPayment({
 export async function ChangeOrderEstimation({
   estimation,
   order_id,
+  status,
 }: {
   order_id: string;
   estimation: number;
+  status: OrderStatus;
 }): Promise<ServerActionReturn<void>> {
   try {
     await prisma.order.update({
@@ -86,6 +89,10 @@ export async function ChangeOrderEstimation({
       },
       data: {
         estimation,
+        status:
+          status === "ESTIMATION_REJECTED"
+            ? "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION"
+            : status,
       },
     });
 
@@ -190,5 +197,56 @@ export async function RejectPayment({
   } catch (error) {
     console.error("rejectPayment Error:", error);
     return errorResponse("Terjadi kesalahan saat menolak pembayaran");
+  }
+}
+
+export async function CancelOrder({
+  order_id,
+  cancelled_by_id,
+  cancelled_reason,
+  order_status,
+}: {
+  order_id: string;
+  cancelled_by_id: string;
+  cancelled_reason: string;
+  order_status: OrderStatus;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    const updated = await prisma.order.update({
+      where: {
+        id: order_id,
+      },
+      data: { cancelled_by_id, status: "CANCELLED", cancelled_reason },
+      select: {
+        total_price: true,
+        shop: {
+          select: {
+            refund_disbursement_mode: true,
+          },
+        },
+      },
+    });
+
+    if (order_status === "PROCESSING") {
+      await prisma.refund.create({
+        data: {
+          amount: updated.total_price,
+          order_id: order_id,
+          disbursement_mode: updated.shop.refund_disbursement_mode,
+          reason: "OTHER",
+          status: "APPROVED",
+          description: "Pembatalan order oleh kedai",
+        },
+      });
+    }
+
+    revalidatePath("/dashboard-kedai/order/" + order_id);
+    revalidatePath("/dashboard-pelanggan/order/" + order_id);
+
+    return successResponse(undefined, "Sukses membatalkan order");
+  } catch (error) {
+    console.log(error);
+
+    return errorResponse("Terjadi kesalahan");
   }
 }

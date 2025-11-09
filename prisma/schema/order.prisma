@@ -1,50 +1,50 @@
 model Order {
-    id         String   @id @default(uuid())
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-    customer    User   @relation(fields: [customer_id], references: [id])
-    customer_id String
+  customer    User   @relation(fields: [customer_id], references: [id])
+  customer_id String
 
-    shop              Shop      @relation(fields: [shop_id], references: [id])
-    shop_id           String
-    estimation        Int? // dalam menit
-    payment_proof_url String?
-    processed_at      DateTime? // waktu ketika order mulai diproses setelah pembayaran di verifikasi
+  shop              Shop      @relation(fields: [shop_id], references: [id])
+  shop_id           String
+  estimation        Int? // dalam menit
+  payment_proof_url String?
+  processed_at      DateTime? // waktu ketika order mulai diproses setelah pembayaran di verifikasi
 
-    rejected_reason   String?
-    cancelled_reason  String?
-    cancelled_by_id   String?
+  rejected_reason  String?
+  cancelled_reason String?
+  cancelled_by_id  String?
 
-    total_price Float
+  total_price Float
 
-    status OrderStatus
+  status OrderStatus
 
-    type OrderType @default(READY)
+  type OrderType @default(READY)
 
-    testimony ShopTestimony?
-    complaint ShopComplaint?
-    refund Refund?
+  testimony ShopTestimony?
+  complaint ShopComplaint?
+  refund    Refund?
 
-    // Todo: cari cara agar jika percakapan dihapus order tidak dihapus
-    conversation Conversation @relation(fields: [conversation_id], references: [id])
-    conversation_id String
-    message        Message[]
-    payment_method PaymentMethod
+  // Todo: cari cara agar jika percakapan dihapus order tidak dihapus
+  conversation    Conversation  @relation(fields: [conversation_id], references: [id])
+  conversation_id String
+  message         Message[]
+  payment_method  PaymentMethod
 
-    order_items OrderItem[]
+  order_items OrderItem[]
 
-    post_order_type PostOrderType @default(DELIVERY_TO_TABLE)
-    table_number    Int?       
-    floor           Int?
-    // courier_journey CourierJourney? @relation(fields: [courier_journey_id], references: [id])
-    // courier_journey_id String?     @unique // Relasi ke CourierJourney untuk COURIER_DELIVERY
+  post_order_type PostOrderType @default(DELIVERY_TO_TABLE)
+  table_number    Int?
+  floor           Int?
+  // courier_journey CourierJourney? @relation(fields: [courier_journey_id], references: [id])
+  // courier_journey_id String?     @unique // Relasi ke CourierJourney untuk COURIER_DELIVERY
 
-    @@index([customer_id])
-    @@index([shop_id])
-    @@index([status])
-    @@index([created_at])
-    @@map("orders")
+  @@index([customer_id])
+  @@index([shop_id])
+  @@index([status])
+  @@index([created_at])
+  @@map("orders")
 }
 
 enum OrderType {
@@ -53,54 +53,56 @@ enum OrderType {
 }
 
 model OrderItem {
-    id         Int     @id @default(autoincrement())
-    order      Order   @relation( fields: [order_id], references: [id], onDelete: Cascade)
-    order_id   String
-    product    Product @relation(fields: [product_id], references: [id])
-    product_id String
-    quantity   Int
-    price      Float
-    note       String?
+  id         Int     @id @default(autoincrement())
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id   String
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id String
+  quantity   Int
+  price      Float
+  note       String?
 
-    @@index([order_id])
-    @@map("order_items")
+  @@index([order_id])
+  @@map("order_items")
 }
 
 enum OrderStatus {
-    PENDING_CONFIRMATION // customer buat order, tunggu shop konfirmasi
-    WAITING_PAYMENT // shop setuju, customer harus bayar
-    WAITING_CUSTOMER_ESTIMATION_CONFIRMATION // tunggu customer setuju dengan estimasi order
-    WAITING_SHOP_CONFIRMATION // customer sudah upload bukti
-    PROCESSING // shop terima pembayaran, pesanan diproses
-    COMPLETED // order selesai
-    REJECTED // ditolak karena stok tidak ada
-    PAYMENT_REJECTED // bukti pembayaran tidak valid
-    CANCELLED // pembatalan
+  PENDING_CONFIRMATION // customer buat order, tunggu shop konfirmasi
+  WAITING_PAYMENT // shop setuju, customer harus bayar
+  WAITING_CUSTOMER_ESTIMATION_CONFIRMATION // tunggu customer setuju dengan estimasi order
+  WAITING_SHOP_CONFIRMATION // customer sudah upload bukti
+  PROCESSING // shop terima pembayaran, pesanan diproses
+  COMPLETED // order selesai
+  REJECTED // ditolak karena stok tidak ada
+  PAYMENT_REJECTED // bukti pembayaran tidak valid
+  ESTIMATION_REJECTED // customer tolak estimasi
+  CANCELLED // pembatalan
 }
 
 enum PostOrderType {
-    DELIVERY_TO_TABLE
-    TAKEAWAY
-    COURIER_DELIVERY
+  DELIVERY_TO_TABLE
+  TAKEAWAY
+  COURIER_DELIVERY
 }
 
 // todo: buat type untuk disbursement apakah cash atau transfer
 model Refund {
-  id                String         @id @default(uuid())
-  order             Order          @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id          String @unique
+  id       String @id @default(uuid())
+  order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id String @unique
 
-  complaint_proof_url        String? // bukti complaint   
-  disbursement_proof_url     String? // bukti tf refund sudah dibayar
+  complaint_proof_url    String? // bukti complaint   
+  disbursement_proof_url String? // bukti tf refund sudah dibayar
+  disbursement_mode      RefundDisbursementMode // mode pengembalian dana
 
-  amount            Float         // jumlah refund
-  reason            RefundReason
-  status            RefundStatus   @default(PENDING)
-  description       String? @db.LongText
-  
-  requested_at      DateTime       @default(now())
-  processed_at      DateTime?
-  rejected_reason   String?
+  amount      Float // jumlah refund
+  reason      RefundReason
+  status      RefundStatus @default(PENDING)
+  description String?      @db.LongText
+
+  requested_at    DateTime  @default(now())
+  processed_at    DateTime?
+  rejected_reason String?
 
   @@index([order_id])
   @@index([status])
@@ -108,17 +110,17 @@ model Refund {
 }
 
 enum RefundReason {
-  LATE_DELIVERY        // terlambat > estimasi
-  WRONG_ORDER          // salah pesanan
-  DAMAGED_FOOD         // rusak
-  MISSING_ITEM         // kurang item
-  OTHER                // lain-lain
+  LATE_DELIVERY // terlambat > estimasi
+  WRONG_ORDER // salah pesanan
+  DAMAGED_FOOD // rusak
+  MISSING_ITEM // kurang item
+  OTHER // lain-lain
 }
 
 enum RefundStatus {
-  PENDING              // menunggu proses
-  APPROVED             // disetujui
-  REJECTED             // ditolak
-  PROCESSED            // uang sudah dikembalikan (butuh konfirmasi user)
-  CANCELLED            // dibatalkan user
+  PENDING // menunggu proses
+  APPROVED // disetujui
+  REJECTED // ditolak
+  PROCESSED // uang sudah dikembalikan (butuh konfirmasi user)
+  CANCELLED // dibatalkan user
 }

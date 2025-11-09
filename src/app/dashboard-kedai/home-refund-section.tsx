@@ -1,5 +1,3 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-
 import {
   Item,
   ItemActions,
@@ -7,7 +5,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
-import { IconEye, IconReceiptRefund } from "@tabler/icons-react";
+import { IconChecks, IconEye } from "@tabler/icons-react";
 import { refundReasonMapping } from "@/constant/refund-mapping";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -42,7 +40,7 @@ export default async function HomeRefundSection({
         <Empty className="border">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <IconReceiptRefund />
+              <IconChecks />
             </EmptyMedia>
             <EmptyTitle>Belum Ada Pengajuan</EmptyTitle>
             <EmptyDescription></EmptyDescription>
