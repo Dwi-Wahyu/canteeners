@@ -70,3 +70,5 @@
 - fix ketika confirm estimasi dan metode pembayaran non tunai tidak ditemukan
 
 - fix munculkan nomor rekening jika transfer bank setelah konfirmasi estimasi
+
+- fix fetch ulang data order dari signal websocket

@@ -164,3 +164,31 @@ export async function RejectOrder({
     return errorResponse("Terjadi kesalahan saat menolak order");
   }
 }
+
+export async function RejectPayment({
+  order_id,
+  reason,
+}: {
+  order_id: string;
+  reason: string;
+}): Promise<ServerActionReturn<void>> {
+  try {
+    await prisma.order.update({
+      where: {
+        id: order_id,
+      },
+      data: {
+        status: "PAYMENT_REJECTED",
+        rejected_reason: reason.trim(),
+      },
+    });
+
+    revalidatePath(`/dashboard-kedai/order/${order_id}`);
+    revalidatePath(`/dashboard-pelanggan/order/${order_id}`);
+
+    return successResponse(undefined, "Berhasil menolak pembayaran");
+  } catch (error) {
+    console.error("rejectPayment Error:", error);
+    return errorResponse("Terjadi kesalahan saat menolak pembayaran");
+  }
+}

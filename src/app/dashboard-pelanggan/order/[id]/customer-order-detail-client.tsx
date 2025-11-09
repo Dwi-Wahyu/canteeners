@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/item";
 import {
   IconCash,
+  IconCashOff,
   IconEdit,
   IconNote,
   IconShoppingCartExclamation,
@@ -31,7 +32,6 @@ import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import CancelOrderDialog from "./cancel-order-dialog";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { ConfirmEstimation } from "../actions";
@@ -97,6 +97,14 @@ export default function CustomerOrderDetailClient({
         <Alert variant={"destructive"}>
           <IconShoppingCartExclamation />
           <AlertTitle>Pesanan Ditolak</AlertTitle>
+          <AlertDescription>{order.rejected_reason}</AlertDescription>
+        </Alert>
+      )}
+
+      {order.status === "PAYMENT_REJECTED" && (
+        <Alert variant={"destructive"}>
+          <IconCashOff />
+          <AlertTitle>Bukti Ditolak</AlertTitle>
           <AlertDescription>{order.rejected_reason}</AlertDescription>
         </Alert>
       )}
@@ -177,6 +185,23 @@ export default function CustomerOrderDetailClient({
         </div>
       )}
 
+      {order.status === "WAITING_PAYMENT" &&
+        order.payment_method === "QRIS" && (
+          <div>
+            <h1 className="font-semibold">QRCode QRIS</h1>
+            <div>
+              {order.shop.payments
+                .filter((p) => p.method === "QRIS")
+                .map((payment, idx) => (
+                  <img
+                    key={idx}
+                    src={"/uploads/shop-qrcode/" + payment.qr_url}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
       {order.payment_method !== "CASH" &&
         ["WAITING_PAYMENT", "WAITING_SHOP_CONFIRMATION"].includes(
           order.status
@@ -200,6 +225,18 @@ export default function CustomerOrderDetailClient({
             )}
           </div>
         )}
+
+      {order.status === "PAYMENT_REJECTED" && (
+        <div>
+          <h1 className="font-semibold mb-1">Kirim Ulang Bukti Pembayaran</h1>
+
+          <SendPaymentProofForm
+            order_id={order.id}
+            conversation_id={order.conversation_id}
+            customer_id={order.customer_id}
+          />
+        </div>
+      )}
 
       <div>
         <h1 className="font-semibold">Jenis Order</h1>

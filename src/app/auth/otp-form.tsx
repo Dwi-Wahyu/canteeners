@@ -1,7 +1,7 @@
 "use client";
 
 import { useOtpCooldown } from "@/hooks/use-otp-cooldown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SendOTPCode, SignUpCustomer } from "./actions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,10 @@ import { useRouter } from "nextjs-toploader/app";
 
 export default function OtpForm({
   customerData,
+  setShowSnk,
 }: {
   customerData: SignUpSchemaType | null;
+  setShowSnk: (value: boolean) => void;
 }) {
   const { canSend, cooldownTimeLeft, startCooldown } = useOtpCooldown();
   const [otpGenerated, setOtpGenerated] = useState<number | null>(null);
@@ -63,6 +65,10 @@ export default function OtpForm({
     startCooldown();
   }
 
+  useEffect(() => {
+    handleSendOTP();
+  }, []);
+
   async function checkOTPCode() {
     if (!customerData) {
       toast.error(
@@ -91,16 +97,7 @@ export default function OtpForm({
       return;
     }
 
-    const result = await SignUpCustomer(customerData);
-
-    if (result.success) {
-      toast.success(result.message);
-      setTimeout(() => {
-        router.push("/auth/signin");
-      }, 1000);
-    } else {
-      toast.error(result.error.message);
-    }
+    setShowSnk(true);
   }
 
   return (

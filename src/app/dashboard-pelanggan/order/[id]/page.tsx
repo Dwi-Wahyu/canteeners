@@ -5,6 +5,7 @@ import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getCustomerOrderDetail } from "../queries";
 import CustomerOrderDetailClient from "./customer-order-detail-client";
 import OrderReviewSection from "@/app/order/[id]/order-review-section";
+import OrderComplaintClient from "@/app/order/[id]/order-complaint-client";
 
 export default async function ShopOrderDetailPage({
   params,
@@ -44,6 +45,18 @@ export default async function ShopOrderDetailPage({
           isUserCustomer={true}
           order_id={order.id}
           prevTestimony={order.testimony}
+        />
+      )}
+
+      {order.status === "COMPLETED" && (
+        <OrderComplaintClient
+          order_id={order.id}
+          isUserCustomer={order.customer_id === session.user.id}
+          customer={{
+            avatar: order.customer.avatar,
+            name: order.customer.name,
+          }}
+          prevComplaint={order.complaint}
         />
       )}
     </div>

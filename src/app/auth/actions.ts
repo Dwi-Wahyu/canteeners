@@ -30,6 +30,9 @@ export async function SignUpCustomer(
             status: "ACTIVE",
           },
         },
+        customer_profile: {
+          create: {},
+        },
       },
     });
 
@@ -54,26 +57,6 @@ export async function SendOTPCode(
     const mailerUser = process.env.CANTEENERS_DOMAIN_MAIL_USERNAME;
     const mailerPass = process.env.CANTEENERS_DOMAIN_MAIL_PASSWORD;
 
-    const templatePath = join(
-      process.cwd(),
-      "public/template/email",
-      "otp.html"
-    );
-
-    const templateString = await readFile(templatePath, "utf-8");
-
-    const otpString = otpCode.toString().padStart(6, "0");
-
-    const otpBoxesHtml = otpString
-      .split("")
-      .map((digit) => `<div class="otp-box">${digit}</div>`)
-      .join("");
-
-    const finalHtml = templateString.replace(
-      "{{OTP_BOXES_HERE}}",
-      otpBoxesHtml
-    );
-
     let transporter = nodemailer.createTransport({
       host: "smtp.hostinger.com",
       port: 465,
@@ -81,7 +64,6 @@ export async function SendOTPCode(
         user: mailerUser,
         pass: mailerPass,
       },
-      html: finalHtml,
     });
 
     const mailOptions = {

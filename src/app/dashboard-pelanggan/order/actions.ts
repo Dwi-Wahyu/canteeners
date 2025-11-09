@@ -5,7 +5,9 @@ import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
 import { LocalStorageService } from "@/services/storage-services";
 import { ServerActionReturn } from "@/types/server-action";
+import { unlinkSync } from "fs";
 import { revalidatePath } from "next/cache";
+import { join } from "path";
 
 export async function UploadPaymentProofImage(file: File) {
   const storageService = new LocalStorageService();
@@ -30,6 +32,27 @@ export async function SendPaymentProof({
   customer_id: string;
 }): Promise<ServerActionReturn<void>> {
   try {
+    const order = await prisma.order.findFirst({
+      where: {
+        id: order_id,
+      },
+    });
+
+    if (!order) {
+      return errorResponse("Order tidak ditemukan");
+    }
+
+    // hapus nanti file yang lama, pastikan pake trycatch biar ga error
+    if (order.payment_proof_url) {
+      await unlinkSync(
+        join(
+          process.cwd(),
+          "public/uploads/payment-proof",
+          order.payment_proof_url
+        )
+      );
+    }
+
     const updated = await prisma.order.update({
       where: {
         id: order_id,
@@ -182,9 +205,7 @@ export async function ConfirmEstimation({
       const shopQRISPayments = await prisma.payment.findFirst({
         where: {
           shop_id,
-          method: {
-            not: "QRIS",
-          },
+          method: "QRIS",
         },
       });
 
@@ -219,9 +240,7 @@ export async function ConfirmEstimation({
       const shopBankTransferPayments = await prisma.payment.findFirst({
         where: {
           shop_id,
-          method: {
-            not: "BANK_TRANSFER",
-          },
+          method: "BANK_TRANSFER",
         },
       });
 

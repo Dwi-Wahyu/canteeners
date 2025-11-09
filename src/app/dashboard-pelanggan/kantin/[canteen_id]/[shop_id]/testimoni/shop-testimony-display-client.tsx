@@ -10,7 +10,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconMessageCircleUser } from "@tabler/icons-react";
+import { IconMessageCircleUser, IconStar } from "@tabler/icons-react";
 import { getShopTestimonies } from "./queries";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -46,16 +46,25 @@ export default function ShopTestimonyDisplayClient({
         <div>
           {data.map((testimony, idx) => (
             <Card key={idx}>
-              <CardContent className="flex gap-1 items-start">
+              <CardContent className="flex gap-3 items-start">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={"/uploads/avatar/" + testimony.order.customer.avatar}
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
-                <div>
-                  <h1 className="font-semibold">
-                    {testimony.order.customer.name}
-                  </h1>
+                <div className="w-full">
+                  <div className="flex gap-1 items-center justify-between">
+                    <h1 className="font-semibold">
+                      {testimony.order.customer.name}
+                    </h1>
+
+                    <div className="flex gap-1 items-center">
+                      <IconStar className="w-4 h-4" />
+                      <h1 className="font-semibold">{testimony.rating}</h1>
+                    </div>
+                  </div>
                   <h1>{testimony.message}</h1>
                 </div>
               </CardContent>

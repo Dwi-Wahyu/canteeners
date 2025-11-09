@@ -24,6 +24,7 @@ import Link from "next/link";
 import { PasswordInput } from "@/components/password-input";
 import { useState } from "react";
 import OtpForm from "./otp-form";
+import ConfirmSNKPage from "./confirm-snk-page";
 
 export function SignupForm({
   className,
@@ -33,6 +34,7 @@ export function SignupForm({
   const [customerData, setCustomerData] = useState<SignUpSchemaType | null>(
     null
   );
+  const [showSnk, setShowSnk] = useState(false);
 
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(SignUpSchema),
@@ -54,9 +56,13 @@ export function SignupForm({
 
   return (
     <div className={"flex flex-col gap-6"} {...props}>
-      {showOTPForm ? (
-        <OtpForm customerData={customerData} />
-      ) : (
+      {showSnk && <ConfirmSNKPage customerData={customerData} />}
+
+      {showOTPForm && !showSnk && (
+        <OtpForm customerData={customerData} setShowSnk={setShowSnk} />
+      )}
+
+      {!showOTPForm && !showSnk && (
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Formulir Pendaftaran</CardTitle>

@@ -70,28 +70,6 @@ export default function ShopOrderDetailClient({
     });
   }
 
-  async function handleConfirmPayment() {
-    startTransition(async () => {
-      const result = await ConfirmPayment({
-        conversation_id: order.conversation_id,
-        order_id: order.id,
-        owner_id: order.shop.owner_id,
-      });
-
-      if (result.success) {
-        notificationDialog.success({
-          title: "Pembayaran Berhasil Dikonfirmasi",
-          message: "Mohon kerjakan pesanan sekarang juga",
-        });
-      } else {
-        notificationDialog.error({
-          title: "Pembayaran Gagal Dikonfirmasi",
-          message: "Silakan hubungi CS",
-        });
-      }
-    });
-  }
-
   useEffect(() => {
     subscribeOrder(order.id);
 
@@ -203,7 +181,7 @@ export default function ShopOrderDetailClient({
 
               {order.status === "WAITING_SHOP_CONFIRMATION" && (
                 <div className="grid grid-cols-2 gap-4 mt-2">
-                  <RejectPaymentDialog />
+                  <RejectPaymentDialog order_id={order.id} />
                   <ConfirmPaymentDialog
                     conversation_id={order.conversation_id}
                     order_id={order.id}

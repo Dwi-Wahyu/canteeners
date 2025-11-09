@@ -48,9 +48,19 @@ export async function getCustomerOrderDetail(id: string) {
               name: true,
             },
           },
+          payments: {
+            select: {
+              method: true,
+              qr_url: true,
+              additional_price: true,
+              note: true,
+              account_number: true,
+            },
+          },
           owner_id: true,
         },
       },
+      complaint: true,
       testimony: true,
       customer: {
         select: {
