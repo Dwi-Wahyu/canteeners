@@ -7,14 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { AddShopTestimony } from "../actions";
+import { AddShopTestimony } from "./actions";
 import { toast } from "sonner";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,

@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  refundDisbursementModeMapping,
   refundReasonMapping,
   refundStatusMapping,
 } from "@/constant/refund-mapping";
@@ -52,12 +53,12 @@ export default function RefundDetailClient({
           </div>
 
           <div className="flex gap-2">
-            <NavigationButton size="icon" url={"/order/" + refund.order.id}>
+            <NavigationButton size="sm" url={"/order/" + refund.order.id}>
               <IconReceipt />
             </NavigationButton>
 
             <NavigationButton
-              size="icon"
+              size="sm"
               url={"/dashboard-kedai/chat/" + refund.order.conversation_id}
             >
               <IconMessageCircle />
@@ -86,6 +87,13 @@ export default function RefundDetailClient({
               </h1>
             </div>
           )}
+
+          <div>
+            <h1 className="font-semibold">Mode Pengembalian Dana</h1>
+            <h1 className="text-muted-foreground break-words">
+              {refundDisbursementModeMapping[refund.disbursement_mode]}
+            </h1>
+          </div>
 
           <div>
             <h1 className="font-semibold">Diajukan Pada</h1>
@@ -138,8 +146,7 @@ export default function RefundDetailClient({
           )}
         </div>
 
-        {/* todo: ganti nanti pemeriksaan ini kalau metode disbursement bukan cash */}
-        {refund.order.payment_method !== "CASH" &&
+        {refund.disbursement_mode !== "CASH" &&
           (refund.status === "APPROVED" || refund.status === "PROCESSED") && (
             <div>
               <h1 className="font-semibold mb-1">Bukti Pengembalian Dana</h1>

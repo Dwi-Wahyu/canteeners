@@ -14,12 +14,17 @@ import { getHomeOwnerShopRefunds } from "./pengajuan-refund/queries";
 
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default async function HomeRefundSection({
   shop_id,
@@ -50,23 +55,19 @@ export default async function HomeRefundSection({
         <>
           <div className="flex flex-col gap-2">
             {refunds.map((refund, idx) => (
-              <Item variant={"outline"} key={idx}>
-                <ItemContent>
-                  <ItemTitle>{refund.order.customer.name}</ItemTitle>
-                  <ItemDescription>
-                    {refundReasonMapping[refund.reason]}
-                  </ItemDescription>
-                </ItemContent>
-                <ItemActions>
-                  <Button variant={"outline"} size={"icon"}>
-                    <Link
-                      href={"/dashboard-kedai/pengajuan-refund/" + refund.id}
-                    >
-                      <IconEye />
-                    </Link>
-                  </Button>
-                </ItemActions>
-              </Item>
+              <Link
+                key={idx}
+                href={"/dashboard-kedai/pengajuan-refund/" + refund.id}
+              >
+                <Card>
+                  <CardContent>
+                    <CardTitle>{refund.order.customer.name}</CardTitle>
+                    <CardDescription className="mt-1">
+                      Rp {refund.amount}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 

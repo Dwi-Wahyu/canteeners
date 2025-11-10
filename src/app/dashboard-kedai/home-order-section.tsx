@@ -22,6 +22,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 
 type RecentOrdersType = NonNullable<
   Awaited<ReturnType<typeof getShopDataAndRecentOrder>>
@@ -59,15 +65,15 @@ export default function HomeOrderSection({
       {orders.map((order, idx) => {
         return (
           <Link key={idx} href={"/dashboard-kedai/order/" + order.id}>
-            <Item variant="outline" className="mt-2 relative shadow rounded-lg">
-              <ItemContent>
-                <ItemTitle>{order.customer.name}</ItemTitle>
-                <ItemDescription>
+            <Card className="mt-2 relative shadow rounded-lg">
+              <CardContent>
+                <CardTitle>{order.customer.name}</CardTitle>
+                <CardDescription className="mt-1">
                   {formatDateToYYYYMMDD(order.created_at)}{" "}
                   {formatToHour(order.created_at)}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
+                </CardDescription>
+              </CardContent>
+            </Card>
           </Link>
         );
       })}

@@ -3,11 +3,8 @@
 import { orderStatusMapping } from "@/constant/order-status-mapping";
 import { getShopOrderDetail } from "../queries";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CustomBadge from "@/components/custom-badge";
 import { OrderStatus } from "@/app/generated/prisma";
-import { formatDateWithoutYear } from "@/helper/date-helper";
-import { formatToHour } from "@/helper/hour-helper";
 
 import {
   Item,
@@ -111,7 +108,6 @@ export default function ShopOrderDetailClient({
     <div className="flex flex-col gap-2">
       <div>
         <h1 className="font-semibold">Status</h1>
-
         <CustomBadge
           value={order.status}
           outlineValues={[
@@ -121,7 +117,11 @@ export default function ShopOrderDetailClient({
             OrderStatus.WAITING_CUSTOMER_ESTIMATION_CONFIRMATION,
           ]}
           successValues={[OrderStatus.COMPLETED]}
-          destructiveValues={[OrderStatus.CANCELLED, OrderStatus.REJECTED]}
+          destructiveValues={[
+            OrderStatus.CANCELLED,
+            OrderStatus.REJECTED,
+            OrderStatus.ESTIMATION_REJECTED,
+          ]}
         >
           {orderStatusMapping[order.status]}
         </CustomBadge>
@@ -219,7 +219,7 @@ export default function ShopOrderDetailClient({
             </div>
           ) : (
             <div>
-              <Image
+              <img
                 src={"/uploads/payment-proof/" + order.payment_proof_url}
                 width={400}
                 height={300}

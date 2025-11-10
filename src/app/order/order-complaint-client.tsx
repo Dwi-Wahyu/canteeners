@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { FileUploadImage } from "@/app/_components/file-upload-image";
 import Link from "next/link";
-import { AddShopComplaint, uploadShopComplaintImage } from "../actions";
+import { AddShopComplaint, uploadShopComplaintImage } from "./actions";
 import { toast } from "sonner";
 import { ShopComplaint } from "@/app/generated/prisma";
 import { useMutation } from "@tanstack/react-query";
@@ -173,7 +173,9 @@ export default function OrderComplaintClient({
                     className="py-6"
                     variant={"outline"}
                   >
-                    <Link href={`/order/${order_id}/refund`}>
+                    <Link
+                      href={`/dashboard-pelanggan/order/${order_id}/refund`}
+                    >
                       Ajukan Refund
                     </Link>
                   </Button>

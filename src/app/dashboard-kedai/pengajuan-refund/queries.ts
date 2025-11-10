@@ -21,6 +21,7 @@ export async function getHomeOwnerShopRefunds(shop_id: string, take?: number) {
     select: {
       id: true,
       reason: true,
+      amount: true,
       order: {
         select: {
           customer: {

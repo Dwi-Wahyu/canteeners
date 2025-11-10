@@ -3,7 +3,6 @@ import NotFoundResource from "@/app/_components/not-found-resource";
 import { auth } from "@/config/auth";
 import { getConversationMessages } from "@/app/chat/queries";
 import DetailConversationClient from "@/app/chat/detail-conversation-client";
-import { getOrderWaitingPayment } from "@/app/order/queries";
 
 export default async function ConversationPage({
   params,
@@ -24,14 +23,11 @@ export default async function ConversationPage({
     return <NotFoundResource />;
   }
 
-  const order_waiting_payment = await getOrderWaitingPayment(id);
-
   return (
     <DetailConversationClient
       conversation={conversation}
       sender_id={session.user.id}
       role={session.user.role}
-      order_waiting_payment={order_waiting_payment}
     />
   );
 }

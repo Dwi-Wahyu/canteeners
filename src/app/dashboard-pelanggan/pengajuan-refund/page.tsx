@@ -27,6 +27,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function CustomerRefundPage() {
   const session = await auth();
@@ -80,31 +81,26 @@ export default async function CustomerRefundPage() {
       ) : (
         <div className="flex flex-col gap-4">
           {refunds.map((refund, idx) => (
-            <Item variant={"outline"} key={idx}>
-              <ItemHeader>
-                <h1 className="font-semibold text-base">
-                  {refund.order.shop.name}
-                </h1>
+            <Link href={"/dashboard-pelanggan/pengajuan-refund/" + refund.id}>
+              <Item variant={"outline"} key={idx}>
+                <ItemHeader>
+                  <h1 className="font-semibold text-base">
+                    {refund.order.shop.name}
+                  </h1>
 
-                <h1>
-                  {formatDateWithoutYear(refund.requested_at)}{" "}
-                  {formatToHour(refund.requested_at)}
-                </h1>
-              </ItemHeader>
-              <ItemContent key={idx}>
-                <ItemTitle>{refundReasonMapping[refund.reason]}</ItemTitle>
-                <ItemDescription>
-                  {refundStatusMapping[refund.status]}
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <NavigationButton
-                  url={"/dashboard-pelanggan/pengajuan-refund/" + refund.id}
-                >
-                  <IconEye />
-                </NavigationButton>
-              </ItemActions>
-            </Item>
+                  <h1>
+                    {formatDateWithoutYear(refund.requested_at)}{" "}
+                    {formatToHour(refund.requested_at)}
+                  </h1>
+                </ItemHeader>
+                <ItemContent key={idx}>
+                  <ItemTitle>{refundReasonMapping[refund.reason]}</ItemTitle>
+                  <ItemDescription>
+                    {refundStatusMapping[refund.status]}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            </Link>
           ))}
         </div>
       )}

@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/file-upload";
 import { useChatRoom } from "@/hooks/use-chat-room";
 import { getConversationMessages } from "./queries";
-import { getOrderWaitingPayment } from "../order/queries";
 
 import {
   DropdownMenu,
@@ -33,7 +32,6 @@ import { IconMessage, IconMessages } from "@tabler/icons-react";
 export default function ChatInput({
   conversation,
   sender_id,
-  order_waiting_payment,
   quick_chats,
   is_pending_quick_chat,
 }: {
@@ -41,13 +39,11 @@ export default function ChatInput({
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
-  order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
   quick_chats: { message: string }[] | undefined;
   is_pending_quick_chat: boolean;
 }) {
   const [isUploading, setIsUploading] = React.useState(false);
 
-  const [isSendingPayment, setIsSendingPayment] = React.useState(false);
   const [showQuickChats, setShowQuickChats] = React.useState(false);
 
   const { text, setText, media, setMedia, handleSend, isLoading } = useChatRoom(
@@ -110,10 +106,6 @@ export default function ChatInput({
   }, []);
 
   const onSubmit = async () => {
-    if (isSendingPayment) {
-      await handleSend("PAYMENT_PROOF", order_waiting_payment?.id);
-    }
-
     await handleSend("TEXT");
 
     console.log(media);
@@ -210,37 +202,11 @@ export default function ChatInput({
               </Button>
             )}
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size={"icon"}
-                  type="button"
-                  variant="ghost"
-                  className="size-10 rounded-sm"
-                >
-                  <Paperclip />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <FileUploadTrigger className="w-full">
-                      Kirim Gambar
-                      <span className="sr-only">Attach file</span>
-                    </FileUploadTrigger>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild disabled={!order_waiting_payment}>
-                    <FileUploadTrigger
-                      className="w-full"
-                      onClick={() => setIsSendingPayment(true)}
-                    >
-                      Kirim bukti pembayaran
-                      <span className="sr-only">Send payment proof</span>
-                    </FileUploadTrigger>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <FileUploadTrigger className="w-full">
+              <Paperclip />
+
+              <span className="sr-only">Send media</span>
+            </FileUploadTrigger>
 
             <Button
               size="icon"

@@ -22,7 +22,7 @@ export default async function RefundPage({
         backUrl={"/dashboard-pelanggan/order/" + id}
       />
 
-      <div className="p-5">
+      <div>
         <Card>
           <CardContent>
             <CardTitle>Form Pengajuan Refund</CardTitle>

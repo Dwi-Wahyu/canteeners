@@ -311,7 +311,7 @@ export default function CustomerOrderDetailClient({
                 customer_id={order.customer_id}
               />
             ) : (
-              <Image
+              <img
                 src={"/uploads/payment-proof/" + order.payment_proof_url}
                 width={400}
                 height={300}

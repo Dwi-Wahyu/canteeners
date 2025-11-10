@@ -4,8 +4,8 @@ import TopbarWithBackButton from "@/components/layouts/topbar-with-backbutton";
 import ShopOrderDetailClient from "./shop-order-detail-client";
 import { auth } from "@/config/auth";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
-import OrderReviewSection from "@/app/order/[id]/order-review-section";
 import OrderUiInfoDialog from "@/app/order/order-ui-info-dialog";
+import OrderReviewSection from "@/app/order/order-review-section";
 
 export default async function ShopOrderDetailPage({
   params,
@@ -34,6 +34,7 @@ export default async function ShopOrderDetailPage({
     <div className="flex flex-col gap-5">
       <TopbarWithBackButton
         title="Detail Order"
+        backUrl={"/dashboard-kedai/chat/" + order.conversation_id}
         actionButton={<OrderUiInfoDialog />}
       />
 

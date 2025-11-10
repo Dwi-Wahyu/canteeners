@@ -4,7 +4,6 @@ import { formatDateToYYYYMMDD } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";
 
 import { getConversationMessages } from "@/app/chat/queries";
-import { getOrderWaitingPayment } from "../order/queries";
 
 import { IconCheck, IconChecks } from "@tabler/icons-react";
 import { useChatRoom } from "@/hooks/use-chat-room";
@@ -20,14 +19,12 @@ export default function DetailConversationClient({
   conversation,
   sender_id,
   role,
-  order_waiting_payment,
 }: {
   conversation: NonNullable<
     Awaited<ReturnType<typeof getConversationMessages>>
   >;
   sender_id: string;
   role: string;
-  order_waiting_payment: Awaited<ReturnType<typeof getOrderWaitingPayment>>;
 }) {
   const { messages, messagesEndRef } = useChatRoom({
     conversationId: conversation.id,
@@ -212,7 +209,6 @@ export default function DetailConversationClient({
           <ChatInput
             conversation={conversation}
             sender_id={sender_id}
-            order_waiting_payment={order_waiting_payment}
             is_pending_quick_chat={isLoading}
             quick_chats={data}
           />

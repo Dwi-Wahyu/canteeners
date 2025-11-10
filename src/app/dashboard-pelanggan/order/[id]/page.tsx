@@ -4,8 +4,8 @@ import { auth } from "@/config/auth";
 import UnauthorizedPage from "@/app/_components/unauthorized-page";
 import { getCustomerOrderDetail } from "../queries";
 import CustomerOrderDetailClient from "./customer-order-detail-client";
-import OrderReviewSection from "@/app/order/[id]/order-review-section";
-import OrderComplaintClient from "@/app/order/[id]/order-complaint-client";
+import OrderReviewSection from "@/app/order/order-review-section";
+import OrderComplaintClient from "@/app/order/order-complaint-client";
 import OrderUiInfoDialog from "@/app/order/order-ui-info-dialog";
 
 export default async function ShopOrderDetailPage({
@@ -35,6 +35,7 @@ export default async function ShopOrderDetailPage({
     <div className="flex flex-col gap-5">
       <TopbarWithBackButton
         title="Detail Order"
+        backUrl={"/dashboard-kedai/chat/" + order.conversation_id}
         actionButton={<OrderUiInfoDialog />}
       />
 

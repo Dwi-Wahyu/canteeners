@@ -140,7 +140,7 @@ export default function RefundDetailClient({
           )}
         </div>
 
-        {refund.order.payment_method !== "CASH" &&
+        {refund.disbursement_mode !== "CASH" &&
           refund.status === "APPROVED" && (
             <div className="mt-2">
               <h1 className="font-semibold mb-1">Bukti Pengembalian Dana</h1>
@@ -174,8 +174,8 @@ export default function RefundDetailClient({
         <div className="flex flex-col gap-4 mt-2">
           {refund.status === "PENDING" && <TolakRefundDialog id={refund.id} />}
 
-          {refund.order.payment_method !== "CASH" &&
-            refund.status === "APPROVED" &&
+          {refund.status === "APPROVED" &&
+            refund.disbursement_mode === "TRANSFER" &&
             !refund.disbursement_proof_url && (
               <SendDisbursementDialog refund_id={refund.id} />
             )}
