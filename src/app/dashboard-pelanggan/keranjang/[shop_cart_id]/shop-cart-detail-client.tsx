@@ -93,8 +93,12 @@ export default function ShopCartDetailClient({
           title: "Sukses checkout keranjang",
           message: "Order berhasil dicatat",
           actionButtons: (
-            <div className="flex gap-2">
-              <Button onClick={notificationDialog.hide} asChild>
+            <>
+              <Button
+                onClick={notificationDialog.hide}
+                variant={"outline"}
+                asChild
+              >
                 <Link
                   href={"/dashboard-pelanggan/order/" + data.data?.order_id}
                 >
@@ -114,7 +118,7 @@ export default function ShopCartDetailClient({
                   Hubungi Pemilik Kedai
                 </Link>
               </Button>
-            </div>
+            </>
           ),
         });
       } else {

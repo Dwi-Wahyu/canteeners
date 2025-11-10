@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { create } from "zustand";
 
 type NotificationDialogType = "success" | "error" | "info";
@@ -7,6 +8,7 @@ interface Notification {
   message?: string;
   type: NotificationDialogType;
   actionButtons?: React.ReactNode;
+  icon?: ReactNode;
 }
 
 interface NotificationStore {

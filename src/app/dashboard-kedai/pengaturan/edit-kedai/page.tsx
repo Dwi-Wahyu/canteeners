@@ -21,7 +21,10 @@ export default async function EditShopPage() {
 
   return (
     <div>
-      <TopbarWithBackButton title="Edit Data Kedai" />
+      <TopbarWithBackButton
+        title="Edit Data Kedai"
+        backUrl="/dashboard-kedai/pengaturan"
+      />
 
       <Card>
         <CardContent>

@@ -61,18 +61,12 @@ export default function EditShopForm({
     },
   });
 
-  const router = useRouter();
-
   const onSubmit = async (payload: UpdateShopSchemaType) => {
     if (files.length > 0) {
       payload.image_url = await uploadShopImage(files[0]);
     }
 
-    console.log(payload);
-
     const result = await UpdateShop(payload);
-
-    console.log(result);
 
     if (result.success) {
       notificationDialog.success({
@@ -80,8 +74,6 @@ export default function EditShopForm({
         message: "Data kedai berhasil diperbarui.",
         actionButtons: <Button onClick={notificationDialog.hide}>Tutup</Button>,
       });
-
-      router.push("/dashboard-kedai/pengaturan");
     } else {
       console.log(result.error);
 

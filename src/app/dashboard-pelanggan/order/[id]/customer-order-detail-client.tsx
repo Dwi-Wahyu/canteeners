@@ -17,6 +17,8 @@ import {
 import {
   IconCash,
   IconCashOff,
+  IconCopy,
+  IconCopyCheck,
   IconEdit,
   IconNote,
   IconShoppingCartExclamation,
@@ -38,7 +40,7 @@ import { ConfirmEstimation } from "../actions";
 import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { formatToHour } from "@/helper/hour-helper";
 import { useRouter } from "nextjs-toploader/app";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   useSocket,
   useSocketSubscribeOrder,
@@ -58,6 +60,8 @@ export default function CustomerOrderDetailClient({
   const subscribeOrder = useSocketSubscribeOrder();
   const unsubscribeOrder = useSocketUnsubscribeOrder();
   const socketOrderUpdate = useSocketUpdateOrder();
+
+  const [copied, setCopied] = useState(false);
 
   const confirmEstimationMutation = useMutation({
     mutationFn: async () => {
@@ -204,11 +208,6 @@ export default function CustomerOrderDetailClient({
         <h1>{order.total_price}</h1>
       </div>
 
-      <div>
-        <h1 className="font-semibold">Metode Pembayaran</h1>
-        <h1>{paymentMethodMapping[order.payment_method]}</h1>
-      </div>
-
       {order.estimation && (
         <div className="flex flex-col gap-2">
           <div>
@@ -234,6 +233,52 @@ export default function CustomerOrderDetailClient({
           )}
         </div>
       )}
+
+      <div>
+        <h1 className="font-semibold">Metode Pembayaran</h1>
+        <h1>{paymentMethodMapping[order.payment_method]}</h1>
+      </div>
+
+      {order.status === "WAITING_PAYMENT" &&
+        order.payment_method === "BANK_TRANSFER" && (
+          <div>
+            <h1 className="font-semibold">Nomor Rekening</h1>
+
+            <div className="flex gap-2 items-center">
+              <h1>
+                {
+                  order.shop.payments.filter(
+                    (payment) => payment.method === "BANK_TRANSFER"
+                  )[0].account_number
+                }
+              </h1>
+
+              <button
+                onClick={() => {
+                  const bankTransferPayment = order.shop.payments.filter(
+                    (payment) => payment.method === "BANK_TRANSFER"
+                  )[0]; // Ambil elemen pertama, bisa jadi undefined
+
+                  const accountNumber =
+                    bankTransferPayment?.account_number?.toString();
+
+                  if (accountNumber) {
+                    navigator.clipboard.writeText(accountNumber);
+                    setCopied(true);
+                  } else {
+                    console.error("Nomor akun BANK_TRANSFER tidak ditemukan.");
+                  }
+                }}
+              >
+                {copied ? (
+                  <IconCopyCheck className="w-4 h-4" />
+                ) : (
+                  <IconCopy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+          </div>
+        )}
 
       {order.status === "WAITING_PAYMENT" &&
         order.payment_method === "QRIS" && (

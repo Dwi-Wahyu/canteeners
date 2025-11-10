@@ -16,6 +16,7 @@ import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { MessageData } from "@/store/socket/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { IconReceipt } from "@tabler/icons-react";
 
 export default function ClientOwnerLayout({
   children,
@@ -62,18 +63,22 @@ export default function ClientOwnerLayout({
           notificationDialog.success({
             title: "Pesanan Baru Masuk",
             message: "Segera cek detail pesanan",
+            icon: <IconReceipt className="w-20 h-20 text-success-foreground" />,
             actionButtons: (
-              <div className="flex gap-2 items-center">
+              <>
                 <Button variant={"outline"} onClick={notificationDialog.hide}>
                   Tutup
                 </Button>
 
                 <Button asChild>
-                  <Link href={"/dashboard-kedai/order/" + data.order_id}>
+                  <Link
+                    onClick={notificationDialog.hide}
+                    href={"/dashboard-kedai/order/" + data.order_id}
+                  >
                     Detail
                   </Link>
                 </Button>
-              </div>
+              </>
             ),
           });
         }

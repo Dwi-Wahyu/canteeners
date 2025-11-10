@@ -21,7 +21,7 @@ const icons: Record<NotificationType, JSX.Element> = {
 };
 
 const colors = {
-  // Warna solid untuk icon paling dalam (bg-...)
+  // Warna solid untuk icon paling dalam
   solid: {
     success: "bg-success",
     error: "bg-destructive",
@@ -51,20 +51,20 @@ export default function NotificationDialog() {
   return (
     <Dialog open={!!notification} onOpenChange={() => hide()}>
       <DialogContent showCloseButton={false}>
-        <DialogHeader className="flex flex-col items-center gap-4">
+        <DialogHeader className="flex flex-col items-center gap-4 ">
           <div className="fixed left-0 -top-[6.5rem] w-full flex justify-center">
             <div className={`rounded-full p-4 bg-card`}>
               <div className={`rounded-full p-4 ${colors.ring_middle[type]}`}>
                 <div className={`rounded-full p-4 ${colors.ring_outer[type]}`}>
                   <div className={`rounded-full p-4 ${colors.solid[type]}`}>
-                    {icons[type]}
+                    {notification.icon ? notification.icon : icons[type]}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-[5.5rem]">
+          <div className="pt-[5.5rem] text-center">
             <DialogTitle className="text-xl font-semibold">
               {notification.title}
             </DialogTitle>
@@ -73,7 +73,9 @@ export default function NotificationDialog() {
             )}
 
             {notification.actionButtons && (
-              <div className="mt-5">{notification.actionButtons}</div>
+              <div className="mt-5 flex justify-center gap-4">
+                {notification.actionButtons}
+              </div>
             )}
           </div>
         </DialogHeader>

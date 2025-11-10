@@ -88,6 +88,7 @@ export async function calculateShopNetProfit(
   totalCost: number;
   totalRefund: number;
 }> {
+  // todo : kurangi ini dengan fee aplikasi dari jumlah order items * quantity
   const revenueResult = await prisma.order.aggregate({
     where: {
       shop_id: shopId,
