@@ -176,10 +176,6 @@ export async function ChangeOrderEstimation({
       },
       data: {
         estimation,
-        status:
-          status === "ESTIMATION_REJECTED"
-            ? "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION"
-            : status,
       },
     });
 
