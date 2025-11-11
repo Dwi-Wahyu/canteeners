@@ -42,10 +42,5 @@ export default function OrderEstimationCountDown({
     return () => clearInterval(timer);
   }, [processed_at, estimation, targetTimeMs]); // Jalankan ulang jika processed_at atau estimation berubah
 
-  // --- Tampilan di bagian bawah ---
-  const finishTime = processed_at
-    ? formatToHour(new Date(targetTimeMs)) // Gunakan waktu selesai target
-    : "N/A";
-
   return <>{countdown}</>;
 }

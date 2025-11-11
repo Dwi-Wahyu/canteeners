@@ -35,7 +35,7 @@ export default async function ShopOrderDetailPage({
     <div className="flex flex-col gap-5">
       <TopbarWithBackButton
         title="Detail Order"
-        backUrl={"/dashboard-kedai/chat/" + order.conversation_id}
+        backUrl={"/dashboard-pelanggan/chat/" + order.conversation_id}
         actionButton={<OrderUiInfoDialog />}
       />
 

@@ -8,6 +8,8 @@
 !.yarn/releases
 !.yarn/versions
 
+script.txt
+
 /certificates/*
 
 /data/*

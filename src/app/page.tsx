@@ -40,18 +40,18 @@ export default async function LandingPage() {
       <main>
         <section
           id="hero"
-          className="py-20 min-h-screen md:py-32 text-center border-b"
+          className="min-h-screen flex p-4 justify-center items-center border-b"
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-4 leading-tight">
-              <span className="text-primary">Kantin Naik Level</span>
+          <div className="flex justify-center items-center flex-col text-center">
+            <h2 className="text-5xl text-primary md:text-7xl font-extrabold leading-tight">
+              Kantin Naik Level
             </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
+            <p className="text-xl mb-8 md:max-w-3xl">
               Solusi cerdas untuk keramaian kantin. Pesan makanan tanpa antri,
               langsung dari meja Anda, dan terhubung instan dengan pemilik
               warung.
             </p>
-            <div className="flex flex-col md:flex-row gap-3 justify-center items-center w-full">
+            <div className="flex md:flex-row flex-col justify-center items-center gap-3 w-full">
               <Button asChild size={"lg"} variant={"default"} className="w-fit">
                 <Link href={"/#kantin"}>Temukan Kantin Anda</Link>
               </Button>
@@ -63,7 +63,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="about" className="py-16 md:py-24 bg-secondary shadow">
+        <section id="about" className="py-16 md:py-24 bg-secondary border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-4xl font-bold text-primary">
@@ -139,7 +139,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="kantin" className="py-16 md:py-24 shadow">
+        <section id="kantin" className="py-16 md:py-24 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-4xl font-bold text-primary">

@@ -114,14 +114,9 @@ export default function ShopOrderDetailClient({
             OrderStatus.WAITING_SHOP_CONFIRMATION,
             OrderStatus.WAITING_PAYMENT,
             OrderStatus.PENDING_CONFIRMATION,
-            OrderStatus.WAITING_CUSTOMER_ESTIMATION_CONFIRMATION,
           ]}
           successValues={[OrderStatus.COMPLETED]}
-          destructiveValues={[
-            OrderStatus.CANCELLED,
-            OrderStatus.REJECTED,
-            OrderStatus.ESTIMATION_REJECTED,
-          ]}
+          destructiveValues={[OrderStatus.CANCELLED, OrderStatus.REJECTED]}
         >
           {orderStatusMapping[order.status]}
         </CustomBadge>
@@ -135,14 +130,6 @@ export default function ShopOrderDetailClient({
             <AlertDescription>{order.rejected_reason}</AlertDescription>
           </Alert>
         )}
-
-      {order.status === "ESTIMATION_REJECTED" && (
-        <Alert variant={"destructive"}>
-          <IconShoppingCartExclamation />
-          <AlertTitle>Estimasi Ditolak</AlertTitle>
-          <AlertDescription>{order.rejected_reason}</AlertDescription>
-        </Alert>
-      )}
 
       <div>
         <h1 className="font-semibold mb-1">Pesanan</h1>

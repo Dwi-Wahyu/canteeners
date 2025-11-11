@@ -10,7 +10,7 @@ export default function LandingTopbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="py-4 px-4 sm:px-8 bg-secondary shadow-sm sticky top-0 z-50">
+    <header className="py-4 px-4 sm:px-8 bg-secondary shadow-sm fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="flex gap-2 items-center">

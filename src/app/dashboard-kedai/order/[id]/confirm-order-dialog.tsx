@@ -40,6 +40,10 @@ export default function ConfirmOrderDialog({
       return await ConfirmOrder({
         estimation,
         order_id,
+        conversation_id,
+        owner_id,
+        payment_method,
+        shop_id,
       });
     },
   });

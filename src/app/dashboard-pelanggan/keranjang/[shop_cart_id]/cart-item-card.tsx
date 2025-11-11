@@ -100,109 +100,118 @@ export default function CartItemCard({
 
   return (
     <Card>
-      <CardContent className="flex gap-4">
-        <Image
-          src={
-            cartItem.product.image_url
-              ? `/uploads/product/${cartItem.product.image_url}`
-              : "/placeholder-image.jpg"
-          }
-          alt={cartItem.product.name}
-          width={100}
-          height={100}
-          className="rounded-lg object-cover aspect-square"
-          onError={(e) => (e.currentTarget.src = "/placeholder-image.jpg")} // Fallback jika gambar gagal dimuat
-        />
-        <div className="w-full">
-          <div className="flex justify-between items-center w-full">
-            <h1 className="font-semibold text-start">
-              {cartItem.product.name}
-            </h1>
+      <CardContent>
+        <div className="flex gap-4">
+          <Image
+            src={
+              cartItem.product.image_url
+                ? `/uploads/product/${cartItem.product.image_url}`
+                : "/placeholder-image.jpg"
+            }
+            alt={cartItem.product.name}
+            width={100}
+            height={100}
+            className="rounded-lg object-cover aspect-square"
+            onError={(e) => (e.currentTarget.src = "/placeholder-image.jpg")} // Fallback jika gambar gagal dimuat
+          />
+          <div className="w-full">
+            <div className="flex justify-between items-center w-full">
+              <h1 className="font-semibold text-start">
+                {cartItem.product.name}
+              </h1>
 
-            <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <IconNote className="w-3 h-3 text-muted-foreground" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle className="hidden">Product Details</DialogTitle>
-                  <DialogDescription className="hidden">
-                    Product Details Description
-                  </DialogDescription>
+              <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <IconNote className="w-3 h-3 text-muted-foreground" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="hidden">
+                      Product Details
+                    </DialogTitle>
+                    <DialogDescription className="hidden">
+                      Product Details Description
+                    </DialogDescription>
 
-                  <div className="text-start flex flex-col gap-2">
-                    <h1 className="text-start font-semibold">
-                      {cartItem.product.name}
-                    </h1>
-                    <div>
-                      <h1 className="text-sm text-muted-foreground mb-1">
-                        Catatan
+                    <div className="text-start flex flex-col gap-2">
+                      <h1 className="text-start font-semibold">
+                        {cartItem.product.name}
                       </h1>
-                      <Textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Tambahkan catatan untuk produk ini..."
-                      />
+                      <div>
+                        <h1 className="text-sm text-muted-foreground mb-1">
+                          Catatan
+                        </h1>
+                        <Textarea
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                          placeholder="Tambahkan catatan untuk produk ini..."
+                        />
+                      </div>
+                      <Button
+                        onClick={handleSave}
+                        className="mt-4"
+                        size={"lg"}
+                        disabled={mutation.isPending}
+                      >
+                        {mutation.isPending ? "Menyimpan..." : "Simpan"}
+                      </Button>
                     </div>
-                    <Button
-                      onClick={handleSave}
-                      className="mt-4"
-                      size={"lg"}
-                      disabled={mutation.isPending}
-                    >
-                      {mutation.isPending ? "Menyimpan..." : "Simpan"}
-                    </Button>
-                  </div>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-          </div>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </div>
 
-          <div className="mt-2">
             <h1 className="text-sm text-muted-foreground">
               Rp {cartItem.price_at_add * qty}
             </h1>
-          </div>
 
-          <div className="flex gap-4 mt-4 items-center">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-4 mt-4 items-center">
+              <div className="flex gap-2 items-center">
+                <Button
+                  size="icon"
+                  onClick={() => changeQuantity(qty - 1)}
+                  disabled={qty <= 1 || mutation.isPending || disabled}
+                >
+                  -
+                </Button>
+                <Input
+                  type="number"
+                  value={qty}
+                  onChange={(e) => changeQuantity(Number(e.target.value))}
+                  className="w-16 text-center "
+                  min={1}
+                />
+                <Button
+                  size="icon"
+                  onClick={() => changeQuantity(qty + 1)}
+                  disabled={mutation.isPending || disabled}
+                >
+                  +
+                </Button>
+              </div>
+
               <Button
+                variant="destructive"
                 size="icon"
-                onClick={() => changeQuantity(qty - 1)}
-                disabled={qty <= 1 || mutation.isPending || disabled}
+                disabled={
+                  deleteMutation.isPending || disabled || disabledDeleteButton
+                }
+                onClick={() => deleteMutation.mutate()}
               >
-                -
-              </Button>
-              <Input
-                type="number"
-                value={qty}
-                onChange={(e) => changeQuantity(Number(e.target.value))}
-                className="w-16 text-center "
-                min={1}
-              />
-              <Button
-                size="icon"
-                onClick={() => changeQuantity(qty + 1)}
-                disabled={mutation.isPending || disabled}
-              >
-                +
+                <IconTrash />
               </Button>
             </div>
-
-            <Button
-              variant="destructive"
-              size="icon"
-              disabled={
-                deleteMutation.isPending || disabled || disabledDeleteButton
-              }
-              onClick={() => deleteMutation.mutate()}
-            >
-              <IconTrash />
-            </Button>
           </div>
         </div>
+
+        {cartItem.notes && (
+          <div className="flex gap-1 items-center mt-3 text-muted-foreground">
+            <IconNote className="w-4 h-4" />
+            <h1>{cartItem.notes}</h1>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

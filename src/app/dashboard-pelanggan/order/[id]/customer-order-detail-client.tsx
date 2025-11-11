@@ -34,10 +34,6 @@ import OrderEstimationCountDown from "@/app/order/order-estimation-countdown";
 import CancelOrderDialog from "./cancel-order-dialog";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { ConfirmEstimation } from "../actions";
-import { notificationDialog } from "@/hooks/use-notification-dialog";
 import { formatToHour } from "@/helper/hour-helper";
 import { useRouter } from "nextjs-toploader/app";
 import { useEffect, useState } from "react";
@@ -47,7 +43,6 @@ import {
   useSocketUnsubscribeOrder,
   useSocketUpdateOrder,
 } from "@/hooks/use-socket";
-import RejectEstimationDialog from "./reject-estimation-dialog";
 
 export default function CustomerOrderDetailClient({
   order,
@@ -62,37 +57,6 @@ export default function CustomerOrderDetailClient({
   const socketOrderUpdate = useSocketUpdateOrder();
 
   const [copied, setCopied] = useState(false);
-
-  const confirmEstimationMutation = useMutation({
-    mutationFn: async () => {
-      return await ConfirmEstimation({
-        order_id: order.id,
-        payment_method: order.payment_method,
-        conversation_id: order.conversation_id,
-        owner_id: order.shop.owner_id,
-        shop_id: order.shop_id,
-      });
-    },
-    onSuccess(data) {
-      if (data.success) {
-        socketOrderUpdate(order.id);
-        notificationDialog.success({
-          title: "Berhasil konfirmasi estimasi",
-          message: data.message,
-          actionButtons: (
-            <Button onClick={notificationDialog.hide} size={"lg"}>
-              Tutup
-            </Button>
-          ),
-        });
-      } else {
-        notificationDialog.error({
-          title: "Terjadi Kesalahan",
-          message: data.error.message,
-        });
-      }
-    },
-  });
 
   useEffect(() => {
     subscribeOrder(order.id);
@@ -373,25 +337,6 @@ export default function CustomerOrderDetailClient({
           )}
         </div>
       </div>
-
-      {order.status === "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION" && (
-        <div className="mt-2">
-          <h1 className="font-semibold">Konfirmasi Estimasi</h1>
-          <h1 className="text-muted-foreground">Cek estimasi yang diberikan</h1>
-
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <RejectEstimationDialog order_id={order.id} />
-
-            <Button
-              size={"lg"}
-              onClick={() => confirmEstimationMutation.mutateAsync()}
-              disabled={confirmEstimationMutation.isPending}
-            >
-              Konfirmasi
-            </Button>
-          </div>
-        </div>
-      )}
 
       {![
         "COMPLETED",

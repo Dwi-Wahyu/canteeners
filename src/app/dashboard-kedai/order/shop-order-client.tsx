@@ -10,7 +10,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconEye, IconReceiptOff } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconChevronRight,
+  IconEye,
+  IconReceiptOff,
+} from "@tabler/icons-react";
 import {
   Item,
   ItemActions,
@@ -98,7 +103,9 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
                     className={`border-${getStatusColor(order.status)}`}
                   >
                     <ItemHeader>
-                      <h1>{order.order_items.length} Produk</h1>
+                      <div>
+                        <h1>{order.order_items.length} Produk</h1>
+                      </div>
 
                       <h1>Rp {order.total_price}</h1>
                     </ItemHeader>
@@ -110,14 +117,7 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
                       </ItemDescription>
                     </ItemContent>
                     <ItemActions>
-                      {order.estimation && (
-                        <h1>
-                          <OrderEstimationCountDown
-                            estimation={order.estimation}
-                            processed_at={order.processed_at}
-                          />
-                        </h1>
-                      )}
+                      <IconChevronRight />
                     </ItemActions>
                   </Item>
                 </Link>
@@ -138,10 +138,24 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
                     calculateTimeRemaining(targetTimeMs)
                   )}`}
                 >
-                  <ItemHeader>
-                    <h1>{order.order_items.length} Produk</h1>
+                  <ItemHeader className="items-start">
+                    <div>
+                      <h1 className="mb-1">
+                        {order.order_items.length} Produk
+                      </h1>
 
-                    <h1>Rp {order.total_price}</h1>
+                      {order.order_items.map((items) => (
+                        <div key={items.id}>
+                          <img
+                            src={"/uploads/product/" + items.product.image_url}
+                            className="w-10 h-10"
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    <h1 className="font-semibold">Rp {order.total_price}</h1>
                   </ItemHeader>
 
                   <ItemContent>
@@ -151,7 +165,20 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
                     </ItemDescription>
                   </ItemContent>
                   <ItemActions>
-                    {order.estimation && (
+                    {order.estimation &&
+                    order.processed_at &&
+                    order.status === "PROCESSING" &&
+                    calculateOrderEstimationRemainining({
+                      estimation: order.estimation,
+                      processed_at: order.processed_at,
+                    }) === "Selesai" ? (
+                      <div className="flex gap-1 items-center text-red-600">
+                        <IconAlertCircle className="w-4 h-4" />
+                        <h1 className="font-semibold text-sm ">
+                          Order Lewat Estimasi
+                        </h1>
+                      </div>
+                    ) : (
                       <h1>
                         <OrderEstimationCountDown
                           estimation={order.estimation}
@@ -159,18 +186,6 @@ export default function ShopOrderClient({ owner_id }: { owner_id: string }) {
                         />
                       </h1>
                     )}
-
-                    {order.estimation &&
-                      order.processed_at &&
-                      order.status === "PROCESSING" &&
-                      calculateOrderEstimationRemainining({
-                        estimation: order.estimation,
-                        processed_at: order.processed_at,
-                      }) === "Selesai" && (
-                        <div>
-                          <h1>Order Sudah Harus Diterima Pelanggan</h1>
-                        </div>
-                      )}
                   </ItemActions>
                 </Item>
               </Link>
