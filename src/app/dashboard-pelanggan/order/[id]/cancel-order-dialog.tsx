@@ -156,7 +156,6 @@ export default function CancelOrderDialog({
           )}
 
           {order_status !== "PENDING_CONFIRMATION" &&
-            order_status !== "WAITING_CUSTOMER_ESTIMATION_CONFIRMATION" &&
             !ORDER_CANCEL_WITHOUT_PAY && (
               <Label className="mt-2 flex items-center gap-2">
                 <Checkbox
