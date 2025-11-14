@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { NavMenu } from "./nav-menu";
 import SidebarUserDetail from "./user-detail";
 import { UtensilsCrossed } from "lucide-react";
+import Image from "next/image";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open } = useSidebar();
@@ -43,7 +44,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem className="p-2 pb-0 flex items-center justify-between">
             {open ? (
               <div className="flex gap-2 items-center">
-                <UtensilsCrossed className="w-9 h-9" />
+                <Image
+                  src={"/app-logo.svg"}
+                  width={36}
+                  height={36}
+                  alt="app logo"
+                />
 
                 <div>
                   <h1 className="text-lg font-bold leading-tight">
@@ -93,7 +99,13 @@ function LoadingSidebarMenu({
         <SidebarMenu>
           <SidebarMenuItem className="p-2 pb-0 flex items-center justify-between">
             <div className="flex gap-2 items-center">
-              <UtensilsCrossed className="w-9 h-9" />
+              <Image
+                src={"/app-logo.svg"}
+                width={36}
+                height={36}
+                alt="app logo"
+              />
+
               <div>
                 <h1 className="text-lg font-bold leading-tight">CANTEENERS</h1>
                 <h1 className="text-sm text-muted-foreground">

@@ -21,6 +21,8 @@ model Shop {
     refund_disbursement_mode RefundDisbursementMode @default(CASH)
 
     payments Payment[]
+    billings ShopBilling[]
+    qrcode_url String?
 
     minimum_price Int?
     maximum_price Int?
@@ -33,6 +35,29 @@ model Shop {
     @@index([canteen_id])
     @@index([name])
     @@map("shops")
+}
+
+model ShopBilling {
+    id String @id @default(nanoid())
+
+    shop Shop @relation(fields: [shop_id], references: [id])
+    shop_id String
+
+    start_date DateTime
+    end_date DateTime
+    // Jumlah komisi yang harus dibayar (1000 per quantity order item)
+    subtotal Float
+    // Jumlah refund yang di proses
+    refund Float
+    // Total akhir yang harus dibayar (subtotal - refund)
+    total Float
+    status ShopBillingStatus @default(UNPAID)
+    @@map("shop_billings")
+}
+
+enum ShopBillingStatus {
+    PAID // sudah terbayar
+    UNPAID // belum dibayar
 }
 
 enum RefundDisbursementMode {

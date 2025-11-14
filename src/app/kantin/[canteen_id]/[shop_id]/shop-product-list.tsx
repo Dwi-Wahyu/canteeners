@@ -1,30 +1,28 @@
 "use client";
 
-import { getAllShopProducts } from "./queries";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Shop } from "@/app/generated/prisma";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IconSearch } from "@tabler/icons-react";
-import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CircleAlertIcon } from "lucide-react";
 import ProductCard from "./product-card";
-import { ProductsType } from "./type";
-import { useRouter } from "nextjs-toploader/app";
+import { useQuery } from "@tanstack/react-query";
+import { getAllShopProducts } from "@/app/dashboard-pelanggan/kantin/[canteen_id]/[shop_id]/queries";
 
 export default function ShopProductList({ shop }: { shop: Shop }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<ProductsType | []>([]);
   const [productName, setProductName] = useState("");
+  const [categoryId, setCategoryId] = useState<number | null>(null);
 
-  useEffect(() => {
-    setIsLoading(true);
-    getAllShopProducts(shop.id, productName).then((products) => {
-      setProducts(products);
-      setIsLoading(false);
-    });
-  }, [productName]);
+  const { data, isFetching } = useQuery({
+    queryKey: ["shop-product-list", shop.id],
+    queryFn: async () => {
+      return await getAllShopProducts({
+        category_id: categoryId,
+        product_name: productName,
+        shop_id: shop.id,
+      });
+    },
+  });
 
   return (
     <div>
@@ -33,20 +31,10 @@ export default function ShopProductList({ shop }: { shop: Shop }) {
         <h1 className="text-muted-foreground">{shop.description}</h1>
       </div>
 
-      <Alert className="mb-4">
-        <CircleAlertIcon />
-        <AlertTitle>Anda Belum Bisa Membuat Pesanan</AlertTitle>
-        <AlertDescription className="underline underline-offset-2">
-          <Link href={"/auth/signin"}>
-            Silahkan login atau mendaftar terlebih dahulu
-          </Link>
-        </AlertDescription>
-      </Alert>
-
       <div className="relative">
         <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
           <IconSearch className="size-4" />
-          <span className="sr-only">User</span>
+          <span className="sr-only">Product Name</span>
         </div>
         <Input
           placeholder="Cari nama produk"
@@ -56,15 +44,17 @@ export default function ShopProductList({ shop }: { shop: Shop }) {
         />
       </div>
 
-      {isLoading ? (
+      {isFetching && (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
           <Skeleton className="w-full h-52" />
           <Skeleton className="w-full h-52" />
           <Skeleton className="w-full h-52" />
         </div>
-      ) : (
+      )}
+
+      {!isFetching && data && data.length > 0 && (
         <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-3">
-          {products.map((product) => (
+          {data.map((product) => (
             <ProductCard product={product} key={product.id} />
           ))}
         </div>

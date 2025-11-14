@@ -151,9 +151,27 @@ export default async function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {canteens.map((canteen, idx) => (
-                <Link
-                  href={"/kantin/" + canteen.id}
+              <Link
+                href={"/kantin/" + canteens[0].id}
+                className="group relative block h-60"
+              >
+                <div className="w-full overflow-hidden absolute z-10 left-0 top-0 h-full rounded-xl">
+                  <img
+                    src={"/uploads/canteen/" + canteens[0].image_url}
+                    alt=""
+                    className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
+                  />
+                </div>
+                <div className="w-full h-full rounded-xl absolute z-20 left-0 flex justify-center items-center top-0 bg-black/50">
+                  <h1 className="font-semibold text-center text-white">
+                    {canteens[0].name}
+                  </h1>
+                </div>
+              </Link>
+
+              {canteens.slice(1).map((canteen, idx) => (
+                <div
+                  // href={"/kantin/" + canteen.id}
                   className="group relative block h-60"
                   key={idx}
                 >
@@ -164,12 +182,13 @@ export default async function LandingPage() {
                       className="rounded-xl group-hover:scale-105 transition-all duration-300 ease-in-out"
                     />
                   </div>
-                  <div className="w-full h-full rounded-xl absolute z-20 left-0 flex justify-center items-center top-0 bg-black/50">
+                  <div className="w-full h-full flex-col rounded-xl absolute z-20 left-0 flex justify-center items-center top-0 bg-black/50">
                     <h1 className="font-semibold text-center text-white">
                       {canteen.name}
                     </h1>
+                    <h1 className=" text-white">Coming Soon</h1>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>

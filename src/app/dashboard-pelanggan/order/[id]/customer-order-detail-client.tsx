@@ -93,7 +93,6 @@ export default function CustomerOrderDetailClient({
             OrderStatus.WAITING_SHOP_CONFIRMATION,
             OrderStatus.WAITING_PAYMENT,
             OrderStatus.PENDING_CONFIRMATION,
-            OrderStatus.WAITING_CUSTOMER_ESTIMATION_CONFIRMATION,
           ]}
           successValues={[OrderStatus.COMPLETED]}
           destructiveValues={[OrderStatus.CANCELLED, OrderStatus.REJECTED]}

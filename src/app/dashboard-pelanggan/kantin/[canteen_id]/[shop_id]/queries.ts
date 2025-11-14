@@ -3,17 +3,21 @@
 import { Prisma } from "@/app/generated/prisma";
 import { prisma } from "@/lib/prisma";
 
-export async function getAllShopProducts(
-  shop_id: string,
-  productName: string,
-  category_id: number | null
-) {
+export async function getAllShopProducts({
+  product_name,
+  category_id,
+  shop_id,
+}: {
+  shop_id: string;
+  product_name: string;
+  category_id: number | null;
+}) {
   type ProductWhereClause = Prisma.ProductWhereInput;
 
   const whereClause: ProductWhereClause = {
     shop_id,
     name: {
-      contains: productName,
+      contains: product_name,
     },
   };
 

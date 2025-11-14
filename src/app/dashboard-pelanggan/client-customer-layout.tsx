@@ -54,15 +54,23 @@ export default function ClientCustomerLayout({
     "/keranjang/",
   ];
 
+  const noDefaultStylingPath = ["profil"];
+
   function isExcluded() {
     return excludedPath.some((path) => pathname.includes(path));
   }
 
+  function isInNoDefault() {
+    return noDefaultStylingPath.some((path) => pathname.includes(path));
+  }
+
   return (
     <>
-      {isExcluded() ? (
-        <div className="p-5 pt-20">{children}</div>
-      ) : (
+      {isInNoDefault() && children}
+
+      {isExcluded() && <div className="p-5 pt-20">{children}</div>}
+
+      {!isInNoDefault() && !isExcluded() && (
         <div className="w-full relative min-h-svh pt-12 pb-16">
           <CustomerTopbar connected={connected} subscribed={false} />
 

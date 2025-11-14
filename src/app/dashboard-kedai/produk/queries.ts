@@ -26,6 +26,7 @@ export async function getProductIncludeCategory(id: string) {
           category: true,
         },
       },
+      options: true,
     },
   });
 }

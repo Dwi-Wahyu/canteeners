@@ -9,10 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { User2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { NavigationButton } from "../../_components/navigation-button";
 import { formatDate } from "@/helper/date-helper";
 import { formatToHour } from "@/helper/hour-helper";

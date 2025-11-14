@@ -17,11 +17,25 @@ model Product {
 
     is_available Boolean @default(true)
 
+    options ProductOption[]
     categories ProductCategory[]
 
     @@index([name])
     @@index([shop_id])
     @@map("products")
+}
+
+model ProductOption {
+    id String @id @default(nanoid())
+    option String
+    grouped_by String?
+    image_url String?
+    additional_price Float?
+    product Product @relation(fields: [product_id], references: [id])
+    product_id String
+
+    @@index([product_id])
+    @@map("product_options")
 }
 
 model Category {

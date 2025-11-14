@@ -51,7 +51,11 @@ export default function ShopProductList({
   const { data, isLoading } = useQuery({
     queryKey: ["shop-product-list", shop.id, productName, categoryId],
     queryFn: async () => {
-      return await getAllShopProducts(shop.id, productName, categoryId);
+      return await getAllShopProducts({
+        category_id: categoryId,
+        product_name: productName,
+        shop_id: shop.id,
+      });
     },
   });
 

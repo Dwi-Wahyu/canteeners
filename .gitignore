@@ -52,6 +52,13 @@ secret.md
 
 /public/uploads/shop/*
 !/public/uploads/shop/.gitkeep
+!/public/uploads/shop/kedai-subarjo.webp
+
+/public/uploads/category/*
+!/public/uploads/category/.gitkeep
+!/public/uploads/category/ayam-geprek.jpg
+!/public/uploads/category/es-buah.jpg
+!/public/uploads/category/gorengan.jpg
 
 /public/uploads/shop-qrcode/*
 !/public/uploads/shop-qrcode/.gitkeep

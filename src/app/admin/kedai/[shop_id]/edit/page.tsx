@@ -8,11 +8,11 @@ import EditShopForm from "./edit-shop-form";
 export default async function EditShopPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ shop_id: string }>;
 }) {
-  const { id } = await params;
+  const { shop_id } = await params;
 
-  const initialData = await getShopDataWithPayment(id);
+  const initialData = await getShopDataWithPayment(shop_id);
 
   if (!initialData) {
     return <NotFoundResource />;

@@ -86,3 +86,15 @@
 - buat fungsi hitung keuntungan total dari kedai (jangan dulu pake filter)
 
 - buat fungsi kasi muncul riwayat order kedai
+
+- ganti default id order jadi ulid
+
+- fix migrasi error table_qrcodes padahal bukan dia diganti (mau kukasi hilang unique constraint na shop_id di shop_billings)
+
+- fix hitung bill
+
+- deploy ulang migrasi
+
+- bikin fungsi tambah pilihan produk
+
+- hapus mapping status order estimasi ditolak

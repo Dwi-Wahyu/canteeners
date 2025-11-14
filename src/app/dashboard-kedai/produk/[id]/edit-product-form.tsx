@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   EditProductSchema,
@@ -55,6 +55,14 @@ export default function EditProductForm({
       categories: initialData.categories.map((each) => ({
         label: each.category.name,
         value: each.category.id.toString(),
+      })),
+      options: initialData.options.map((temp) => ({
+        option: temp.option,
+        additional_price: temp.additional_price
+          ? temp.additional_price.toString()
+          : "0",
+        grouped_by: temp.grouped_by,
+        image_url: temp.image_url,
       })),
     },
   });

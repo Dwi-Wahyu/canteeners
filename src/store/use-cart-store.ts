@@ -3,7 +3,7 @@
 import { PaymentMethod } from "@/app/generated/prisma";
 import { create } from "zustand";
 
-export type KeranjangItem = {
+export type CartItem = {
   productId: string;
   name: string;
   image_url: string;
@@ -12,19 +12,19 @@ export type KeranjangItem = {
   note?: string;
 };
 
-export type KedaiState = {
+export type ShopCartState = {
   id: string;
   name: string;
   ownerId: string;
-  items: KeranjangItem[];
+  items: CartItem[];
   totalQuantity: number;
   totalPrice: number;
   paymentMethod?: PaymentMethod;
   availablePaymentMethod: PaymentMethod[];
 };
 
-export type KeranjangState = {
-  kedai: Record<string, KedaiState>;
+export type CartState = {
+  kedai: Record<string, ShopCartState>;
   totalQuantity: number;
   totalPrice: number;
   actions: {
@@ -35,8 +35,8 @@ export type KeranjangState = {
       ownerId: string
     ) => void;
     removeKedai: (id: string) => void;
-    clearKeranjang: () => void;
-    addItem: (kedaiId: string, item: KeranjangItem) => void;
+    clearCart: () => void;
+    addItem: (kedaiId: string, item: CartItem) => void;
     updateItem: (
       kedaiId: string,
       productId: string,
@@ -51,7 +51,7 @@ export type KeranjangState = {
 
 // Fungsi helper untuk menghitung total per kedai
 const calculateTotals = (
-  items: KeranjangItem[]
+  items: CartItem[]
 ): { totalQuantity: number; totalPrice: number } => {
   return items.reduce(
     (acc, item) => ({
@@ -64,7 +64,7 @@ const calculateTotals = (
 
 // Fungsi helper untuk menghitung total keseluruhan keranjang
 const calculateCartTotals = (
-  kedai: Record<string, KedaiState>
+  kedai: Record<string, ShopCartState>
 ): { totalQuantity: number; totalPrice: number } => {
   return Object.values(kedai).reduce(
     (acc, k) => ({
@@ -75,7 +75,7 @@ const calculateCartTotals = (
   );
 };
 
-export const useKeranjangStore = create<KeranjangState>((set) => ({
+export const useCartStore = create<CartState>((set) => ({
   kedai: {},
   totalQuantity: 0,
   totalPrice: 0,
@@ -83,7 +83,7 @@ export const useKeranjangStore = create<KeranjangState>((set) => ({
     addKedai(id, name, availablePaymentMethod, ownerId) {
       set((state) => {
         if (state.kedai[id]) return state;
-        const newKedai: KedaiState = {
+        const newKedai: ShopCartState = {
           id,
           name,
           ownerId,
@@ -111,7 +111,7 @@ export const useKeranjangStore = create<KeranjangState>((set) => ({
         };
       });
     },
-    clearKeranjang() {
+    clearCart() {
       set({ kedai: {}, totalQuantity: 0, totalPrice: 0 });
     },
     addItem(kedaiId, newItem) {
@@ -124,7 +124,7 @@ export const useKeranjangStore = create<KeranjangState>((set) => ({
         const existingItemIndex = kedai.items.findIndex(
           (item) => item.productId === newItem.productId
         );
-        let updatedItems: KeranjangItem[];
+        let updatedItems: CartItem[];
         if (existingItemIndex !== -1) {
           updatedItems = kedai.items.map((item, index) =>
             index === existingItemIndex
@@ -235,18 +235,18 @@ export const useKeranjangStore = create<KeranjangState>((set) => ({
   },
 }));
 
-export function useKeranjang() {
-  return useKeranjangStore((state) => state.kedai);
+export function useCart() {
+  return useCartStore((state) => state.kedai);
 }
 
-export function useKeranjangActions() {
-  return useKeranjangStore((state) => state.actions);
+export function useCartActions() {
+  return useCartStore((state) => state.actions);
 }
 
-export function useKeranjangTotalQuantity() {
-  return useKeranjangStore((state) => state.totalQuantity);
+export function useCartTotalQuantity() {
+  return useCartStore((state) => state.totalQuantity);
 }
 
-export function useKeranjangTotalPrice() {
-  return useKeranjangStore((state) => state.totalPrice);
+export function useCartTotalPrice() {
+  return useCartStore((state) => state.totalPrice);
 }

@@ -8,7 +8,6 @@ import {
 } from "@/app/generated/prisma";
 import { errorResponse, successResponse } from "@/helper/action-helpers";
 import { prisma } from "@/lib/prisma";
-import { KedaiState } from "@/store/use-cart-store";
 import { ServerActionReturn } from "@/types/server-action";
 import { revalidatePath } from "next/cache";
 
@@ -218,90 +217,91 @@ export async function changeCartItemDetails({
 
 export async function setShopCartPaymentMethod() {}
 
-export async function processOrder({
-  shopGroupItems,
-  customerId,
-  conversation_id,
-}: {
-  shopGroupItems: Record<string, KedaiState>;
-  customerId: string;
-  conversation_id: string;
-}): Promise<ServerActionReturn<void>> {
-  try {
-    await prisma.$transaction(async (tx) => {
-      const customer = await tx.user.findFirst({
-        where: { id: customerId },
-      });
+// export async function processOrder({
+//   shopGroupItems,
+//   customerId,
+//   conversation_id,
+// }: {
+//   shopGroupItems: Record<string, KedaiState>;
+//   customerId: string;
+//   conversation_id: string;
+// }): Promise<ServerActionReturn<void>> {
+//   try {
+//     await prisma.$transaction(async (tx) => {
+//       const customer = await tx.user.findFirst({
+//         where: { id: customerId },
+//       });
 
-      if (!customer) {
-        throw new Error("Customer tidak ditemukan");
-      }
+//       if (!customer) {
+//         throw new Error("Customer tidak ditemukan");
+//       }
 
-      for (const shop of Object.values(shopGroupItems)) {
-        const order = await tx.order.create({
-          data: {
-            shop_id: shop.id,
-            customer_id: customerId,
-            payment_method: shop.paymentMethod ?? "CASH",
-            status: "PENDING_CONFIRMATION",
-            total_price: shop.totalPrice,
-            conversation_id,
-            order_items: {
-              createMany: {
-                data: shop.items.map((item) => ({
-                  product_id: item.productId,
-                  quantity: item.quantity,
-                  price: item.price * item.quantity,
-                  note: item.note,
-                })),
-              },
-            },
-          },
-        });
+//       for (const shop of Object.values(shopGroupItems)) {
+//         const order = await tx.order.create({
+//           data: {
+//             shop_id: shop.id,
+//             customer_id: customerId,
+//             customer_name: "",
+//             payment_method: shop.paymentMethod ?? "CASH",
+//             status: "PENDING_CONFIRMATION",
+//             total_price: shop.totalPrice,
+//             conversation_id,
+//             order_items: {
+//               createMany: {
+//                 data: shop.items.map((item) => ({
+//                   product_id: item.productId,
+//                   quantity: item.quantity,
+//                   price: item.price * item.quantity,
+//                   note: item.note,
+//                 })),
+//               },
+//             },
+//           },
+//         });
 
-        const existingConversation = await tx.conversation.findFirst({
-          where: {
-            participants: {
-              every: {
-                user_id: { in: [customerId, shop.ownerId] },
-              },
-            },
-          },
-        });
+//         const existingConversation = await tx.conversation.findFirst({
+//           where: {
+//             participants: {
+//               every: {
+//                 user_id: { in: [customerId, shop.ownerId] },
+//               },
+//             },
+//           },
+//         });
 
-        const conversationId =
-          existingConversation?.id ??
-          (
-            await tx.conversation.create({
-              data: {
-                participants: {
-                  createMany: {
-                    data: [{ user_id: customerId }, { user_id: shop.ownerId }],
-                  },
-                },
-              },
-            })
-          ).id;
+//         const conversationId =
+//           existingConversation?.id ??
+//           (
+//             await tx.conversation.create({
+//               data: {
+//                 participants: {
+//                   createMany: {
+//                     data: [{ user_id: customerId }, { user_id: shop.ownerId }],
+//                   },
+//                 },
+//               },
+//             })
+//           ).id;
 
-        await tx.message.create({
-          data: {
-            conversation_id: conversationId,
-            sender_id: customerId,
-            order_id: order.id,
-            type: "ORDER",
-            text: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
-          },
-        });
-      }
-    });
+//         await tx.message.create({
+//           data: {
+//             conversation_id: conversationId,
+//             sender_id: customerId,
+//             order_id: order.id,
+//             type: "ORDER",
+//             text: `Order masuk. Mohon konfirmasi apakah pesanan tersedia`,
+//           },
+//         });
+//       }
+//     });
 
-    return successResponse(undefined, "Berhasil memproses pesanan");
-  } catch (error) {
-    console.log(error);
+//     return successResponse(undefined, "Berhasil memproses pesanan");
+//   } catch (error) {
+//     console.log(error);
 
-    return errorResponse("Gagal memproses pesanan");
-  }
-}
+//     return errorResponse("Gagal memproses pesanan");
+//   }
+// }
 
 export async function processShopCart({
   shopCartId,
@@ -410,6 +410,7 @@ export async function processShopCart({
       const order = await tx.order.create({
         data: {
           shop_id: shopCart.shop.id,
+          customer_name: "",
           customer_id,
           payment_method: paymentMethod,
           status: "PENDING_CONFIRMATION",

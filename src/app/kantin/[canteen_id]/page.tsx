@@ -1,7 +1,12 @@
 import NotFoundResource from "@/app/_components/not-found-resource";
 import { Card, CardContent } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
-import { IconChevronLeft, IconStar, IconStarFilled } from "@tabler/icons-react";
+import {
+  IconChevronLeft,
+  IconMessageCircleUser,
+  IconStar,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import Link from "next/link";
 
 export default async function DetailKantinPage({
@@ -28,6 +33,8 @@ export default async function DetailKantinPage({
           id: true,
           image_url: true,
           description: true,
+          average_rating: true,
+          total_ratings: true,
           products: {
             take: 3,
           },
@@ -50,7 +57,7 @@ export default async function DetailKantinPage({
       <div className="mx-auto max-w-5xl">
         <div className="mb-4">
           <Link
-            href={"/dashboard-pelanggan"}
+            href={"/"}
             className="flex gap-2 items-center text-sm text-muted-foreground"
           >
             <IconChevronLeft className="w-4 h-4 mb-1" />
@@ -105,12 +112,16 @@ export default async function DetailKantinPage({
                     ))}
                   </div>
 
-                  <div className="flex justify-end gap-1">
-                    <IconStarFilled />
-                    <IconStarFilled />
-                    <IconStar />
-                    <IconStar />
-                    <IconStar />
+                  <div className="flex justify-end gap-4">
+                    <div className="flex gap-1 items-center">
+                      <IconStar />
+                      <h1 className="font-semibold">{shop.average_rating}</h1>
+                    </div>
+
+                    <div className="flex gap-1 items-center">
+                      <IconMessageCircleUser />
+                      <h1 className="font-semibold">{shop.average_rating}</h1>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

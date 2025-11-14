@@ -87,174 +87,186 @@ export default function EditShopForm({
   };
 
   return (
-    <Form {...form}>
-      <form
-        className="gap-5 flex flex-col"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nama</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Deskripsi Singkat</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="w-full">
-          <h1 className="mb-2 text-sm">Gambar</h1>
-
-          <FileUploadImage
-            multiple={false}
-            initialPreviewUrl={"/uploads/shop/" + initialData.image_url}
-            onFilesChange={(newFiles) => {
-              setFiles(newFiles);
-            }}
+    <>
+      <Form {...form}>
+        <form
+          className="gap-5 flex flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nama</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          {form.formState.errors.image_url && (
-            <p data-slot="form-message" className="text-destructive text-sm">
-              {form.formState.errors.image_url.message}
-            </p>
-          )}
-        </div>
+          <div>
+            <FormLabel>QRCode Kedai</FormLabel>
 
-        <FormField
-          control={form.control}
-          name="open_time"
-          render={({ field }) => (
-            <div className="flex flex-col gap-3">
+            <div>
+              <h1>Belum generate qrcode</h1>
+            </div>
+          </div>
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel className="px-1">Jam Operasional Buka</FormLabel>
-
+                <FormLabel>Deskripsi Singkat</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="time"
-                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                    value={field.value ?? ""}
-                  />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            </div>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="close_time"
-          render={({ field }) => (
-            <div className="flex flex-col gap-3">
-              <FormItem>
-                <FormLabel className="px-1">Jam Operasional Tutup</FormLabel>
-
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="time"
-                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                    value={field.value ?? ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </div>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="order_mode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mode Pemesanan</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue="READY_ONLY"
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Pemilik Warung" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(ShopOrderMode).map((mode, idx) => (
-                      <SelectItem key={idx} value={mode}>
-                        {shopOrderModeMapping[mode]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="refund_disbursement_mode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mode Pengembalian Dana Refund</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue="READY_ONLY"
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Pemilik Warung" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(RefundDisbursementMode).map((mode, idx) => (
-                      <SelectItem key={idx} value={mode}>
-                        {refundDisbursementModeMapping[mode]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-center">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? (
-              <>
-                <Loader className="animate-spin" /> Loading
-              </>
-            ) : (
-              <>
-                <Save />
-                Simpan
-              </>
             )}
-          </Button>
-        </div>
-      </form>
-    </Form>
+          />
+
+          <div className="w-full">
+            <h1 className="mb-2 text-sm">Gambar</h1>
+
+            <FileUploadImage
+              multiple={false}
+              initialPreviewUrl={"/uploads/shop/" + initialData.image_url}
+              onFilesChange={(newFiles) => {
+                setFiles(newFiles);
+              }}
+            />
+
+            {form.formState.errors.image_url && (
+              <p data-slot="form-message" className="text-destructive text-sm">
+                {form.formState.errors.image_url.message}
+              </p>
+            )}
+          </div>
+
+          <FormField
+            control={form.control}
+            name="open_time"
+            render={({ field }) => (
+              <div className="flex flex-col gap-3">
+                <FormItem>
+                  <FormLabel className="px-1">Jam Operasional Buka</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="time"
+                      className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </div>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="close_time"
+            render={({ field }) => (
+              <div className="flex flex-col gap-3">
+                <FormItem>
+                  <FormLabel className="px-1">Jam Operasional Tutup</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="time"
+                      className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </div>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="order_mode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mode Pemesanan</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue="READY_ONLY"
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih Pemilik Warung" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(ShopOrderMode).map((mode, idx) => (
+                        <SelectItem key={idx} value={mode}>
+                          {shopOrderModeMapping[mode]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="refund_disbursement_mode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mode Pengembalian Dana Refund</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue="READY_ONLY"
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih Pemilik Warung" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(RefundDisbursementMode).map(
+                        (mode, idx) => (
+                          <SelectItem key={idx} value={mode}>
+                            {refundDisbursementModeMapping[mode]}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-center">
+            <Button disabled={form.formState.isSubmitting} type="submit">
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader className="animate-spin" /> Loading
+                </>
+              ) : (
+                <>
+                  <Save />
+                  Simpan
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }

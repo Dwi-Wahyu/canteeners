@@ -8,11 +8,12 @@ import {
 import { prisma } from "@/lib/prisma";
 import {
   IconBan,
-  IconCash,
   IconCashPlus,
+  IconFileDollar,
   IconList,
   IconMessage,
   IconPencil,
+  IconReceipt,
 } from "@tabler/icons-react";
 
 export default async function ShopDetails({
@@ -88,8 +89,13 @@ export default async function ShopDetails({
             </NavigationButton>
 
             <NavigationButton url={`/admin/kedai/${shop.id}/edit`}>
-              <IconCash />
-              Riwayat Order dan Tagihan
+              <IconReceipt />
+              Riwayat Order
+            </NavigationButton>
+
+            <NavigationButton url={`/admin/kedai/${shop.id}/tagihan`}>
+              <IconFileDollar />
+              Tagihan
             </NavigationButton>
 
             <NavigationButton url={`/admin/kedai/${shop.id}/edit`}>

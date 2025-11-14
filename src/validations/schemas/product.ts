@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+export const ProductOptionSchema = z.object({
+  option: z.string().min(1, { message: "Nama opsi harus diisi." }),
+  additional_price: z.string().nullable().optional(),
+  grouped_by: z.string().nullable().optional(),
+  image_url: z.string().nullable().optional(),
+});
+
 export const InputProductSchema = z.object({
   name: z.string().min(1, { message: "Nama produk harus diisi." }),
   description: z.string().optional(),
@@ -13,6 +20,7 @@ export const InputProductSchema = z.object({
       value: z.string(),
     })
   ),
+  options: z.array(ProductOptionSchema),
 });
 
 export type InputProductSchemaType = z.infer<typeof InputProductSchema>;
@@ -31,6 +39,7 @@ export const EditProductSchema = z.object({
       value: z.string(),
     })
   ),
+  options: z.array(ProductOptionSchema),
 });
 
 export type EditProductSchemaType = z.infer<typeof EditProductSchema>;

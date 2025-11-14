@@ -1,10 +1,13 @@
 model Order {
-  id         String   @id @default(uuid())
+  id         String   @id @default(ulid())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  customer    User   @relation(fields: [customer_id], references: [id])
-  customer_id String
+  // relasi ini diisi jika customer telah login 
+  customer    User?   @relation(fields: [customer_id], references: [id])
+  customer_id String?
+
+  customer_name String
 
   shop              Shop      @relation(fields: [shop_id], references: [id])
   shop_id           String
@@ -15,6 +18,7 @@ model Order {
   rejected_reason  String?
   cancelled_reason String?
   cancelled_by_id  String?
+  cancelled_by_name String?
 
   total_price Float
 
@@ -26,9 +30,8 @@ model Order {
   complaint ShopComplaint?
   refund    Refund?
 
-  // Todo: cari cara agar jika percakapan dihapus order tidak dihapus
-  conversation    Conversation  @relation(fields: [conversation_id], references: [id])
-  conversation_id String
+  conversation    Conversation?  @relation(fields: [conversation_id], references: [id])
+  conversation_id String?
   message         Message[]
   payment_method  PaymentMethod
 
@@ -40,6 +43,7 @@ model Order {
   // courier_journey CourierJourney? @relation(fields: [courier_journey_id], references: [id])
   // courier_journey_id String?     @unique // Relasi ke CourierJourney untuk COURIER_DELIVERY
 
+  @@index([customer_name])
   @@index([customer_id])
   @@index([shop_id])
   @@index([status])
@@ -58,6 +62,7 @@ model OrderItem {
   order_id   String
   product    Product @relation(fields: [product_id], references: [id])
   product_id String
+  product_options_id String?  // id pilihan produk
   quantity   Int
   price      Float
   note       String?
@@ -83,7 +88,6 @@ enum PostOrderType {
   COURIER_DELIVERY
 }
 
-// todo: buat type untuk disbursement apakah cash atau transfer
 model Refund {
   id       String @id @default(uuid())
   order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
